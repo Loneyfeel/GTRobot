@@ -13,8 +13,10 @@
   },
   "dependencies": {
     "@ant-design/icons": "^5.2.6",
+    "@vkruglikov/react-telegram-web-app": "^2.1.5",
     "antd": "^5.10.3",
     "gh-pages": "^6.0.0",
+    "lightweight-charts": "^4.1.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "sass": "^1.69.5"

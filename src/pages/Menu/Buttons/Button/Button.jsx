@@ -1,27 +1,11 @@
 import style from './button.module.sass'
 import {RightOutlined} from '@ant-design/icons'
-import {useState} from "react";
+import {ButtonAnimation} from '../../../../shared/ButtonAnimation/ButtonAnimation.js'
 
 function Button(props) {
     //для анимации кнопки
-    const [isAnimating, setIsAnimating] = useState(true); //для анимации кнопки
-    const handleClickAnim = (e) => {
-        setIsAnimating(true);
-        const animateButton = (timestamp) => {
-            if (!isAnimating) return;
-            const t = timestamp - startTime;
-            if (t < 1000) {
-                requestAnimationFrame(animateButton);
-            }
-            const progress = t / 600;
-            const button = e.target;
-            const rect = button.getBoundingClientRect();
-            const position = `${e.nativeEvent.offsetX} ${e.nativeEvent.offsetY},${progress * Math.max(rect.width, rect.height)}`;
-            button.style.backgroundImage = `-webkit-gradient(radial,${position},${position},from(rgba(100,100,100,${0.6 - progress * 0.6})),to(#fff0))`;
-        };
-        const startTime = performance.now();
-        requestAnimationFrame(animateButton);
-    }
+    const { handleClickAnim } = ButtonAnimation();
+
     // Открываем ссылку
     const handleClick = () => {
         const url = props.url;
