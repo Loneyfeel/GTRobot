@@ -39,8 +39,6 @@ const Screener = () => {
         // Очистка интервала при размонтировании компонента
         return () => clearInterval(intervalId)
     }, [])
-
-    console.log(data)
     return (
         <>
             <div className={style.screener}>
