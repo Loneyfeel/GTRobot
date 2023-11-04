@@ -15,7 +15,7 @@ export const ButtonAnimation = () => {
             const button = e.target;
             const rect = button.getBoundingClientRect();
             const position = `${e.nativeEvent.offsetX} ${e.nativeEvent.offsetY},${progress * Math.max(rect.width, rect.height)}`;
-            button.style.backgroundImage = `-webkit-gradient(radial,${position},${position},from(rgba(150,150,150,${0.6 - progress * 0.6})),to(#fff0))`;
+            button.style.backgroundImage = `-webkit-gradient(radial,${position},${position},from(rgba(150,150,150,${0.6 - progress * 0.6})),to(#fff0)) `;
         };
         const startTime = performance.now();
         requestAnimationFrame(animateButton);

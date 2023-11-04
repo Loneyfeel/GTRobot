@@ -8,8 +8,8 @@ function Button(props) {
 
     // Открываем ссылку
     const handleClick = () => {
-        const url = props.url;
-        // window.location.href = url; //РАСКОММЕНТИРОВАТЬ
+        const url = props.url
+        window.location.href = url
     };
     return (
         <>

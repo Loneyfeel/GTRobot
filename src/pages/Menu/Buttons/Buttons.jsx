@@ -7,9 +7,8 @@ function Buttons() {
     return (
         <>
             <div className={style.menu__buttons}>
-                {/*ДОБАВИТЬ УРЛ в url="" И РАСКОММЕНТИТЬ В BUTTON*/}
-                <Button id="Analysis" icon={<SearchOutlined />} text="Анализ и сигнал" url=""/>
-                <Button id="Monitoring" icon={<BarChartOutlined />} text="Мониторинг" url=""/>
+                <Button id="Analysis" icon={<SearchOutlined />} text="Анализ и сигнал" url="/signals"/>
+                <Button id="Monitoring" icon={<BarChartOutlined />} text="Мониторинг" url="/klines"/>
             </div>
         </>
     )
