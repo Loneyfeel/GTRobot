@@ -9,7 +9,7 @@ function Button(props) {
     // Открываем ссылку
     const handleClick = () => {
         const url = props.url;
-        // window.location.href = url;
+        // window.location.href = url; //РАСКОММЕНТИРОВАТЬ
     };
     return (
         <>

@@ -7,7 +7,10 @@ select,
 a,
 span
 {
-    -webkit-tap-highlight-color: transparent;
+    -webkit-tap-highlight-color: transparent; /*это чтобы не было синего выделения при нажатии*/
+}
+html {
+    scroll-behavior: smooth;
 }
 
 body{

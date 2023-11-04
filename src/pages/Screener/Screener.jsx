@@ -1,14 +1,13 @@
 import style from './screener.module.sass'
-import React, {useEffect, useState} from 'react';
-import TableComponent from "./TableComponent";
-import Chart from "./TradingViewWidget/index.js";
-import {formatWordToNumber} from "./TableComponent/helps/FormatNumber/FormatNumber.js";
+import React, {useEffect, useState} from 'react'
+import TableComponent from "./TableComponent"
+import {formatWordToNumber} from "./TableComponent/helps/FormatNumber/FormatNumber.js"
 
-const proxy = 'https://corsproxy.io/?';
+const proxy = 'https://corsproxy.io/?'
 
 const Screener = () => {
     // состояние для хранения данных, полученных из API
-    const [data, setData] = useState([]);
+    const [data, setData] = useState([])
     useEffect(() => {
         async function fetchData() {
             try {
@@ -17,42 +16,38 @@ const Screener = () => {
                     headers: {
                         'Content-Type': 'application/json',
                     },
-                });
+                })
                 if (response.ok) {
-                    const apiData = await response.json();
-
-                    // Применить formatWordToNumber к полю cd в каждом элементе массива
+                    const apiData = await response.json()
+                    // Применить formatWordToNumber к полю cd в каждом элементе массива, тк
                     const dataWithFormattedCD = apiData.map(item => {
-                        const cd = formatWordToNumber(item.cd);
-                        return { ...item, cd };
-                    });
-
+                        const cd = formatWordToNumber(item.cd)
+                        return { ...item, cd }
+                    })
                     // Обновить состояние setData с данными, в которых cd уже отформатирован
-                    setData(dataWithFormattedCD);
+                    setData(dataWithFormattedCD)
                 } else {
-                    console.error('Ошибка при получении данных');
+                    console.error('Ошибка при получении данных')
                 }
             } catch (error) {
-                console.error('Ошибка при получении данных: ', error);
+                console.error('Ошибка при получении данных: ', error)
             }
         }
-
-        fetchData();
+        fetchData()
         // Установка интервала для обновления данных каждые 5 секунд
-        const intervalId = setInterval(fetchData, 5000);
-
+        const intervalId = setInterval(fetchData, 5000)
         // Очистка интервала при размонтировании компонента
-        return () => clearInterval(intervalId);
-    }, []); // Пустой массив зависимостей, чтобы запрос выполнялся только один раз
+        return () => clearInterval(intervalId)
+    }, [])
 
+    console.log(data)
     return (
         <>
-            <div className="screener">
-                <Chart/>
+            <div className={style.screener}>
                 <TableComponent data={data}/>
             </div>
         </>
-    );
-};
+    )
+}
 
-export default Screener;
+export default Screener

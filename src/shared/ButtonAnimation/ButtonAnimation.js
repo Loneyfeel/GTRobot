@@ -1,8 +1,8 @@
 import { useState } from 'react';
 
+//тут описан волновой эффект анимации при нажатии
 export const ButtonAnimation = () => {
     const [isAnimating, setIsAnimating] = useState(true);
-
     const handleClickAnim = (e) => {
         setIsAnimating(true);
         const animateButton = (timestamp) => {

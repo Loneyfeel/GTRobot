@@ -1,10 +1,14 @@
-import style from './chart.module.sass'
-import React, {useEffect, useRef} from "react"
-import { useThemeParams } from '@vkruglikov/react-telegram-web-app'
+import './miniTVwidget.sass'
+import CloseIcon from '@mui/icons-material/Close'
+import RefreshIcon from '@mui/icons-material/Refresh'
+
+import React, {useEffect, useRef} from 'react'
+import {useThemeParams} from "@vkruglikov/react-telegram-web-app"
 
 let tvScriptLoadingPromise;
-export default function TradingViewWidget() {
-    const [colorScheme, themeParams] = useThemeParams() //тг тема
+
+export default function MiniTVwidget({symbol, onClose}) {
+    const [colorScheme, themeParams] = useThemeParams() //тема тг
     const themeColor = ({
         bg_color: themeParams.bg_color,
         button_color: themeParams.button_color,
@@ -19,7 +23,6 @@ export default function TradingViewWidget() {
     useEffect(
         () => {
             onLoadScriptRef.current = createWidget;
-
             if (!tvScriptLoadingPromise) {
                 tvScriptLoadingPromise = new Promise((resolve) => {
                     const script = document.createElement('script');
@@ -27,34 +30,33 @@ export default function TradingViewWidget() {
                     script.src = 'https://s3.tradingview.com/tv.js';
                     script.type = 'text/javascript';
                     script.onload = resolve;
+
                     document.head.appendChild(script);
                 });
             }
             tvScriptLoadingPromise.then(() => onLoadScriptRef.current && onLoadScriptRef.current());
             return () => onLoadScriptRef.current = null;
-
             function createWidget() {
-                if (document.getElementById('tradingview_a741a') && 'TradingView' in window) {
+                if (document.getElementById('tradingview_b9a65') && 'TradingView' in window) {
                     new window.TradingView.widget({
-                        library_path: "https://charting-library.tradingview-widget.com/charting_library/",
                         width: "100%",
                         height: "300",
-                        symbol: "BTCUSDT",
+                        symbol: symbol,
                         interval: "30",
                         timezone: "Etc/UTC",
                         theme: `${colorScheme}`,
                         style: "1",
                         locale: "ru",
                         enable_publishing: false,
+                        hide_top_toolbar: true,
                         backgroundColor: `${themeColor.bg_color}`,
-                        hide_legend: true,
-                        allow_symbol_change: true,
                         save_image: false,
                         studies: [
                             "Volume@tv-basicstudies",
                             "STD;Supertrend"
                         ],
-                        container_id: "tradingview_a741a"
+                        hide_volume: true,
+                        container_id: "tradingview_b9a65"
                     });
                 }
             }
@@ -63,8 +65,10 @@ export default function TradingViewWidget() {
     );
 
     return (
-        <div className={style.tradingview_widget_container}>
-            <div id='tradingview_a741a'/>
+        <div className='tradingview-widget-container'>
+            <button onClick={onClose} className="button_close"><CloseIcon/></button>
+            <div className="widget" id='tradingview_b9a65'/>
+            <div className="widget_loading"><RefreshIcon fontSize={'large'}/></div>
         </div>
-    )
+    );
 }
