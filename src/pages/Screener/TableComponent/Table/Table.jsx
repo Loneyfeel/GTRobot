@@ -48,17 +48,17 @@ const Table = ({ data, sorting, setSorting, rowsPerPage, page, openMiniTVwidget,
                 <th className="chart"></th>
                 <th>
                     <span
-                          onClick={() => handleSort("name")}
-                          style={{cursor: "pointer"}}
+                        onClick={() => handleSort("name")}
+                        style={{cursor: "pointer"}}
                     >
-                         <div className="animation" onClick={handleClickAnim}></div>
+                        <div className="animation" onClick={handleClickAnim}></div>
                         <p>Монета {getSortIcon("name")}</p>
                     </span>
                 </th>
                 <th className="power">
                         <span
-                              onClick={() => handleSort("raz")}
-                              style={{cursor: "pointer"}}
+                            onClick={() => handleSort("raz")}
+                            style={{cursor: "pointer"}}
                         >
                             <div className="animation" onClick={handleClickAnim}></div>
                             <p>Сила {getSortIcon("raz")}</p>
@@ -66,8 +66,8 @@ const Table = ({ data, sorting, setSorting, rowsPerPage, page, openMiniTVwidget,
                 </th>
                 <th className="price">
                         <span
-                              onClick={() => handleSort("price")}
-                              style={{cursor: "pointer"}}
+                            onClick={() => handleSort("price")}
+                            style={{cursor: "pointer"}}
                         >
                             <div className="animation" onClick={handleClickAnim}></div>
                             <p>Цена {getSortIcon("price")}</p>
@@ -75,8 +75,8 @@ const Table = ({ data, sorting, setSorting, rowsPerPage, page, openMiniTVwidget,
                 </th>
                 <th>
                         <span
-                              onClick={() => handleSort("cd")}
-                              style={{cursor: "pointer"}}
+                            onClick={() => handleSort("cd")}
+                            style={{cursor: "pointer"}}
                         >
                             <div className="animation" onClick={handleClickAnim}></div>
                             <p>Плотн {getSortIcon("cd")}</p>
@@ -84,8 +84,8 @@ const Table = ({ data, sorting, setSorting, rowsPerPage, page, openMiniTVwidget,
                 </th>
                 <th>
                         <span
-                              onClick={() => handleSort("dal")}
-                              style={{cursor: "pointer"}}
+                            onClick={() => handleSort("dal")}
+                            style={{cursor: "pointer"}}
                         >
                             <div className="animation" onClick={handleClickAnim}></div>
                             <p>Расст % {getSortIcon("dal")}</p>
@@ -98,15 +98,16 @@ const Table = ({ data, sorting, setSorting, rowsPerPage, page, openMiniTVwidget,
                 ? sortedData.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((item, index) => (
                     <tr key={index}>
                         <td className="chart">
+                            <div className="animation" onClick={handleClickAnim}>
                                 <button className="mini_graph" onClick={() => {
                                     onClose()
                                     setTimeout(() => {
                                         openMiniTVwidget(`${item.name}USDT`); // Открывает новое окно после задержки
                                     }, 0);
                                 }}>
-                                    <div className="animation" onClick={handleClickAnim}></div>
                                     <BarChartIcon className="mini_graph_icon"/>
                                 </button>
+                            </div>
                         </td>
                         <td><p
                             className={`${item.id === `${item.name}_ask` ? "name_red" : "name_green"}`}

@@ -67,19 +67,20 @@ const Pages = ({ data, currentPage, setCurrentPage, rowsPerPage }) => {
     return (
         <>
             <div className={style.pages}>
-                <button
-                    className={`${style.pages__button_prev}`}
-                    onClick={() => {
-                        setCurrentPage(currentPage - 1)
-                        setTimeout(() => {
-                            window.scrollTo(0, document.documentElement.scrollHeight)
-                        }, 0)
-                    }}
-                    disabled={currentPage === 0}
-                >
-                    <div className={style.animation} onClick={handleClickAnim}></div>
-                    Пред
-                </button>
+                <div className={style.animation} onClick={handleClickAnim}>
+                    <button
+                        className={`${style.pages__button_prev}`}
+                        onClick={() => {
+                            setCurrentPage(currentPage - 1)
+                            setTimeout(() => {
+                                window.scrollTo(0, document.documentElement.scrollHeight)
+                            }, 0)
+                        }}
+                        disabled={currentPage === 0}
+                    >
+                        Пред
+                    </button>
+                </div>
                 <div className={style.table__pages}>
                     {pageNumbers.map((page, index) => (
                         <span key={index} onClick={() =>
@@ -89,20 +90,23 @@ const Pages = ({ data, currentPage, setCurrentPage, rowsPerPage }) => {
                         </span>
                     ))}
                 </div>
-                <button
-                    className={`${style.pages__button_next}`}
-                    onClick={() => {
-                        setCurrentPage(currentPage + 1)
-                        window.scrollTo(0, document.documentElement.scrollHeight);
-                    }}
-                    disabled={currentPage === totalPages - 1}
-                >
-                    <div className={style.animation} onClick={handleClickAnim}></div>
-                    След
-                </button>
+                <div className={style.animation} onClick={handleClickAnim}>
+                    <button
+                        className={`${style.pages__button_next}`}
+                        onClick={() => {
+                            setCurrentPage(currentPage + 1)
+                            window.scrollTo(0, document.documentElement.scrollHeight);
+                        }}
+                        disabled={currentPage === totalPages - 1}
+                    >
+
+                        След
+                    </button>
+                </div>
             </div>
         </>
     );
 };
 
 export default Pages;
+
