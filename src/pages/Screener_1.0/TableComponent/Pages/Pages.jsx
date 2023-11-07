@@ -1,6 +1,7 @@
 import style from './pages.module.sass'
 import { ButtonAnimation } from "../../../../shared/ButtonAnimation/ButtonAnimation.js"
 import React, { useEffect } from "react"
+import {useTranslation} from "react-i18next";
 
 const Pages = ({ data, currentPage, setCurrentPage, rowsPerPage }) => {
     const totalPages = Math.ceil(data.length / rowsPerPage)
@@ -64,23 +65,25 @@ const Pages = ({ data, currentPage, setCurrentPage, rowsPerPage }) => {
     // Для анимации нажатия
     const { handleClickAnim } = ButtonAnimation()
 
+    //локализация
+    const {t, i18n} = useTranslation()
+
     return (
         <>
             <div className={style.pages}>
-                <div className={style.animation} onClick={handleClickAnim}>
-                    <button
-                        className={`${style.pages__button_prev}`}
-                        onClick={() => {
-                            setCurrentPage(currentPage - 1)
-                            setTimeout(() => {
-                                window.scrollTo(0, document.documentElement.scrollHeight)
-                            }, 0)
-                        }}
-                        disabled={currentPage === 0}
-                    >
-                        Пред
-                    </button>
-                </div>
+                <button
+                    className={`${style.pages__button_prev}`}
+                    onClick={() => {
+                        setCurrentPage(currentPage - 1)
+                        setTimeout(() => {
+                            window.scrollTo(0, document.documentElement.scrollHeight)
+                        }, 0)
+                    }}
+                    disabled={currentPage === 0}
+                >
+                    <div className={style.animation} onClick={handleClickAnim}></div>
+                    {t('screener.table_buttons.pages.prev')}
+                </button>
                 <div className={style.table__pages}>
                     {pageNumbers.map((page, index) => (
                         <span key={index} onClick={() =>
@@ -90,23 +93,20 @@ const Pages = ({ data, currentPage, setCurrentPage, rowsPerPage }) => {
                         </span>
                     ))}
                 </div>
-                <div className={style.animation} onClick={handleClickAnim}>
-                    <button
-                        className={`${style.pages__button_next}`}
-                        onClick={() => {
-                            setCurrentPage(currentPage + 1)
-                            window.scrollTo(0, document.documentElement.scrollHeight);
-                        }}
-                        disabled={currentPage === totalPages - 1}
-                    >
-
-                        След
-                    </button>
-                </div>
+                <button
+                    className={`${style.pages__button_next}`}
+                    onClick={() => {
+                        setCurrentPage(currentPage + 1)
+                        window.scrollTo(0, document.documentElement.scrollHeight);
+                    }}
+                    disabled={currentPage === totalPages - 1}
+                >
+                    <div className={style.animation} onClick={handleClickAnim}></div>
+                    {t('screener.table_buttons.pages.next')}
+                </button>
             </div>
         </>
     );
 };
 
 export default Pages;
-

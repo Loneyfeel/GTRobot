@@ -1,0 +1,35 @@
+{
+  "mainMenu": {
+    "title": "Main menu",
+    "buttons": {
+      "trading": "Trading instruments",
+      "bot_descr": "How the works",
+      "call": "Contact us",
+      "about": "About us",
+      "referal": "Referral"
+    }
+  },
+  "toolsMenu": {
+    "title": "Trading instruments",
+    "buttons": {
+      "analysis": "Analysis and signal",
+      "monitoring": "Monitoring"
+    }
+  },
+  "screener": {
+    "table_title": "Density screener on the Binance exchange",
+    "table_header": {
+      "name": "Coin",
+      "raz": "Power",
+      "price": "Price",
+      "cd": "Dens",
+      "dal": "Dist"
+    },
+    "table_buttons": {
+      "pages": {
+        "prev": "Prev",
+        "next": "Next"
+      }
+    }
+  }
+}

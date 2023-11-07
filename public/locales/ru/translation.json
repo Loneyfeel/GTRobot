@@ -1,0 +1,35 @@
+{
+  "mainMenu": {
+    "title": "Главное меню",
+    "buttons": {
+      "trading": "Торговые инструменты",
+      "bot_descr": "Про бота",
+      "call": "Связь",
+      "about": "О нас",
+      "referal": "Реферал"
+    }
+  },
+  "toolsMenu": {
+    "title": "Торговые инструменты",
+    "buttons": {
+      "analysis": "Аналитика и сигнал",
+      "monitoring": "Мониторинг"
+    }
+  },
+  "screener": {
+    "table_title": "Скринер плотностей на бирже Binance",
+    "table_header": {
+      "name": "Монета",
+      "raz": "Сила",
+      "price": "Цена",
+      "cd": "Плотн",
+      "dal": "Расст"
+    },
+    "table_buttons": {
+      "pages": {
+        "prev": "Пред",
+        "next": "След"
+      }
+    }
+  }
+}

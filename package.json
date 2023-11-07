@@ -9,7 +9,7 @@
     "lint": "eslint . --ext js,jsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview",
     "build:Screener": "npm run build src/pages/Screener_2.0",
-    "build:Menu": "npm run build src/pages/Menu",
+    "build:Menu": "npm run build src/pages/Tools Menu",
     "build:MainMenu": "npm run build src/pages/Main Menu"
   },
   "dependencies": {
@@ -21,9 +21,14 @@
     "@mui/material": "^5.14.16",
     "@mui/x-data-grid": "^6.18.0",
     "@vkruglikov/react-telegram-web-app": "^2.1.5",
+    "axios": "^1.6.0",
+    "i18next": "^23.6.0",
+    "i18next-browser-languagedetector": "^7.1.0",
+    "i18next-http-backend": "^2.3.1",
     "lightweight-charts": "^4.1.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-i18next": "^13.3.1",
     "sass": "^1.69.5"
   },
   "devDependencies": {

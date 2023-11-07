@@ -1,0 +1,35 @@
+{
+  "mainMenu": {
+    "title": "Asosiy menyu",
+    "buttons": {
+      "trading": "Savdo vositalari",
+      "bot_descr": "Bot qanday ishlaydi",
+      "call": "Bog'lanish",
+      "about": "Biz haqimizda",
+      "referal": "Yo'llanma"
+    }
+  },
+  "toolsMenu": {
+    "title": "Savdo vositalari",
+    "buttons": {
+      "analysis": "Tahlil va signal",
+      "monitoring": "Monitoring"
+    }
+  },
+  "screener": {
+    "table_title": "Binance birjasida zichlik skriningi",
+    "table_header": {
+      "name": "Tanga",
+      "raz": "Kuch",
+      "price": "Narxi",
+      "cd": "Zichl",
+      "dal": "Masofa"
+    },
+    "table_buttons": {
+      "pages": {
+        "prev": "Oldi",
+        "next": "Keyi"
+      }
+    }
+  }
+}

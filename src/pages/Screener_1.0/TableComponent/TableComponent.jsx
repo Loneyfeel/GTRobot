@@ -6,6 +6,7 @@ import Pages from "./Pages/index.js"
 import MiniTVwidget from './Mini-TVwidget/'
 import Chart from "../TradingViewWidget/TradingViewWidget.jsx"
 import style from './tableComponent.module.sass'
+import {useTranslation} from "react-i18next";
 
 const TableComponent = ({ data }) => {
     const [nameFilter, setNameFilter] = useState("")
@@ -51,6 +52,9 @@ const TableComponent = ({ data }) => {
     // Общее количество строк после фильтрации
     const totalRows = filteredData.length
 
+    //локализация
+    const {t, i18n} = useTranslation()
+
     return (
         <>
             <Chart />
@@ -66,7 +70,7 @@ const TableComponent = ({ data }) => {
                 <div className={style.table__header}>
                     <div className={style.table__title}>
                         <div className={style.title}>
-                            <p>Скринер плотностей на бирже Binance</p>
+                            <p>{t('screener.table_title')}:</p>
                         </div>
                         <div className={style.pagination}>
                             <Pagination
