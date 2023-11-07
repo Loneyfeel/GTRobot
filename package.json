@@ -7,11 +7,19 @@
     "dev": "vite",
     "build": "vite build",
     "lint": "eslint . --ext js,jsx --report-unused-disable-directives --max-warnings 0",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "build:Screener": "npm run build src/pages/Screener_2.0",
+    "build:Menu": "npm run build src/pages/Menu",
+    "build:MainMenu": "npm run build src/pages/Main Menu"
   },
   "dependencies": {
     "@ant-design/icons": "^5.2.6",
+    "@emotion/react": "^11.11.1",
+    "@emotion/styled": "^11.11.0",
+    "@mui/base": "^5.0.0-beta.22",
     "@mui/icons-material": "^5.14.16",
+    "@mui/material": "^5.14.16",
+    "@mui/x-data-grid": "^6.18.0",
     "@vkruglikov/react-telegram-web-app": "^2.1.5",
     "lightweight-charts": "^4.1.1",
     "react": "^18.2.0",
