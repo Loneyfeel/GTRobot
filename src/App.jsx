@@ -1,11 +1,13 @@
 import './App.css'
 
 // import Menu from "./pages/Tools Menu";
-import Screener from "./pages/Screener_1.0";
+import Screener from "./pages/Screener_2.0";
 // import MainMenu from "./pages/Main Menu/index.js";
 import {useTranslation} from "react-i18next";
 import {useEffect, useState} from "react";
 import axios from "axios";
+import { createTheme, ThemeProvider, styled } from '@mui/material/styles';
+import {useThemeParams} from "@vkruglikov/react-telegram-web-app";
 
 function App() {
 
@@ -31,11 +33,57 @@ function App() {
         i18n.changeLanguage(language); // Измените текущий язык
     }, [i18n, language]);
 
+    const [colorScheme, themeParams] = useThemeParams() //тг тема
+    const themeColor = ({
+        bg_color: themeParams.bg_color,
+        button_color: themeParams.button_color,
+        button_text_color: themeParams.button_text_color,
+        hint_color: themeParams.hint_color,
+        link_color: themeParams.link_color,
+        secondary_bg_color: themeParams.secondary_bg_color,
+        text_color: themeParams.text_color,
+    });
+
+    const theme = createTheme({
+        palette: {
+            primary: {
+                main: themeColor.button_color,
+            },
+            secondary: {
+                main: '#ffffff',
+            },
+            background: {
+                default: themeColor.bg_color,
+                paper: themeColor.secondary_bg_color,
+            },
+            text: {
+                primary: themeColor.text_color,
+            },
+            tableSortLabel: {
+                disableRipple: true,
+            },
+        },
+        components: {
+            MuiTableSortLabel: {
+                styleOverrides: {
+                    icon: {
+                        // Отключаем анимацию для иконки
+                        transition: 'none',
+                        filter: 'invert(0.5)',
+                        margin: '0',
+                        marginLeft: '2px'
+                    },
+                },
+            },
+        },
+    });
   return (
     <>
+        <ThemeProvider theme={theme}>
         {/*<MainMenu/>*/}
         {/*<Menu/>*/}
         <Screener/>
+        </ThemeProvider>
     </>
   )
 }

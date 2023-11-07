@@ -1,4 +1,3 @@
-import './filter.sass'
 import React, { useState, useEffect, useRef } from "react"
 import {formatNumber} from '../helps/FormatNumber/FormatNumber.js'
 import {Autocomplete} from "@mui/material";
@@ -6,6 +5,8 @@ import TextField from "@mui/material/TextField";
 import Select from "@mui/material/Select";
 import MenuItem from "@mui/material/MenuItem";
 import Button from "@mui/material/Button";
+import ResetButton from "../Table/Reset Buttons/index.js";
+import RotateLeftIcon from '@mui/icons-material/RotateLeft';
 
 const Filters = ({filteredData, filters, setFilters}) => {
 
@@ -23,18 +24,12 @@ const Filters = ({filteredData, filters, setFilters}) => {
 
     return (
         <>
-            <Button
+            <ResetButton
                 id="reset_filters"
-                variant="contained"
-                color="secondary"
-                onClick={() => {
-                    resetFilters();
-                    setIsFilteringActive(false);
-                }}
+                onClick={() => resetFilters()}
                 disabled={!isFilteringActive}
-            >
-                Сбросить фильтры
-            </Button>
+                children={<RotateLeftIcon/>}
+            />
             <Autocomplete
                 id="coinNameFilter"
                 options={filteredData.filter((item, index) => index % 2 === 1).map((item) => item.name)} // Фильтруем каждое второе название

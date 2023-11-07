@@ -102,15 +102,16 @@ const Table = ({ data, sorting, setSorting, rowsPerPage, page, openMiniTVwidget,
                 ? sortedData.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((item, index) => (
                     <tr key={index}>
                         <td className="chart">
+                            <div className="animation" onClick={handleClickAnim}>
                                 <button className="mini_graph" onClick={() => {
                                     onClose()
                                     setTimeout(() => {
                                         openMiniTVwidget(`${item.name}USDT`); // Открывает новое окно после задержки
                                     }, 0);
                                 }}>
-                                    <div className="animation" onClick={handleClickAnim}></div>
                                     <BarChartIcon className="mini_graph_icon"/>
                                 </button>
+                            </div>
                         </td>
                         <td><p
                             className={`${item.id === `${item.name}_ask` ? "name_red" : "name_green"}`}

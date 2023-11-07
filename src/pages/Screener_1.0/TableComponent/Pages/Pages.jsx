@@ -71,6 +71,7 @@ const Pages = ({ data, currentPage, setCurrentPage, rowsPerPage }) => {
     return (
         <>
             <div className={style.pages}>
+                <div className={style.animation} onClick={handleClickAnim}>
                 <button
                     className={`${style.pages__button_prev}`}
                     onClick={() => {
@@ -81,9 +82,9 @@ const Pages = ({ data, currentPage, setCurrentPage, rowsPerPage }) => {
                     }}
                     disabled={currentPage === 0}
                 >
-                    <div className={style.animation} onClick={handleClickAnim}></div>
                     {t('screener.table_buttons.pages.prev')}
                 </button>
+                </div>
                 <div className={style.table__pages}>
                     {pageNumbers.map((page, index) => (
                         <span key={index} onClick={() =>
@@ -93,6 +94,7 @@ const Pages = ({ data, currentPage, setCurrentPage, rowsPerPage }) => {
                         </span>
                     ))}
                 </div>
+                <div className={style.animation} onClick={handleClickAnim}>
                 <button
                     className={`${style.pages__button_next}`}
                     onClick={() => {
@@ -101,9 +103,10 @@ const Pages = ({ data, currentPage, setCurrentPage, rowsPerPage }) => {
                     }}
                     disabled={currentPage === totalPages - 1}
                 >
-                    <div className={style.animation} onClick={handleClickAnim}></div>
+
                     {t('screener.table_buttons.pages.next')}
                 </button>
+                </div>
             </div>
         </>
     );

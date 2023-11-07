@@ -51,6 +51,7 @@ const TableComponent = ({ data }) => {
     useEffect(() => {
         applyFiltersAndSorting();
     }, [filters, order, orderBy, data]);
+
     return (
         <>
             <Pagination
@@ -67,9 +68,9 @@ const TableComponent = ({ data }) => {
             />
             <Table
                 filteredData={filteredData}
-                page={0}
-                rowsPerPage={10}
-                orderBy={''}
+                page={page}
+                rowsPerPage={rowsPerPage}
+                orderBy={orderBy}
                 setOrderBy={setOrderBy}
                 order={order}
                 setOrder={setOrder}

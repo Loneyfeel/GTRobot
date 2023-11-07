@@ -6,11 +6,18 @@ import Table from '@mui/material/Table'
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import TableCell from "@mui/material/TableCell";
-import {TableSortLabel, Typography} from "@mui/material";
+import {IconButton, TableSortLabel, Typography} from "@mui/material";
 import TableBody from "@mui/material/TableBody";
 import Button from "@mui/material/Button";
+import HeaderTableCell from "./HeaderTableCell/index.js";
+import ResetButton from "./Reset Buttons/index.js";
+import BodyTableCell from "./BodyTableCell/index.js";
+import RotateLeftIcon from '@mui/icons-material/RotateLeft';
+import BarChartIcon from '@mui/icons-material/BarChart';
 
 const TableC = ({ filteredData, page, rowsPerPage, orderBy, setOrderBy, order, setOrder }) => {
+
+
     const [isSortingActive, setIsSortingActive] = useState(false);
 
     //нажатие сортировки
@@ -35,110 +42,221 @@ const TableC = ({ filteredData, page, rowsPerPage, orderBy, setOrderBy, order, s
         resetSorting(); // Сбрасываем сортировки при загрузке страницы
     }, []);
 
+    //для определения фона плотности
+    const getColorForCD = (cd) => {
+        if (cd >= 5000000) {
+            return "rgba(211, 47, 47, 0.8)";
+        } else if (cd >= 2000000) {
+            return "rgba(245, 124, 0, 0.8)";
+        } else if (cd >= 1000000) {
+            return "rgba(214, 202, 36, 0.8)";
+        } else if (cd >= 200000) {
+            return "rgba(203, 146, 66, 0.8)";
+        } else {
+            return "";
+        }
+    };
+    //для определения фона плотности
+    const getColorForDAL = (dal) => {
+        if (dal >= 5) {
+            return "rgba(45, 176, 25, 0.8)";
+        } else if (dal >= 2) {
+            return "rgba(224, 144, 22, 0.7)";
+        } else if (dal >= 1) {
+            return "rgba(224, 204, 22, 0.7)";
+        } else if (dal >= 0) {
+            return "rgba(88, 80, 28, 0.4)";
+        } else {
+            return "";
+        }
+    };
+
     return (
         <>
         <TableContainer component={Paper}
                         sx={{
                             overflow: "hidden",
+                            maxWidth: '100%',
+                            padding: '0',
                         }}
         >
-            <Table>
-                <TableHead>
-                    <TableRow>
-                        <TableCell>
-                            <Button
-                                id="reset_sorting"
-                                variant="contained"
-                                color="secondary"
+            <Table
+            sx={{
+
+            }}>
+                <TableHead
+                    sx={{
+                        display: 'flex',
+                    }}
+                >
+                    <TableRow
+                        sx={{
+                            minWidth: '100vw',
+                            height: '30px',
+                            display: 'flex',
+                            alignItems: 'center',
+                            flexDirection: 'flex-start',
+                        }}
+                    >
+                        <TableCell
+                        sx={{
+                            display: 'flex',
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            minWidth:'0',
+                            padding: '0',
+                            margin: '0 3px',
+                            width: '30px',
+                            height: '30px',
+                            borderBottom: 'none',
+                        }}>
+                            <ResetButton
+                                id={'reset_sorting'}
                                 onClick={() => resetSorting()}
                                 disabled={!isSortingActive}
-                            >
-                                Сбросить сортировку
-                            </Button>
+                                children={<RotateLeftIcon/>}
+                            />
                         </TableCell>
-                        <TableCell>
-                            <TableSortLabel
-                                active={orderBy === 'name'}
-                                direction={orderBy === 'name' ? order : 'asc'}
-                                onClick={() => handleSort('name')}
-                            >
-                                Монета
-                            </TableSortLabel>
-                        </TableCell>
-                        <TableCell>
+                        <HeaderTableCell
+                            active={orderBy === 'name'}
+                            direction={orderBy === 'name' ? order : 'asc'}
+                            onClick={() => handleSort('name')}
+                            children={'Монета'}
+                        />
+                        <TableCell
+                            sx={{
+                                minWidth:'60px',
+                                padding: '4px',
+                                paddingRight: '0',
+                                height: '30px',
+                                borderBottom: 'none',
+                                fontSize: '12px',
+                            }}
+                        >
                             <TableSortLabel
                                 active={orderBy === 'raz'}
                                 direction={orderBy === 'raz' ? order : 'asc'}
                                 onClick={() => handleSort('raz')}
+                                sx={{
+
+                                }}
                             >
                                 Сила
                             </TableSortLabel>
                         </TableCell>
-                        <TableCell>
-                            <TableSortLabel
-                                active={orderBy === 'price'}
-                                direction={orderBy === 'price' ? order : 'asc'}
-                                onClick={() => handleSort('price')}
-                            >
-                                Цена
-                            </TableSortLabel>
-                        </TableCell>
-                        <TableCell>
-                            <TableSortLabel
-                                active={orderBy === 'cd'}
-                                direction={orderBy === 'cd' ? order : 'asc'}
-                                onClick={() => handleSort('cd')}
-                            >
-                                Плотн
-                            </TableSortLabel>
-                        </TableCell>
-                        <TableCell>
-                            <TableSortLabel
-                                active={orderBy === 'dal'}
-                                direction={orderBy === 'dal' ? order : 'asc'}
-                                onClick={() => handleSort('dal')}
-                            >
-                                Расст
-                            </TableSortLabel>
-                        </TableCell>
+                        <HeaderTableCell
+                            active={orderBy === 'price'}
+                            direction={orderBy === 'price' ? order : 'asc'}
+                            onClick={() => handleSort('price')}
+                            children={'Цена'}
+                        />
+                        <HeaderTableCell
+                            active={orderBy === 'cd'}
+                            direction={orderBy === 'cd' ? order : 'asc'}
+                            onClick={() => handleSort('cd')}
+                            children={'Плотн'}
+                        />
+                        <HeaderTableCell
+                            active={orderBy === 'dal'}
+                            direction={orderBy === 'dal' ? order : 'asc'}
+                            onClick={() => handleSort('dal')}
+                            children={'Расст'}
+                        />
                     </TableRow>
                 </TableHead>
                 <TableBody>
                     {filteredData.slice(page * rowsPerPage, (page + 1) * rowsPerPage).map((item) => (
                         <TableRow
+                            sx={{
+                                minWidth: '100vw',
+                                height: '30px',
+                                display: 'flex',
+                                alignItems: 'center',
+                                flexDirection: 'flex-start',
+                                borderBottom: '1px solid var(--tg-theme-button-color)',
+                            }}
                             key={item.id}
                         >
-                            <TableCell></TableCell>
                             <TableCell
-
+                                sx={{
+                                    display: 'flex',
+                                    justifyContent: 'center',
+                                    alignItems: 'center',
+                                    minWidth:'0',
+                                    padding: '0',
+                                    margin: '0 3px',
+                                    width: '30px',
+                                    height: '30px',
+                                    borderBottom: 'none',
+                                }}
                             >
-                                <Typography
-                                    style={{ backgroundColor: item.id === `${item.name}_ask` ? 'red' : 'green' }}
-                                    p={0}
-                                    textAlign="center"
-                                >
-                                    {item.name}
-                                </Typography>
+                                <IconButton
+                                sx={{
+                                    minWidth:'0',
+                                    padding: '0',
+                                    width: '30px',
+                                    color: 'primary.main'
+                                }}>
+                                    <BarChartIcon/>
+                                </IconButton>
                             </TableCell>
-                            <TableCell>{item.raz}</TableCell>
-                            <TableCell>{item.price}</TableCell>
-                            <TableCell>{item.cd}</TableCell>
-                            {/*<p*/}
-                            {/*    className={`${*/}
-                            {/*        item.cd >= 5000000*/}
-                            {/*            ? "density_red"*/}
-                            {/*            : item.cd >= 2000000*/}
-                            {/*                ? "density_orange"*/}
-                            {/*                : item.cd >= 1000000*/}
-                            {/*                    ? "density_yellow"*/}
-                            {/*                    : item.cd >= 200000*/}
-                            {/*                        ? "density_brown"*/}
-                            {/*                        : ""*/}
-                            {/*    }`}*/}
-                            {/*>*/}
-                            {/*    {formatNumber(item.cd)}*/}
-                            {/*</p>*/}
-                            <TableCell>{item.dal}</TableCell>
+                            <BodyTableCell
+                                children={
+                                    <Typography
+                                        sx={{
+                                            backgroundColor: item.id === `${item.name}_ask` ? 'rgba(227, 45, 45, 0.8)' : 'rgba(59, 196, 37, 0.8)',
+                                            padding: '0 2px',
+                                            fontSize: '14px'
+                                        }}
+                                        textAlign="left"
+                                    >
+                                        {item.name}
+                                    </Typography>
+                                }
+                            />
+                            <TableCell
+                                sx={{
+                                    minWidth:'60px',
+                                    padding: '4px 7px',
+                                    height: '30px',
+                                    borderBottom: 'none',
+                                    fontSize: '14px',
+                                }}
+                            >
+                                {item.raz}
+                            </TableCell>
+                            <BodyTableCell
+                                children={item.price}
+                            />
+                            <BodyTableCell
+                                children={
+                                    <Typography
+                                       sx={{
+                                           textAlign: 'right',
+                                           fontSize: '12px',
+                                           backgroundColor: getColorForCD(item.cd),
+                                           padding: '0 2px'
+                                       }}
+                                    >
+                                        {formatNumber(item.cd)}
+                                    </Typography>
+                            }
+                            />
+                            <BodyTableCell
+                                children={
+                                    <Typography
+                                        sx={{
+                                            textAlign: 'right',
+                                            fontSize: '12px',
+                                            backgroundColor: getColorForDAL(item.dal),
+                                            padding: '0 2px'
+                                        }}
+                                    >
+                                        {`${item.dal}%`}
+                                    </Typography>
+                                }
+
+                            />
                         </TableRow>
                     ))}
                 </TableBody>
