@@ -25,7 +25,7 @@ function App() {
             });
     }, []); // useEffect выполняется при монтировании компонента
 
-    // const language = 'uz'
+    // const language = 'en'
 
     //локализация
     const {t, i18n} = useTranslation()
@@ -50,7 +50,7 @@ function App() {
                 main: themeColor.button_color,
             },
             secondary: {
-                main: '#ffffff',
+                main: themeColor.secondary_bg_color,
             },
             background: {
                 default: themeColor.bg_color,

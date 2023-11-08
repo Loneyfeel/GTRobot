@@ -16,9 +16,24 @@ const Pages = ({filteredData, rowsPerPage, page, setPage}) => {
                 }}
                 variant="outlined"
                 shape="rounded"
-                showFirstButton
-                showLastButton
                 siblingCount={2}
+                sx={{
+                    padding: '5px 0',
+                    backgroundColor: 'var(--tg-theme-secondary-bg-color)',
+                    '& .MuiPaginationItem-root': {
+                        backgroundColor: 'var(--tg-theme-bg-color)',
+                        padding: '2px',
+                        margin: '0 1px',
+                        minWidth: '25px',
+                        height: '30px',
+                        borderRadius: '5px'
+                    },
+                    '& .MuiPagination-ul': {
+                        display: 'flex',
+                        justifyContent: 'space-between',
+                    },
+            }}
+                color="primary"
             />
         </>
     );

@@ -22,7 +22,7 @@ const Screener = () => {
                     // Применить formatWordToNumber к полю cd в каждом элементе массива, тк
                     const dataWithFormattedCD = apiData.map(item => {
                         const cd = formatWordToNumber(item.cd)
-                        return { ...item, cd }
+                        return {...item, cd}
                     })
                     // Обновить состояние setData с данными, в которых cd уже отформатирован
                     setData(dataWithFormattedCD)
@@ -33,6 +33,7 @@ const Screener = () => {
                 console.error('Ошибка при получении данных: ', error)
             }
         }
+
         fetchData()
         // Установка интервала для обновления данных каждые 5 секунд
         const intervalId = setInterval(fetchData, 5000)
@@ -41,9 +42,7 @@ const Screener = () => {
     }, [])
     return (
         <>
-            {/*<div className={style.screener}>*/}
-                <TableComponent data={data}/>
-            {/*</div>*/}
+            <TableComponent data={data}/>
         </>
     )
 }

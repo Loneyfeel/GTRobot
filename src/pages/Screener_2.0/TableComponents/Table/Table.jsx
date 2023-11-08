@@ -14,8 +14,9 @@ import ResetButton from "./Reset Buttons/index.js";
 import BodyTableCell from "./BodyTableCell/index.js";
 import RotateLeftIcon from '@mui/icons-material/RotateLeft';
 import BarChartIcon from '@mui/icons-material/BarChart';
+import {useTranslation} from "react-i18next";
 
-const TableC = ({ filteredData, page, rowsPerPage, orderBy, setOrderBy, order, setOrder }) => {
+const TableC = ({ filteredData, page, rowsPerPage, orderBy, setOrderBy, order, setOrder, openMiniTVwidget, onClose }) => {
 
 
     const [isSortingActive, setIsSortingActive] = useState(false);
@@ -71,6 +72,8 @@ const TableC = ({ filteredData, page, rowsPerPage, orderBy, setOrderBy, order, s
         }
     };
 
+    const {t, i18n} = useTranslation()
+
     return (
         <>
         <TableContainer component={Paper}
@@ -78,11 +81,15 @@ const TableC = ({ filteredData, page, rowsPerPage, orderBy, setOrderBy, order, s
                             overflow: "hidden",
                             maxWidth: '100%',
                             padding: '0',
+                            borderRadius: '0',
                         }}
         >
             <Table
             sx={{
-
+                display: 'flex',
+                flexDirection: 'column',
+                borderRadius: '0',
+                minHeight: '50vh'
             }}>
                 <TableHead
                     sx={{
@@ -94,6 +101,7 @@ const TableC = ({ filteredData, page, rowsPerPage, orderBy, setOrderBy, order, s
                             minWidth: '100vw',
                             height: '30px',
                             display: 'flex',
+                            justifyContent: 'space-between',
                             alignItems: 'center',
                             flexDirection: 'flex-start',
                         }}
@@ -121,7 +129,7 @@ const TableC = ({ filteredData, page, rowsPerPage, orderBy, setOrderBy, order, s
                             active={orderBy === 'name'}
                             direction={orderBy === 'name' ? order : 'asc'}
                             onClick={() => handleSort('name')}
-                            children={'Монета'}
+                            children={t('screener.table_header.name')}
                         />
                         <TableCell
                             sx={{
@@ -141,26 +149,26 @@ const TableC = ({ filteredData, page, rowsPerPage, orderBy, setOrderBy, order, s
 
                                 }}
                             >
-                                Сила
+                                {t('screener.table_header.raz')}
                             </TableSortLabel>
                         </TableCell>
                         <HeaderTableCell
                             active={orderBy === 'price'}
                             direction={orderBy === 'price' ? order : 'asc'}
                             onClick={() => handleSort('price')}
-                            children={'Цена'}
+                            children={t('screener.table_header.price')}
                         />
                         <HeaderTableCell
                             active={orderBy === 'cd'}
                             direction={orderBy === 'cd' ? order : 'asc'}
                             onClick={() => handleSort('cd')}
-                            children={'Плотн'}
+                            children={t('screener.table_header.cd')}
                         />
                         <HeaderTableCell
                             active={orderBy === 'dal'}
                             direction={orderBy === 'dal' ? order : 'asc'}
                             onClick={() => handleSort('dal')}
-                            children={'Расст'}
+                            children={t('screener.table_header.dal')}
                         />
                     </TableRow>
                 </TableHead>
@@ -171,6 +179,7 @@ const TableC = ({ filteredData, page, rowsPerPage, orderBy, setOrderBy, order, s
                                 minWidth: '100vw',
                                 height: '30px',
                                 display: 'flex',
+                                justifyContent: 'space-between',
                                 alignItems: 'center',
                                 flexDirection: 'flex-start',
                                 borderBottom: '1px solid var(--tg-theme-button-color)',
@@ -196,6 +205,12 @@ const TableC = ({ filteredData, page, rowsPerPage, orderBy, setOrderBy, order, s
                                     padding: '0',
                                     width: '30px',
                                     color: 'primary.main'
+                                }}
+                                onClick={() => {
+                                    onClose()
+                                    setTimeout(() => {
+                                        openMiniTVwidget(`${item.name}USDT`); // Открывает новое окно после задержки
+                                    }, 0);
                                 }}>
                                     <BarChartIcon/>
                                 </IconButton>

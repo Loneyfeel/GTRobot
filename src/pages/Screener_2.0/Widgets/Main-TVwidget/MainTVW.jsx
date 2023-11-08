@@ -1,6 +1,7 @@
 import style from './mainTVW.module.sass'
 import React, {useEffect, useRef} from "react"
 import { useThemeParams } from '@vkruglikov/react-telegram-web-app'
+import {useTranslation} from "react-i18next";
 
 let tvScriptLoadingPromise;
 export default function MainTVW() {
@@ -16,6 +17,7 @@ export default function MainTVW() {
     });
 
     const onLoadScriptRef = useRef();
+    const {t, i18n} = useTranslation()
     useEffect(
         () => {
             onLoadScriptRef.current = createWidget;
@@ -44,7 +46,7 @@ export default function MainTVW() {
                         timezone: "Etc/UTC",
                         theme: `${colorScheme}`,
                         style: "1",
-                        locale: "ru",
+                        locale: `${t('screener.chart_lang')}`,
                         enable_publishing: false,
                         backgroundColor: `${themeColor.bg_color}`,
                         hide_legend: true,
@@ -63,8 +65,6 @@ export default function MainTVW() {
     );
 
     return (
-        <div className={style.tradingview_widget_container}>
             <div id='tradingview_a741a'/>
-        </div>
     )
 }

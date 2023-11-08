@@ -12,8 +12,8 @@ const ResetButton = ({id, onClick, disabled, children}) => {
                 disabled={disabled}
                 sx={{
                     color: 'primary.dark',
-                    minWidth: '0px',
-                    maxWidth: '30px',
+                    minWidth: '35px',
+                    maxWidth: '35px',
                     padding: '0 3px',
                 }}
             >

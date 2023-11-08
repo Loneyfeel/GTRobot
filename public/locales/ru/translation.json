@@ -25,11 +25,6 @@
       "cd": "Плотн",
       "dal": "Расст"
     },
-    "table_buttons": {
-      "pages": {
-        "prev": "Пред",
-        "next": "След"
-      }
-    }
+    "chart_lang": "ru"
   }
 }

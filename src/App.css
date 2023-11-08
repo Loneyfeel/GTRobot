@@ -1,11 +1,6 @@
 @import './shared/reset.css';
 
-input,
-textarea,
-button,
-select,
-a,
-span
+*
 {
     -webkit-tap-highlight-color: transparent; /*это чтобы не было синего выделения при нажатии*/
 }
