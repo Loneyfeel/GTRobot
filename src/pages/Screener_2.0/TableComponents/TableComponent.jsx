@@ -1,14 +1,16 @@
 import React, {useEffect, useState} from 'react';
-import Pagination from "./Pagination/index.js";
-import Filters from "./Filters/index.js";
-import Pages from "./Pages/index.js";
-import Table from "./Table/index.js";
 import {Box, Paper, Typography} from "@mui/material";
+
+import Pagination from "./Pagination";
+import Filters from "./Filters";
+import Pages from "./Pages";
+import Table from "./Table";
 import MainTVW from "../Widgets/Main-TVwidget";
 import MiniTVW from "../Widgets/Mini-TVwidget";
+
 import {useTranslation} from "react-i18next";
 
-const TableComponent = ({ data }) => {
+const TableComponent = React.memo(({ data }) => {
     const [filteredData, setFilteredData] = useState(data);
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(10);
@@ -85,7 +87,10 @@ const TableComponent = ({ data }) => {
                     backgroundColor: 'var(--tg-theme-bg-color)',
                     borderRadius: '0'
                 }}>
-                <Box>
+                <Box
+                sx={{
+                    height: '300px'
+                }}>
                     {isMiniTVwidgetVisible &&
                         <MiniTVW
                             symbol={selectedSymbol}
@@ -136,6 +141,6 @@ const TableComponent = ({ data }) => {
             </Paper>
         </>
     );
-}
+})
 
 export default TableComponent;

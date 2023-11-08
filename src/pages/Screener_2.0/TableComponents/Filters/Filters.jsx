@@ -1,16 +1,9 @@
 import React, { useState, useEffect, useRef } from "react";
 import { formatNumber } from '../helps/FormatNumber/FormatNumber.js';
-import {Autocomplete, Box, Paper} from "@mui/material";
-import TextField from "@mui/material/TextField";
-import Select from "@mui/material/Select";
-import MenuItem from "@mui/material/MenuItem";
-import Button from "@mui/material/Button";
-import ResetButton from "../Table/Reset Buttons/index.js";
+import {MenuItem, Box} from "@mui/material";
 import RotateLeftIcon from '@mui/icons-material/RotateLeft';
-import FiltersSelect from "./FiltersSelect/index.js";
-import { useAutocomplete } from '@mui/base';
-import { styled } from '@mui/system';
-import '../../../Screener_1.0/TableComponent/Filters/filter.sass';
+import ResetButton from "../Table/Reset Buttons";
+import FiltersSelect from "./FiltersSelect";
 import FilterName from "./FilterName";
 
 const Filters = ({ filteredData, filters, setFilters }) => {

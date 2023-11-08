@@ -11,3 +11,6 @@ html {
 body{
     color: var(--tg-theme-text-color);
 }
+body::-webkit-scrollbar {
+    display: none;
+}

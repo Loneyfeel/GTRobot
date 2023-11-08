@@ -1,6 +1,5 @@
 import React from 'react';
 import Select from "@mui/material/Select";
-import MenuItem from "@mui/material/MenuItem";
 
 const FiltersSelect = ({ label, variable, filters, setFilters, setIsFilteringActive, children }) => {
     return (

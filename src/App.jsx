@@ -6,16 +6,18 @@ import Screener from "./pages/Screener_2.0";
 import {useTranslation} from "react-i18next";
 import {useEffect, useState} from "react";
 import axios from "axios";
-import { createTheme, ThemeProvider, styled } from '@mui/material/styles';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
 import {useThemeParams} from "@vkruglikov/react-telegram-web-app";
 
 function App() {
 
-    const userId = "tg.initDataUnsafe.user.id"; // Установите значение userId
-    const [language, setLanguage] = useState()
+    const proxy = 'https://corsproxy.io/?'
+
+    const userId = "tg.initDataUnsafe.user.language_code" // Установите значение userId
+    const [language, setLanguage] = useState('en')
     useEffect(() => {
         const data = { userId };
-        axios.post('https://gtrobot.ngrok.dev/api/user-locale', data)
+        axios.post(`${proxy}https://gtrobot.ngrok.dev/api/user-locale`, data)
             .then((response) => {
                 setLanguage(response.data); // Получить значение language из ответа
                 console.log('Полученный язык:', language);
@@ -31,7 +33,7 @@ function App() {
     const {t, i18n} = useTranslation()
     useEffect(() => {
         i18n.changeLanguage(language); // Измените текущий язык
-    }, [i18n, language]);
+    }, [i18n, language])
 
     const [colorScheme, themeParams] = useThemeParams() //тг тема
     const themeColor = ({

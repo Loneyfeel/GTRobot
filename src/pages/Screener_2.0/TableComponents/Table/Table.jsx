@@ -1,22 +1,17 @@
 import React, {useEffect, useState} from "react"
-import { formatNumber } from '../helps/FormatNumber/FormatNumber.js'
-import TableContainer from "@mui/material/TableContainer";
-import Paper from "@mui/material/Paper";
-import Table from '@mui/material/Table'
-import TableHead from "@mui/material/TableHead";
-import TableRow from "@mui/material/TableRow";
-import TableCell from "@mui/material/TableCell";
-import {IconButton, TableSortLabel, Typography} from "@mui/material";
-import TableBody from "@mui/material/TableBody";
-import Button from "@mui/material/Button";
-import HeaderTableCell from "./HeaderTableCell/index.js";
-import ResetButton from "./Reset Buttons/index.js";
-import BodyTableCell from "./BodyTableCell/index.js";
+
+import {TableContainer, Paper, Table, TableHead, TableRow, TableCell, IconButton, TableSortLabel, Typography, TableBody, } from "@mui/material";
 import RotateLeftIcon from '@mui/icons-material/RotateLeft';
 import BarChartIcon from '@mui/icons-material/BarChart';
+
+import { formatNumber } from '../helps/FormatNumber/FormatNumber.js'
+import HeaderTableCell from "./HeaderTableCell";
+import ResetButton from "./Reset Buttons";
+import BodyTableCell from "./BodyTableCell";
+
 import {useTranslation} from "react-i18next";
 
-const TableC = ({ filteredData, page, rowsPerPage, orderBy, setOrderBy, order, setOrder, openMiniTVwidget, onClose }) => {
+const TableScreener = ({ filteredData, page, rowsPerPage, orderBy, setOrderBy, order, setOrder, openMiniTVwidget, onClose }) => {
 
 
     const [isSortingActive, setIsSortingActive] = useState(false);
@@ -79,7 +74,7 @@ const TableC = ({ filteredData, page, rowsPerPage, orderBy, setOrderBy, order, s
         <TableContainer component={Paper}
                         sx={{
                             overflow: "hidden",
-                            maxWidth: '100%',
+                            maxWidth: '100vw',
                             padding: '0',
                             borderRadius: '0',
                         }}
@@ -89,7 +84,7 @@ const TableC = ({ filteredData, page, rowsPerPage, orderBy, setOrderBy, order, s
                 display: 'flex',
                 flexDirection: 'column',
                 borderRadius: '0',
-                minHeight: '50vh'
+                minHeight: '50vh',
             }}>
                 <TableHead
                     sx={{
@@ -281,4 +276,4 @@ const TableC = ({ filteredData, page, rowsPerPage, orderBy, setOrderBy, order, s
     )
 }
 
-export default TableC
+export default TableScreener

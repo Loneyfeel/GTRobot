@@ -2,44 +2,41 @@
 import React, {useEffect, useState} from 'react'
 import TableComponent from "./TableComponents/index.js";
 import {formatWordToNumber} from "./TableComponents/helps/FormatNumber/FormatNumber.js";
+import axios from "axios";
 
 
 const proxy = 'https://corsproxy.io/?'
 
 const Screener = () => {
     const [data, setData] = useState([])
-    useEffect(() => {
-        async function fetchData() {
-            try {
-                const response = await fetch(`${proxy}https://gtrobot.ngrok.dev/api/screener`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                })
-                if (response.ok) {
-                    const apiData = await response.json()
-                    // Применить formatWordToNumber к полю cd в каждом элементе массива, тк
-                    const dataWithFormattedCD = apiData.map(item => {
-                        const cd = formatWordToNumber(item.cd)
-                        return {...item, cd}
-                    })
-                    // Обновить состояние setData с данными, в которых cd уже отформатирован
-                    setData(dataWithFormattedCD)
-                } else {
-                    console.error('Ошибка при получении данных')
+    const fetchData = async () => {
+        try {
+            const response = await axios.post(`${proxy}https://gtrobot.ngrok.dev/api/screener`, {}, {
+                headers: {
+                    'Content-Type': 'application/json',
                 }
-            } catch (error) {
-                console.error('Ошибка при получении данных: ', error)
+            });
+            if (response.status === 200) {
+                const apiData = response.data;
+                const dataWithFormattedCD = apiData.map(item => ({
+                    ...item,
+                    cd: formatWordToNumber(item.cd),
+                }));
+                setData(dataWithFormattedCD);
+            } else {
+                console.error('Ошибка при получении данных');
             }
+        } catch (error) {
+            console.error('Ошибка при получении данных: ', error);
         }
+    };
 
-        fetchData()
-        // Установка интервала для обновления данных каждые 5 секунд
-        const intervalId = setInterval(fetchData, 5000)
-        // Очистка интервала при размонтировании компонента
-        return () => clearInterval(intervalId)
-    }, [])
+    useEffect(() => {
+        fetchData();
+        const intervalId = setInterval(fetchData, 5000);
+        return () => clearInterval(intervalId);
+    }, []);
+
     return (
         <>
             <TableComponent data={data}/>

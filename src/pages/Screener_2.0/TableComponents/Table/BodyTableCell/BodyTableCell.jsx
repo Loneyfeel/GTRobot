@@ -1,6 +1,5 @@
 import React from 'react';
 
-import TableSortLabel from '@mui/material/TableSortLabel';
 import TableCell from "@mui/material/TableCell";
 
 const BodyTableCell = ({ children }) => (
