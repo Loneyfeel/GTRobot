@@ -96,9 +96,9 @@ function App() {
     <>
         <ThemeProvider theme={theme}>
             <MainMenu/>
-            {/*<ToolsMeЯЯnu/>*/}
-            {/*<Screener/>*/}
-            {/*<Forex/>*/}
+            <ToolsMenu/>
+            <Screener/>
+            <Forex/>
         </ThemeProvider>
     </>
   )
