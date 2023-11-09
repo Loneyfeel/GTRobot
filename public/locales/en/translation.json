@@ -26,5 +26,20 @@
       "dal": "Dist"
     },
     "chart_lang": "en"
+  },
+  "forex": {
+    "auth":{
+      "title": "Log in to your Forex account",
+      "form": {
+        "login": "Login",
+        "password": "Password",
+        "server": "Server"
+      },
+      "button_logIn": "Log In",
+      "button_logOut": "Log Out"
+    },
+    "settings": {
+      "title": "Switching Autotrading to Forex"
+    }
   }
 }

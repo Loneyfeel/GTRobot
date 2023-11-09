@@ -26,5 +26,20 @@
       "dal": "Masofa"
     },
     "chart_lang": "uz"
+  },
+  "forex": {
+    "auth":{
+      "title": "Forex hisobiga kirish",
+      "form": {
+        "login": "Login",
+        "password": "Parol",
+        "server": "Server"
+      },
+      "button_logIn": "Kirish",
+      "button_logOut": "Chiqish"
+    },
+    "settings": {
+      "title": "Forex avtomobil savdosini almashtirish"
+    }
   }
 }

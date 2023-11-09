@@ -1,12 +1,13 @@
-import React, {useEffect, useState} from 'react';
+import React, {lazy, useEffect, useState} from 'react';
 import {Box, Paper, Typography} from "@mui/material";
 
-import Pagination from "./Pagination";
-import Filters from "./Filters";
-import Pages from "./Pages";
 import Table from "./Table";
-import MainTVW from "../Widgets/Main-TVwidget";
-import MiniTVW from "../Widgets/Mini-TVwidget";
+
+const Pagination = lazy(() => import('./Pagination'));
+const Pages = lazy(() => import('./Pages'));
+const Filters = lazy(() => import('./Filters'));
+const MiniTVW = lazy(() => import('../Widgets/Mini-TVwidget'));
+const MainTVW = lazy(() => import('../Widgets/Main-TVwidget'));
 
 import {useTranslation} from "react-i18next";
 
@@ -78,7 +79,7 @@ const TableComponent = React.memo(({ data }) => {
         setIsMiniTVwidgetVisible(false)
     };
 
-    const {t, i18n} = useTranslation()
+    const {t} = useTranslation()
 
     return (
         <>

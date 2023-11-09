@@ -26,5 +26,20 @@
       "dal": "Расст"
     },
     "chart_lang": "ru"
+  },
+  "forex": {
+    "auth":{
+      "title": "Вход в аккаунт Forex",
+      "form": {
+        "login": "Логин",
+        "password": "Пароль",
+        "server": "Сервер"
+      },
+      "button_logIn": "Войти",
+      "button_logOut": "Выйти"
+    },
+    "settings": {
+      "title": "Переключение автотрейдинга на Форекс"
+    }
   }
 }
