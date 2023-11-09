@@ -1,11 +1,17 @@
-import React from 'react';
+import React, {lazy} from 'react';
 import MainButton from "./MainButton";
 
-import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
-import HomeRepairServiceRoundedIcon from '@mui/icons-material/HomeRepairServiceRounded';
-import SmartToyRoundedIcon from '@mui/icons-material/SmartToyRounded';
-import MessageRoundedIcon from '@mui/icons-material/MessageRounded';
-import PersonAddAltRoundedIcon from '@mui/icons-material/PersonAddAltRounded';
+// import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
+// import HomeRepairServiceRoundedIcon from '@mui/icons-material/HomeRepairServiceRounded';
+// import SmartToyRoundedIcon from '@mui/icons-material/SmartToyRounded';
+// import MessageRoundedIcon from '@mui/icons-material/MessageRounded';
+// import PersonAddAltRoundedIcon from '@mui/icons-material/PersonAddAltRounded';
+
+const InfoOutlinedIcon = lazy(() => import('@mui/icons-material/InfoOutlined'));
+const HomeRepairServiceRoundedIcon = lazy(() => import('@mui/icons-material/HomeRepairServiceRounded'));
+const SmartToyRoundedIcon = lazy(() => import('@mui/icons-material/SmartToyRounded'));
+const MessageRoundedIcon = lazy(() => import('@mui/icons-material/MessageRounded'));
+const PersonAddAltRoundedIcon = lazy(() => import('@mui/icons-material/PersonAddAltRounded'));
 
 import { useTranslation } from "react-i18next";
 import {Box} from "@mui/material";

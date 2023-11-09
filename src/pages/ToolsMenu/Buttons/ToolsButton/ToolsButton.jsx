@@ -58,6 +58,8 @@ function ToolsButton({icon, text, url}) {
                 </Typography>
                 <Box
                     sx={{
+                        display: 'flex',
+                        alignItems: 'center',
                         width: '35px',
                         color: 'var(--tg-theme-button-color)'
                     }}>

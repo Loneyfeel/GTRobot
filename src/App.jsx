@@ -1,9 +1,9 @@
 import './App.css'
 
-import ToolsMenu from "./pages/ToolsMenu";
-import Screener from "./pages/Screener_2.0";
 import MainMenu from "./pages/MainMenu";
-import Forex from "./pages/ForexSettins/index.js";
+// import ToolsMenu from "./pages/ToolsMenu";
+// import Screener from "./pages/Screener";
+// import Forex from "./pages/ForexSettins";
 
 import {useTranslation} from "react-i18next";
 import {useEffect, useState} from "react";
@@ -13,36 +13,36 @@ import {useThemeParams} from "@vkruglikov/react-telegram-web-app";
 
 function App() {
     const [loading, setLoading] = useState(true);
+    const [language, setLanguage] = useState('');
 
-    const proxy = 'https://corsproxy.io/?'
+    const proxy = 'https://corsproxy.io/?';
+    const userId = window.Telegram.WebApp.initDataUnsafe.user.id;
 
-    const userId = window.Telegram.WebApp.initDataUnsafe.user.id // значение userId
-    const [language, setLanguage] = useState('')
-    const fetchUserLanguage = () => {
-        const data = { userId };
-        axios.post(`${proxy}https://gtrobot.ngrok.dev/api/user-locale`, data)
-            .then((response) => {
-                setLanguage(response.data);
-                console.log('Полученный язык:', response.data);
-            })
-            .catch((error) => {
-                console.error('Произошла ошибка при выполнении POST-запроса:', error);
-            })
-            .finally(
-                setLoading(false)
-            )
-    };
-
-
-
-    //локализация
-    const {i18n} = useTranslation()
     useEffect(() => {
-        fetchUserLanguage()
+        const fetchUserLanguage = async () => {
+            try {
+                const response = await axios.post(`${proxy}https://gtrobot.ngrok.dev/api/user-locale`, { userId });
+                setLanguage(response.data);
+                setLoading(false);
+                console.log('Полученный язык:', response.data);
+            } catch (error) {
+                console.error('Произошла ошибка при выполнении POST-запроса:', error);
+            }
+        };
+
+        if (loading) {
+            fetchUserLanguage();
+        }
+    }, [loading]); // Выполняется только при изменении loading
+
+// Локализация
+    const { i18n } = useTranslation();
+    useEffect(() => {
+        const updateLanguage = async () => {
+            await i18n.changeLanguage(language);
+        };
+
         if (!loading) {
-            const updateLanguage = async () => {
-                await i18n.changeLanguage(language);
-            };// Измените текущий язык
             updateLanguage();
         }
     }, [i18n, language, loading]);
@@ -96,9 +96,9 @@ function App() {
     <>
         <ThemeProvider theme={theme}>
             <MainMenu/>
-            <ToolsMenu/>
-            <Screener/>
-            <Forex/>
+            {/*<ToolsMenu/>*/}
+            {/*<Screener/>*/}
+            {/*<Forex/>*/}
         </ThemeProvider>
     </>
   )

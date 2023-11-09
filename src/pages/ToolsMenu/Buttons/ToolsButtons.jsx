@@ -5,7 +5,7 @@ import {Box} from "@mui/material";
 import ToolsButton from "./ToolsButton";
 
 function ToolsButtons() {
-    const {t} = useTranslation()
+    const {t, i18n} = useTranslation()
 
     return (
         <>

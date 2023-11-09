@@ -58,6 +58,8 @@ const MainButton = ({icon, text, url}) => {
                 </Typography>
                 <Box
                 sx={{
+                    display: 'flex',
+                    alignItems: 'center',
                     color: 'var(--tg-theme-button-color)'
                 }}>
                     <KeyboardArrowRightOutlinedIcon />
