@@ -1,9 +1,9 @@
 import './App.css'
 
 import MainMenu from "./pages/MainMenu";
-// import ToolsMenu from "./pages/ToolsMenu";
-// import Screener from "./pages/Screener";
-// import Forex from "./pages/ForexSettins";
+import ToolsMenu from "./pages/ToolsMenu";
+import Screener from "./pages/Screener";
+import Forex from "./pages/ForexSettins";
 
 import {useTranslation} from "react-i18next";
 import {useEffect, useState} from "react";
@@ -96,9 +96,9 @@ function App() {
     <>
         <ThemeProvider theme={theme}>
             <MainMenu/>
-            {/*<ToolsMenu/>*/}
-            {/*<Screener/>*/}
-            {/*<Forex/>*/}
+            <ToolsMenu/>
+            <Screener/>
+            <Forex/>
         </ThemeProvider>
     </>
   )

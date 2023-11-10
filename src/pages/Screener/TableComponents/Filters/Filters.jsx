@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { formatNumber } from '../helps/FormatNumber/FormatNumber.js';
 import {MenuItem, Box} from "@mui/material";
 import RotateLeftIcon from '@mui/icons-material/RotateLeft';
-import ResetButton from "../Table/Reset Buttons";
+import ResetButton from "../Reset Buttons";
 import FiltersSelect from "./FiltersSelect";
 import FilterName from "./FilterName";
 
@@ -85,7 +85,6 @@ const Filters = ({ filteredData, filters, setFilters }) => {
                     <Box
                         sx={{
                             display: 'flex',
-                            justifyContent: 'space-between'
                         }}>
                         <FiltersSelect
                             label="CD Filter"

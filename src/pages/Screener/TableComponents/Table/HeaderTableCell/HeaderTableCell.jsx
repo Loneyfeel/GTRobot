@@ -20,7 +20,15 @@ const HeaderTableCell = ({ active, direction, onClick, children }) => {
                 direction={direction}
                 onClick={onClick}
                 sx={{
-
+                    "&:focus":{
+                        color: 'var(--tg-theme-text-color)'
+                    },
+                    "&:hover":{
+                        color: 'var(--tg-theme-text-color)'
+                    },
+                    "&:active":{
+                        color: 'var(--tg-theme-text-color)'
+                    }
                 }}
             >
                 {children}

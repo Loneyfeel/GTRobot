@@ -15,8 +15,10 @@ const FiltersSelect = ({ label, variable, filters, setFilters, setIsFilteringAct
                     height: '30px',
                     width: '55px',
                     fontSize: '12px',
-                    marginRight: '10px',
+                    marginRight: '12px',
                     backgroundColor: 'var(--tg-theme-bg-color)',
+                    borderRadius: '5px',
+                    border: '1px solid var(--tg-theme-button-color)',
                     "& .MuiSelect-icon": {
                         color: "var(--tg-theme-button-color)",
                     },

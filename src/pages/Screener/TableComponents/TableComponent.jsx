@@ -7,7 +7,6 @@ const Pagination = lazy(() => import('./Pagination'));
 const Pages = lazy(() => import('./Pages'));
 const Filters = lazy(() => import('./Filters'));
 const MiniTVW = lazy(() => import('../Widgets/Mini-TVwidget'));
-const MainTVW = lazy(() => import('../Widgets/Main-TVwidget'));
 
 import {useTranslation} from "react-i18next";
 
@@ -63,10 +62,10 @@ const TableComponent = React.memo(({ data }) => {
 
 
     // состояние для отображения/скрытия MiniTVwidget
-    const [isMiniTVwidgetVisible, setIsMiniTVwidgetVisible] = useState(false)
+    const [isMiniTVwidgetVisible, setIsMiniTVwidgetVisible] = useState(true)
 
     // Состояние для хранения выбранного символа
-    const [selectedSymbol, setSelectedSymbol] = useState("")
+    const [selectedSymbol, setSelectedSymbol] = useState('BTCUSDT')
 
     // Функция для открытия MiniTVwidget и передачи выбранного символа
     const openMiniTVwidget = (symbol) => {
@@ -90,6 +89,7 @@ const TableComponent = React.memo(({ data }) => {
                 }}>
                 <Box
                 sx={{
+                    position: 'relative',
                     height: '300px'
                 }}>
                     {isMiniTVwidgetVisible &&
@@ -97,7 +97,6 @@ const TableComponent = React.memo(({ data }) => {
                             symbol={selectedSymbol}
                             onClose={closeMiniTVwidget}
                         />}
-                    <MainTVW/>
                 </Box>
                 <Box
                 sx={{
