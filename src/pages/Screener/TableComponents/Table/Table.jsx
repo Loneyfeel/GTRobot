@@ -6,7 +6,7 @@ import BarChartIcon from '@mui/icons-material/BarChart';
 
 import { formatNumber } from '../helps/FormatNumber/FormatNumber.js'
 import HeaderTableCell from "./HeaderTableCell";
-import ResetButton from "../Reset Buttons";
+import ResetButton from "./Reset Buttons";
 import BodyTableCell from "./BodyTableCell";
 
 import {useTranslation} from "react-i18next";
@@ -141,15 +141,7 @@ const TableScreener = ({ filteredData, page, rowsPerPage, orderBy, setOrderBy, o
                                 direction={orderBy === 'raz' ? order : 'asc'}
                                 onClick={() => handleSort('raz')}
                                 sx={{
-                                    "&:focus":{
-                                        color: 'var(--tg-theme-text-color)'
-                                    },
-                                    "&:hover":{
-                                        color: 'var(--tg-theme-text-color)'
-                                    },
-                                    "&:active":{
-                                        color: 'var(--tg-theme-text-color)'
-                                    }
+
                                 }}
                             >
                                 {t('screener.table_header.raz')}

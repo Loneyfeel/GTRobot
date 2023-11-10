@@ -15,21 +15,3 @@ body{
 body::-webkit-scrollbar {
     display: none;
 }
-
-/*======================Custom Styles=====================*/
-.mdc-tab__text-label {
-    color: var(--tg-theme-hint-color) !important;
-    font-size: 12px !important;
-}
-
-.mdc-tab--active .mdc-tab__text-label {
-    color: var(--tg-theme-text-color) !important;
-}
-
-.mdc-tab-indicator .mdc-tab-indicator__content--underline {
-    border-color: var(--tg-theme-button-color) !important;
-}
-
-.mdc-tab .mdc-tab__ripple::before, .mdc-tab .mdc-tab__ripple::after, .mdc-tab:focus {
-    background-color: var(--tg-theme-button-color) !important;
-}

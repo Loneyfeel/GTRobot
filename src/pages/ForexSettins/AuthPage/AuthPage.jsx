@@ -78,7 +78,7 @@ const AuthPage = () => {
                                     border: loginError ? '1px solid red' : '1px solid var(--tg-theme-button-color)',
                                 },
                                 '& .MuiInputBase-root.MuiOutlinedInput-root:hover fieldset': {
-                                    border: '1px solid #fff',
+                                    border: '1px solid #fff'
                                 }
                             }}
                             InputProps={{
@@ -93,6 +93,7 @@ const AuthPage = () => {
                             InputLabelProps={{
                                 style: {
                                     color: 'var(--tg-theme-text-color)',
+                                    backgroundColor: 'var(--tg-theme-bg-color)',
                                 },
                             }}
                         />
@@ -112,9 +113,11 @@ const AuthPage = () => {
                                     color: 'var(--tg-theme-text-color)',
                                 },
                                 '& .MuiInputBase-root.MuiOutlinedInput-root fieldset': {
+                                    /* Ваши стили для fieldset */
                                     border: '1px solid var(--tg-theme-button-color)'
                                 },
                                 '& .MuiInputBase-root.MuiOutlinedInput-root:hover fieldset': {
+                                    /* Ваши стили для fieldset */
                                     border: '1px solid #fff'
                                 }
                             }}
@@ -141,6 +144,7 @@ const AuthPage = () => {
                             InputLabelProps={{
                                 style: {
                                     color: 'var(--tg-theme-text-color)',
+                                    backgroundColor: 'var(--tg-theme-bg-color)',
                                 },
                             }}
                         />
@@ -159,9 +163,11 @@ const AuthPage = () => {
                                     color: 'var(--tg-theme-text-color)',
                                 },
                                 '& .MuiInputBase-root.MuiOutlinedInput-root fieldset': {
+                                    /* Ваши стили для fieldset */
                                     border: '1px solid var(--tg-theme-button-color)'
                                 },
                                 '& .MuiInputBase-root.MuiOutlinedInput-root:hover fieldset': {
+                                    /* Ваши стили для fieldset */
                                     border: '1px solid #fff'
                                 }
                             }}
@@ -177,6 +183,7 @@ const AuthPage = () => {
                             InputLabelProps={{
                                 style: {
                                     color: 'var(--tg-theme-text-color)',
+                                    backgroundColor: 'var(--tg-theme-bg-color)',
                                 },
                             }}
                         />

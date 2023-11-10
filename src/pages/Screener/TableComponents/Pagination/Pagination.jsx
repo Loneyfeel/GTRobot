@@ -26,26 +26,23 @@ const Pagination = ({filteredData, page, setPage, rowsPerPage, setRowsPerPage}) 
             sx={{
                 backgroundColor: 'var(--tg-theme-secondary-bg-color)',
                 minWidth:'0',
-                width: '50px',
+                width: '45px',
                 height: '25px',
                 paddingTop: '10px',
                 borderRadius: '5px',
                 border: '1px solid var(--tg-theme-button-color)',
                 overflow: 'hidden',
-                "&:hover":{
-                    border: '1px solid #fff'
-                },
                 '& .MuiTablePagination-actions': {
                     display: 'none'
                 },
                 '& .MuiTablePagination-displayedRows': {
-                    display: 'none',
+                    display: 'none'
                 },
                 '& .MuiTablePagination-toolbar': {
                     padding: '0',
                     minHeight: '0',
                     width: '40px',
-                    height: '25px',
+                    height: '25px'
                 },
                 '& .MuiTablePagination-input': {
                     margin: '0',
