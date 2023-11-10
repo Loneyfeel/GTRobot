@@ -11,10 +11,13 @@ const ResetButton = ({id, onClick, disabled, children}) => {
                 onClick={onClick}
                 disabled={disabled}
                 sx={{
-                    color: 'primary.dark',
+                    color: 'var(--tg-theme-button-color)',
                     minWidth: '35px',
                     maxWidth: '35px',
                     padding: '0 3px',
+                    "&.Mui-disabled": {
+                        color: 'var(--tg-theme-hint-color)',
+                    }
                 }}
             >
                 {children}

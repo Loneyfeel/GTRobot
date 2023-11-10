@@ -1,15 +1,14 @@
 import './miniTVW.sass'
-import CloseIcon from '@mui/icons-material/Close'
 import RefreshIcon from '@mui/icons-material/Refresh'
 
 import React, {useEffect, useRef} from 'react'
 import {useThemeParams} from "@vkruglikov/react-telegram-web-app"
-import {Box, Button, IconButton} from "@mui/material";
+import {Box} from "@mui/material";
 import {useTranslation} from "react-i18next";
 
 let tvScriptLoadingPromise;
 
-export default function MiniTVW({symbol, onClose}) {
+export default function MiniTVW({symbol}) {
     const [colorScheme, themeParams] = useThemeParams() //тема тг
     const themeColor = ({
         bg_color: themeParams.bg_color,
@@ -71,36 +70,15 @@ export default function MiniTVW({symbol, onClose}) {
     return (
         <>
             <Box
-            sx={{
-                position: 'absolute',
-                top: '0',
-                left: '0',
-                width: '100%' ,
-                height: '300px',
-                zIndex: '100',
-                backgroundColor: 'var(--tg-theme-bg-color)',
-            }}>
-                <IconButton
-                    onClick={onClose}
-                    sx={{
-                        padding: '0',
-                        position: 'absolute',
-                        color: 'var(--tg-theme-text-color)',
-                        display: 'flex',
-                        justifyContent: 'center',
-                        alignItems: 'center',
-                        zIndex: '15',
-                        top: '5px',
-                        right: '5px',
-                        paddingInline: 'unset',
-                        width: '22px',
-                        height: '22px',
-                        borderRadius: '6px',
-                        backgroundColor: 'rgba(150, 56, 56, 1)',
-                    }}
-                >
-                    <CloseIcon/>
-                </IconButton>
+                sx={{
+                    position: 'absolute',
+                    top: '0',
+                    left: '0',
+                    width: '100%' ,
+                    height: '300px',
+                    zIndex: '100',
+                    backgroundColor: 'var(--tg-theme-bg-color)',
+                }}>
                 <Box
                     id='tradingview_b9a65'
                     sx={{
@@ -109,18 +87,18 @@ export default function MiniTVW({symbol, onClose}) {
                     }}
                 />
                 <Box
-                sx={{
-                    display: 'flex',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    position: 'absolute',
-                    width: '10px',
-                    height: '10px',
-                    top: '50%',
-                    left: '50%',
-                    zIndex: '5',
-                    animation: 'rotate 1s linear infinite',
-                }}><RefreshIcon fontSize={'large'}/></Box>
+                    sx={{
+                        display: 'flex',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        position: 'absolute',
+                        width: '10px',
+                        height: '10px',
+                        top: '50%',
+                        left: '50%',
+                        zIndex: '5',
+                        animation: 'rotate 1s linear infinite',
+                    }}><RefreshIcon fontSize={'large'}/></Box>
             </Box>
         </>
     );

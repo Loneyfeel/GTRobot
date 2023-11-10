@@ -1,9 +1,9 @@
 import './App.css'
 
 import MainMenu from "./pages/MainMenu";
-// import ToolsMenu from "./pages/ToolsMenu";
-// import Screener from "./pages/Screener";
-// import Forex from "./pages/ForexSettins";
+import ToolsMenu from "./pages/ToolsMenu";
+import Screener from "./pages/Screener";
+import Forex from "./pages/ForexSettins";
 
 import {useTranslation} from "react-i18next";
 import {useEffect, useState} from "react";
@@ -86,22 +86,27 @@ function App() {
                         transition: 'none',
                         filter: 'invert(0.5)',
                         margin: '0',
-                        marginLeft: '2px'
+                        marginLeft: '2px',
+                    },
+                    root: {
+                        "&.Mui-active .MuiTableSortLabel-icon": {
+                            color: "red !important",
+                        },
                     },
                 },
             },
         },
     });
-  return (
-    <>
-        <ThemeProvider theme={theme}>
-            <MainMenu/>
-            {/*<ToolsMenu/>*/}
-            {/*<Screener/>*/}
-            {/*<Forex/>*/}
-        </ThemeProvider>
-    </>
-  )
+    return (
+        <>
+            <ThemeProvider theme={theme}>
+                {/*<MainMenu/>*/}
+                {/*<ToolsMenu/>*/}
+                <Screener/>
+                <Forex/>
+            </ThemeProvider>
+        </>
+    )
 }
 
 export default App

@@ -1,8 +1,9 @@
 import style from './fiterName.module.sass'
 import React, {useState} from 'react';
 import {TextField} from "@mui/material";
+import {useTranslation} from "react-i18next";
 
-const FilterName = ({filters, setFilters, setSearchTerm, setIsFilteringActive, searchResults, searchTerm, setSelectedItem, selectedItem }) => {
+const FilterName = ({filters, setFilters, setSearchTerm, setIsFilteringActive, searchResults, searchTerm, setSelectedItem, setPage }) => {
 
     const [isNameListOpen, setIsNameListOpen] = useState(false);
 
@@ -12,14 +13,15 @@ const FilterName = ({filters, setFilters, setSearchTerm, setIsFilteringActive, s
         setFilters({ ...filters, name: newSearchTerm });
         setIsFilteringActive(!!newSearchTerm);
         setIsFilteringActive(true);
+        setPage(0)
     };
-
+    const {t} = useTranslation()
     return (
         <>
             <div className={style.custom_dropdown}>
                 <TextField
                     size={"small"}
-                    label="...."
+                    label={t('screener.table_header.name')}
                     variant="outlined"
                     value={searchTerm}
                     onChange={handleNameFilterChange}
@@ -38,7 +40,16 @@ const FilterName = ({filters, setFilters, setSearchTerm, setIsFilteringActive, s
                     }}
                     sx={{
                         padding: '0',
-                        width: '70px'
+                        width: '70px',
+                        borderRadius: '5px',
+                        '& .MuiInputBase-root.MuiOutlinedInput-root fieldset': {
+                            borderRadius: '5px',
+                            border: '1px solid var(--tg-theme-button-color)',
+                            padding: '0 1px'
+                        },
+                        '& .MuiInputBase-root.MuiOutlinedInput-root:hover fieldset': {
+                            border: '1px solid #fff'
+                        }
                     }}
                     InputProps={{
                         style: {
@@ -51,14 +62,19 @@ const FilterName = ({filters, setFilters, setSearchTerm, setIsFilteringActive, s
                             style: {
                                 padding: '0 5px',
                                 height: '30px',
-                                fontSize: '12px'
+                                fontSize: '12px',
+                                borderRadius: '5px',
+                                backgroundColor: "var(--tg-theme-bg-color)",
                             },
                         },
                     }}
                     InputLabelProps={{
                         style: {
-                            color: 'var(--tg-theme-text-color)',
-                            top: '0',
+                            color: 'var(--tg-theme-hint-color)',
+                            left: '-10px',
+                            fontSize: '11px',
+                            backgroundColor: "var(--tg-theme-bg-color)",
+                            padding: '2px'
                         },
                     }}
                 />
@@ -68,12 +84,14 @@ const FilterName = ({filters, setFilters, setSearchTerm, setIsFilteringActive, s
                             .filter((_, index) => index % 2 === 0)
                             .map((coin) => (
                                 <li
-                                    className={style.name_list__li}                                    key={coin.id}
+                                    className={style.name_list__li}
+                                    key={coin.id}
                                     onClick={() => {
                                         setSearchTerm(coin.name);
                                         setIsFilteringActive(true);
                                         setFilters({ ...filters, name: coin.name });
                                         setIsNameListOpen(false);
+                                        setPage(0)
                                     }}
                                 >
                                     {coin.name}

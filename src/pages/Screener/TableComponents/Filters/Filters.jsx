@@ -2,11 +2,11 @@ import React, { useState, useEffect, useRef } from "react";
 import { formatNumber } from '../helps/FormatNumber/FormatNumber.js';
 import {MenuItem, Box} from "@mui/material";
 import RotateLeftIcon from '@mui/icons-material/RotateLeft';
-import ResetButton from "../Table/Reset Buttons";
+import ResetButton from "../Reset Buttons";
 import FiltersSelect from "./FiltersSelect";
 import FilterName from "./FilterName";
 
-const Filters = ({ filteredData, filters, setFilters }) => {
+const Filters = ({ filteredData, filters, setFilters, setPage }) => {
     const [isFilteringActive, setIsFilteringActive] = useState(false);
     const [searchTerm, setSearchTerm] = useState("");
     const [searchResults, setSearchResults] = useState([]);
@@ -68,15 +68,21 @@ const Filters = ({ filteredData, filters, setFilters }) => {
                             searchResults={searchResults}
                             searchTerm={searchTerm}
                             setSelectedItem={setSelectedItem}
+                            setPage={setPage}
                         />
                         <FiltersSelect
-                            label="Raz Filter"
                             variable={'raz'}
                             filters={filters}
                             setFilters={setFilters}
                             setIsFilteringActive={setIsFilteringActive}
+                            setPage={setPage}
                             children={['', 3, 5, 10, 20].map((value) => (
-                                <MenuItem key={value} value={value}>
+                                <MenuItem key={value} value={value}
+                                sx={{
+                                    "&:hover":{
+                                        backgroundColor: 'var(--tg-theme-hint-color)'
+                                    }
+                                }}>
                                     {value}
                                 </MenuItem>
                             ))}
@@ -85,31 +91,38 @@ const Filters = ({ filteredData, filters, setFilters }) => {
                     <Box
                         sx={{
                             display: 'flex',
-                            justifyContent: 'space-between'
                         }}>
                         <FiltersSelect
-                            label="CD Filter"
                             variable={'cd'}
                             filters={filters}
                             setFilters={setFilters}
                             setIsFilteringActive={setIsFilteringActive}
+                            setPage={setPage}
                             children={['', 100000, 250000, 500000, 1000000, 2000000, 3000000].map((value) => (
                                 <MenuItem key={value} value={value}
                                           sx={{
                                               padding: '5px',
+                                              "&:hover":{
+                                                  backgroundColor: 'var(--tg-theme-hint-color)'
+                                              }
                                           }}>
                                     {formatNumber(value)}
                                 </MenuItem>
                             ))}
                         />
                         <FiltersSelect
-                            label="Dal Filter"
                             variable={'dal'}
                             filters={filters}
                             setFilters={setFilters}
                             setIsFilteringActive={setIsFilteringActive}
+                            setPage={setPage}
                             children={['', 0.5, 1, 1.5, 2, 3].map((value) => (
-                                <MenuItem key={value} value={value}>
+                                <MenuItem key={value} value={value}
+                                          sx={{
+                                              "&:hover":{
+                                                  backgroundColor: 'var(--tg-theme-hint-color)'
+                                              }
+                                          }}>
                                     {value}
                                 </MenuItem>
                             ))}

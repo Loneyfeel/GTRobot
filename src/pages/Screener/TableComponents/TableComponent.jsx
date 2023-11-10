@@ -7,7 +7,6 @@ const Pagination = lazy(() => import('./Pagination'));
 const Pages = lazy(() => import('./Pages'));
 const Filters = lazy(() => import('./Filters'));
 const MiniTVW = lazy(() => import('../Widgets/Mini-TVwidget'));
-const MainTVW = lazy(() => import('../Widgets/Main-TVwidget'));
 
 import {useTranslation} from "react-i18next";
 
@@ -63,10 +62,10 @@ const TableComponent = React.memo(({ data }) => {
 
 
     // состояние для отображения/скрытия MiniTVwidget
-    const [isMiniTVwidgetVisible, setIsMiniTVwidgetVisible] = useState(false)
+    const [isMiniTVwidgetVisible, setIsMiniTVwidgetVisible] = useState(true)
 
     // Состояние для хранения выбранного символа
-    const [selectedSymbol, setSelectedSymbol] = useState("")
+    const [selectedSymbol, setSelectedSymbol] = useState('BTCUSDT')
 
     // Функция для открытия MiniTVwidget и передачи выбранного символа
     const openMiniTVwidget = (symbol) => {
@@ -89,23 +88,23 @@ const TableComponent = React.memo(({ data }) => {
                     borderRadius: '0'
                 }}>
                 <Box
-                sx={{
-                    height: '300px'
-                }}>
+                    sx={{
+                        position: 'relative',
+                        height: '300px'
+                    }}>
                     {isMiniTVwidgetVisible &&
                         <MiniTVW
                             symbol={selectedSymbol}
                             onClose={closeMiniTVwidget}
                         />}
-                    <MainTVW/>
                 </Box>
                 <Box
-                sx={{
-                    display: 'flex',
-                    justifyContent: 'space-around',
-                    alignItems: 'center',
-                    height: '40px',
-                }}>
+                    sx={{
+                        display: 'flex',
+                        justifyContent: 'space-around',
+                        alignItems: 'center',
+                        height: '40px',
+                    }}>
                     <Typography>
                         {t('screener.table_title')}:
                     </Typography>
@@ -121,6 +120,7 @@ const TableComponent = React.memo(({ data }) => {
                     filteredData={filteredData}
                     filters={filters}
                     setFilters={setFilters}
+                    setPage={setPage}
                 />
                 <Table
                     filteredData={filteredData}

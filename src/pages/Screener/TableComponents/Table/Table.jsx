@@ -6,7 +6,7 @@ import BarChartIcon from '@mui/icons-material/BarChart';
 
 import { formatNumber } from '../helps/FormatNumber/FormatNumber.js'
 import HeaderTableCell from "./HeaderTableCell";
-import ResetButton from "./Reset Buttons";
+import ResetButton from "../Reset Buttons";
 import BodyTableCell from "./BodyTableCell";
 
 import {useTranslation} from "react-i18next";
@@ -71,104 +71,26 @@ const TableScreener = ({ filteredData, page, rowsPerPage, orderBy, setOrderBy, o
 
     return (
         <>
-        <TableContainer component={Paper}
-                        sx={{
-                            overflow: "hidden",
-                            maxWidth: '100vw',
-                            padding: '0',
-                            borderRadius: '0',
-                        }}
-        >
-            <Table
-            sx={{
-                display: 'flex',
-                flexDirection: 'column',
-                borderRadius: '0',
-                minHeight: '50vh',
-            }}>
-                <TableHead
+            <TableContainer component={Paper}
+                            sx={{
+                                overflow: "hidden",
+                                maxWidth: '100vw',
+                                padding: '0',
+                                borderRadius: '0',
+                            }}
+            >
+                <Table
                     sx={{
                         display: 'flex',
-                    }}
-                >
-                    <TableRow
+                        flexDirection: 'column',
+                        borderRadius: '0',
+                        minHeight: '50vh',
+                    }}>
+                    <TableHead
                         sx={{
-                            minWidth: '100vw',
-                            height: '30px',
                             display: 'flex',
-                            justifyContent: 'space-between',
-                            alignItems: 'center',
-                            flexDirection: 'flex-start',
                         }}
                     >
-                        <TableCell
-                        sx={{
-                            display: 'flex',
-                            justifyContent: 'center',
-                            alignItems: 'center',
-                            minWidth:'0',
-                            padding: '0',
-                            margin: '0 3px',
-                            width: '30px',
-                            height: '30px',
-                            borderBottom: 'none',
-                        }}>
-                            <ResetButton
-                                id={'reset_sorting'}
-                                onClick={() => resetSorting()}
-                                disabled={!isSortingActive}
-                                children={<RotateLeftIcon/>}
-                            />
-                        </TableCell>
-                        <HeaderTableCell
-                            active={orderBy === 'name'}
-                            direction={orderBy === 'name' ? order : 'asc'}
-                            onClick={() => handleSort('name')}
-                            children={t('screener.table_header.name')}
-                        />
-                        <TableCell
-                            sx={{
-                                minWidth:'60px',
-                                padding: '4px',
-                                paddingRight: '0',
-                                height: '30px',
-                                borderBottom: 'none',
-                                fontSize: '12px',
-                            }}
-                        >
-                            <TableSortLabel
-                                active={orderBy === 'raz'}
-                                direction={orderBy === 'raz' ? order : 'asc'}
-                                onClick={() => handleSort('raz')}
-                                sx={{
-
-                                }}
-                            >
-                                {t('screener.table_header.raz')}
-                            </TableSortLabel>
-                        </TableCell>
-                        <HeaderTableCell
-                            active={orderBy === 'price'}
-                            direction={orderBy === 'price' ? order : 'asc'}
-                            onClick={() => handleSort('price')}
-                            children={t('screener.table_header.price')}
-                        />
-                        <HeaderTableCell
-                            active={orderBy === 'cd'}
-                            direction={orderBy === 'cd' ? order : 'asc'}
-                            onClick={() => handleSort('cd')}
-                            children={t('screener.table_header.cd')}
-                        />
-                        <HeaderTableCell
-                            active={orderBy === 'dal'}
-                            direction={orderBy === 'dal' ? order : 'asc'}
-                            onClick={() => handleSort('dal')}
-                            children={t('screener.table_header.dal')}
-                        />
-                    </TableRow>
-                </TableHead>
-                <TableBody>
-                    {filteredData.slice(page * rowsPerPage, (page + 1) * rowsPerPage).map((item) => (
                         <TableRow
                             sx={{
                                 minWidth: '100vw',
@@ -177,9 +99,7 @@ const TableScreener = ({ filteredData, page, rowsPerPage, orderBy, setOrderBy, o
                                 justifyContent: 'space-between',
                                 alignItems: 'center',
                                 flexDirection: 'flex-start',
-                                borderBottom: '1px solid var(--tg-theme-button-color)',
                             }}
-                            key={item.id}
                         >
                             <TableCell
                                 sx={{
@@ -192,86 +112,174 @@ const TableScreener = ({ filteredData, page, rowsPerPage, orderBy, setOrderBy, o
                                     width: '30px',
                                     height: '30px',
                                     borderBottom: 'none',
-                                }}
-                            >
-                                <IconButton
-                                sx={{
-                                    minWidth:'0',
-                                    padding: '0',
-                                    width: '30px',
-                                    color: 'primary.main'
-                                }}
-                                onClick={() => {
-                                    onClose()
-                                    setTimeout(() => {
-                                        openMiniTVwidget(`${item.name}USDT`); // Открывает новое окно после задержки
-                                    }, 0);
                                 }}>
-                                    <BarChartIcon/>
-                                </IconButton>
+                                <ResetButton
+                                    id={'reset_sorting'}
+                                    onClick={() => resetSorting()}
+                                    disabled={!isSortingActive}
+                                    children={<RotateLeftIcon/>}
+                                />
                             </TableCell>
-                            <BodyTableCell
-                                children={
-                                    <Typography
-                                        sx={{
-                                            backgroundColor: item.id === `${item.name}_ask` ? 'rgba(227, 45, 45, 0.8)' : 'rgba(59, 196, 37, 0.8)',
-                                            padding: '0 2px',
-                                            fontSize: '14px'
-                                        }}
-                                        textAlign="left"
-                                    >
-                                        {item.name}
-                                    </Typography>
-                                }
+                            <HeaderTableCell
+                                active={orderBy === 'name'}
+                                direction={orderBy === 'name' ? order : 'asc'}
+                                onClick={() => handleSort('name')}
+                                children={t('screener.table_header.name')}
                             />
                             <TableCell
                                 sx={{
                                     minWidth:'60px',
-                                    padding: '4px 7px',
+                                    padding: '4px',
+                                    paddingRight: '0',
                                     height: '30px',
                                     borderBottom: 'none',
-                                    fontSize: '14px',
+                                    fontSize: '12px',
                                 }}
                             >
-                                {item.raz}
+                                <TableSortLabel
+                                    active={orderBy === 'raz'}
+                                    direction={orderBy === 'raz' ? order : 'asc'}
+                                    onClick={() => handleSort('raz')}
+                                    sx={{
+                                        "&:focus":{
+                                            color: 'var(--tg-theme-text-color)'
+                                        },
+                                        "&:hover":{
+                                            color: 'var(--tg-theme-text-color)'
+                                        },
+                                        "&:active":{
+                                            color: 'var(--tg-theme-text-color)'
+                                        },
+                                    }}
+                                >
+                                    {t('screener.table_header.raz')}
+                                </TableSortLabel>
                             </TableCell>
-                            <BodyTableCell
-                                children={item.price}
+                            <HeaderTableCell
+                                active={orderBy === 'price'}
+                                direction={orderBy === 'price' ? order : 'asc'}
+                                onClick={() => handleSort('price')}
+                                children={t('screener.table_header.price')}
                             />
-                            <BodyTableCell
-                                children={
-                                    <Typography
-                                       sx={{
-                                           textAlign: 'right',
-                                           fontSize: '12px',
-                                           backgroundColor: getColorForCD(item.cd),
-                                           padding: '0 2px'
-                                       }}
-                                    >
-                                        {formatNumber(item.cd)}
-                                    </Typography>
-                            }
+                            <HeaderTableCell
+                                active={orderBy === 'cd'}
+                                direction={orderBy === 'cd' ? order : 'asc'}
+                                onClick={() => handleSort('cd')}
+                                children={t('screener.table_header.cd')}
                             />
-                            <BodyTableCell
-                                children={
-                                    <Typography
-                                        sx={{
-                                            textAlign: 'right',
-                                            fontSize: '12px',
-                                            backgroundColor: getColorForDAL(item.dal),
-                                            padding: '0 2px'
-                                        }}
-                                    >
-                                        {`${item.dal}%`}
-                                    </Typography>
-                                }
-
+                            <HeaderTableCell
+                                active={orderBy === 'dal'}
+                                direction={orderBy === 'dal' ? order : 'asc'}
+                                onClick={() => handleSort('dal')}
+                                children={t('screener.table_header.dal')}
                             />
                         </TableRow>
-                    ))}
-                </TableBody>
-            </Table>
-        </TableContainer>
+                    </TableHead>
+                    <TableBody>
+                        {filteredData.slice(page * rowsPerPage, (page + 1) * rowsPerPage).map((item) => (
+                            <TableRow
+                                sx={{
+                                    minWidth: '100vw',
+                                    height: '30px',
+                                    display: 'flex',
+                                    justifyContent: 'space-between',
+                                    alignItems: 'center',
+                                    flexDirection: 'flex-start',
+                                    borderBottom: '1px solid var(--tg-theme-button-color)',
+                                }}
+                                key={item.id}
+                            >
+                                <TableCell
+                                    sx={{
+                                        display: 'flex',
+                                        justifyContent: 'center',
+                                        alignItems: 'center',
+                                        minWidth:'0',
+                                        padding: '0',
+                                        margin: '0 3px',
+                                        width: '30px',
+                                        height: '30px',
+                                        borderBottom: 'none',
+                                    }}
+                                >
+                                    <IconButton
+                                        sx={{
+                                            minWidth:'0',
+                                            padding: '0',
+                                            width: '30px',
+                                            color: 'primary.main'
+                                        }}
+                                        onClick={() => {
+                                            onClose()
+                                            setTimeout(() => {
+                                                openMiniTVwidget(`${item.name}USDT`); // Открывает новое окно после задержки
+                                            }, 0);
+                                        }}>
+                                        <BarChartIcon/>
+                                    </IconButton>
+                                </TableCell>
+                                <BodyTableCell
+                                    children={
+                                        <Typography
+                                            sx={{
+                                                backgroundColor: item.id === `${item.name}_ask` ? 'rgba(227, 45, 45, 0.8)' : 'rgba(59, 196, 37, 0.8)',
+                                                padding: '0 2px',
+                                                fontSize: '14px'
+                                            }}
+                                            textAlign="left"
+                                        >
+                                            {item.name}
+                                        </Typography>
+                                    }
+                                />
+                                <TableCell
+                                    sx={{
+                                        minWidth:'60px',
+                                        padding: '4px 7px',
+                                        height: '30px',
+                                        borderBottom: 'none',
+                                        fontSize: '14px',
+                                    }}
+                                >
+                                    {item.raz}
+                                </TableCell>
+                                <BodyTableCell
+                                    children={item.price}
+                                />
+                                <BodyTableCell
+                                    children={
+                                        <Typography
+                                            sx={{
+                                                textAlign: 'right',
+                                                fontSize: '12px',
+                                                backgroundColor: getColorForCD(item.cd),
+                                                padding: '0 2px'
+                                            }}
+                                        >
+                                            {formatNumber(item.cd)}
+                                        </Typography>
+                                    }
+                                />
+                                <BodyTableCell
+                                    children={
+                                        <Typography
+                                            sx={{
+                                                textAlign: 'right',
+                                                fontSize: '12px',
+                                                backgroundColor: getColorForDAL(item.dal),
+                                                padding: '0 2px'
+                                            }}
+                                        >
+                                            {`${item.dal}%`}
+                                        </Typography>
+                                    }
+
+                                />
+                            </TableRow>
+                        ))}
+                    </TableBody>
+                </Table>
+            </TableContainer>
         </>
     )
 }
