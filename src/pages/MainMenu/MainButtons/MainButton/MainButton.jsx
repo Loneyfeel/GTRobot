@@ -22,7 +22,7 @@ const MainButton = ({icon, text, url}) => {
                     backgroundColor: 'var(--tg-theme-secondary-bg-color)',
                     borderRadius: '10px',
                     color: 'var(--tg-theme-text-color)',
-                    padding: '0'
+                    padding: '0',
                 }}>
                 <Box
                     sx={{

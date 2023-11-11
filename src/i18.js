@@ -10,7 +10,7 @@ i18n
     .init({
         returnEmptyString: false,
         debug: true,
-        fallbackLng: 'en',
+        fallbackLng: 'uz',
     });
 
 export default i18n;

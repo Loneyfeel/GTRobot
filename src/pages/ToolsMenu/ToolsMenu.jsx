@@ -3,13 +3,6 @@ import ToolsButtons from './Buttons'
 import {Box} from "@mui/material";
 
 function ToolsMenu() {
-    window.Telegram.WebApp.BackButton.isVisible = true;
-    window.Telegram.WebApp.ready();
-    window.Telegram.WebApp.BackButton.onClick(async () => {
-        window.Telegram.WebApp.HapticFeedback.notificationOccurred('error');
-
-        window.location.href = '/';
-    });
     return (
         <>
             <Box

@@ -10,6 +10,7 @@ import {useEffect, useState} from "react";
 import axios from "axios";
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import {useThemeParams} from "@vkruglikov/react-telegram-web-app";
+import NoSubscribe from "./pages/NoSuscribe/index.js";
 
 function App() {
     const [loading, setLoading] = useState(true);
@@ -103,7 +104,8 @@ function App() {
                 {/*<MainMenu/>*/}
                 {/*<ToolsMenu/>*/}
                 <Screener/>
-                <Forex/>
+                {/*<Forex/>*/}
+                {/*<NoSubscribe/>*/}
             </ThemeProvider>
         </>
     )
