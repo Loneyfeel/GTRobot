@@ -3,7 +3,7 @@ import './App.css'
 import MainMenu from "./pages/MainMenu";
 import ToolsMenu from "./pages/ToolsMenu";
 import Screener from "./pages/Screener";
-import Forex from "./pages/ForexSettins";
+import Forex from "./pages/Forex";
 
 import {useTranslation} from "react-i18next";
 import {useEffect, useState} from "react";
@@ -14,27 +14,27 @@ import NoSubscribe from "./pages/NoSuscribe/index.js";
 
 function App() {
     const [loading, setLoading] = useState(true);
-    const [language, setLanguage] = useState('');
+    const [language, setLanguage] = useState('ru');
 
-    const proxy = 'https://corsproxy.io/?';
-    const userId = window.Telegram.WebApp.initDataUnsafe.user.id;
-
-    useEffect(() => {
-        const fetchUserLanguage = async () => {
-            try {
-                const response = await axios.post(`${proxy}https://gtrobot.ngrok.dev/api/user-locale`, { userId });
-                setLanguage(response.data);
-                setLoading(false);
-                console.log('Полученный язык:', response.data);
-            } catch (error) {
-                console.error('Произошла ошибка при выполнении POST-запроса:', error);
-            }
-        };
-
-        if (loading) {
-            fetchUserLanguage();
-        }
-    }, [loading]); // Выполняется только при изменении loading
+    // const proxy = 'https://corsproxy.io/?';
+    // const userId = window.Telegram.WebApp.initDataUnsafe.user.id;
+    //
+    // useEffect(() => {
+    //     const fetchUserLanguage = async () => {
+    //         try {
+    //             const response = await axios.post(`${proxy}https://gtrobot.ngrok.dev/api/user-locale`, { userId });
+    //             setLanguage(response.data);
+    //             setLoading(false);
+    //             console.log('Полученный язык:', response.data);
+    //         } catch (error) {
+    //             console.error('Произошла ошибка при выполнении POST-запроса:', error);
+    //         }
+    //     };
+    //
+    //     if (loading) {
+    //         fetchUserLanguage();
+    //     }
+    // }, [loading]); // Выполняется только при изменении loading
 
 // Локализация
     const { i18n } = useTranslation();
@@ -103,8 +103,8 @@ function App() {
             <ThemeProvider theme={theme}>
                 {/*<MainMenu/>*/}
                 {/*<ToolsMenu/>*/}
-                <Screener/>
-                {/*<Forex/>*/}
+                {/*<Screener/>*/}
+                <Forex/>
                 {/*<NoSubscribe/>*/}
             </ThemeProvider>
         </>

@@ -6,12 +6,6 @@ import {useTranslation} from "react-i18next";
 import ForexSettings from "../ForexSettings/index.js";
 
 const AuthPage = () => {
-    const loginError = false
-    const passwordError = false
-    const serverError = false
-    const [helperTextLogin, setHelperTextLogin] = useState('');
-    const [helperTextPassword, setHelperTextPassword] = useState('');
-    const [helperTextServer, setHelperTextServer] = useState('');
     const [isVisibleForexSettings, setVisibleForexSettings] = useState(false)
 
     const [showPassword, setShowPassword] = useState(false);
@@ -63,8 +57,6 @@ const AuthPage = () => {
                         <TextField
                             id="outlined-basic"
                             label={t('forex.auth.form.login')}
-                            error={loginError}
-                            helperText={helperTextLogin}
                             sx={{
                                 maxHeight: '80px',
                                 minHeight: '80px',
@@ -75,7 +67,7 @@ const AuthPage = () => {
                                     color: 'var(--tg-theme-text-color)',
                                 },
                                 '& .MuiInputBase-root.MuiOutlinedInput-root fieldset': {
-                                    border: loginError ? '1px solid red' : '1px solid var(--tg-theme-button-color)',
+                                    border: '1px solid var(--tg-theme-button-color)',
                                 },
                                 '& .MuiInputBase-root.MuiOutlinedInput-root:hover fieldset': {
                                     border: '1px solid #fff',
@@ -100,8 +92,6 @@ const AuthPage = () => {
                             id="outlined-password-input"
                             label={t('forex.auth.form.password')}
                             type={showPassword ? 'text' : 'password'}
-                            error={passwordError}
-                            helperText={helperTextPassword}
                             sx={{
                                 maxHeight: '80px',
                                 minHeight: '80px',
@@ -147,8 +137,6 @@ const AuthPage = () => {
                         <TextField
                             id="outlined-basic"
                             label={t('forex.auth.form.server')}
-                            error={serverError}
-                            helperText={helperTextServer}
                             sx={{
                                 maxHeight: '80px',
                                 minHeight: '80px',

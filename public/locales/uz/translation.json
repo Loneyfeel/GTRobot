@@ -39,7 +39,7 @@
       "button_logOut": "Chiqish"
     },
     "settings": {
-      "title": "Forex avtomobil savdosini almashtirish",
+      "balance": "Balansi",
       "alerts": {
         "success": "Avtomatik savdo yoqilgan!",
         "info": "Avtomatik savdo o'chirilgan."

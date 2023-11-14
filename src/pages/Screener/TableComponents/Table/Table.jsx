@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react"
+import React, {useEffect, useLayoutEffect, useRef, useState} from "react"
 
 import {TableContainer, Paper, Table, TableHead, TableRow, TableCell, IconButton, TableSortLabel, Typography, TableBody, } from "@mui/material";
 import RotateLeftIcon from '@mui/icons-material/RotateLeft';
@@ -10,6 +10,7 @@ import ResetButton from "../Reset Buttons";
 import BodyTableCell from "./BodyTableCell";
 
 import {useTranslation} from "react-i18next";
+import DelayedModal from "../../../../shared/Hint/Screener";
 
 const TableScreener = ({ filteredData, page, rowsPerPage, orderBy, setOrderBy, order, setOrder, openMiniTVwidget, onClose }) => {
 
@@ -67,10 +68,49 @@ const TableScreener = ({ filteredData, page, rowsPerPage, orderBy, setOrderBy, o
         }
     };
 
+
+    // для подсказок
+
+    const [iconButtonRect, setIconButtonRect] = useState(null);
+    const iconButtonRef = useRef(null);
+
+    const handleResize = () => {
+        // Проверяем, не является ли iconButtonRef.current null
+        if (iconButtonRef.current) {
+            const rect = iconButtonRef.current.getBoundingClientRect();
+            setIconButtonRect(rect);
+        }
+    };
+
+    useEffect(() => {
+
+        // Запускается после монтирования компонента
+        handleResize();
+
+        // Добавить слушателя события изменения размера окна
+        window.addEventListener('resize', handleResize);
+
+        // Очистить слушателя события при размонтировании компонента
+        return () => {
+            window.removeEventListener('resize', handleResize);
+        };
+    }, []); // Пустой массив зависимостей означает, что эффект будет запущен только при монтировании и размонтировании
+
+    // Добавленный код для ожидания загрузки элемента
+    useEffect(() => {
+        const timer = setTimeout(() => {
+            handleResize(); // Запускаем еще раз после задержки
+        }, 1000); // Установите таймер на несколько секунд (может потребоваться настроить)
+
+        return () => clearTimeout(timer);
+    }, []); // Пустой массив зависимостей означает, что эффект будет запущен только при монтировании и размонтировании
+
+
     const {t, i18n} = useTranslation()
 
     return (
         <>
+            <DelayedModal iconButtonRect={iconButtonRect} />
             <TableContainer component={Paper}
                             sx={{
                                 overflow: "hidden",
@@ -80,13 +120,16 @@ const TableScreener = ({ filteredData, page, rowsPerPage, orderBy, setOrderBy, o
                             }}
             >
                 <Table
+                    id="screenerTable"
                     sx={{
+                        position: 'relative',
                         display: 'flex',
                         flexDirection: 'column',
                         borderRadius: '0',
                         minHeight: '50vh',
                     }}>
                     <TableHead
+                        ref={iconButtonRef}
                         sx={{
                             display: 'flex',
                         }}
@@ -207,7 +250,7 @@ const TableScreener = ({ filteredData, page, rowsPerPage, orderBy, setOrderBy, o
                                             minWidth:'0',
                                             padding: '0',
                                             width: '30px',
-                                            color: 'primary.main'
+                                            color: 'primary.main',
                                         }}
                                         onClick={() => {
                                             onClose()
