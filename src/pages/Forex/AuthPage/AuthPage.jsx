@@ -1,14 +1,81 @@
-import React, {useState} from 'react';
-import {Box, Button, IconButton, Paper, TextField, Typography} from "@mui/material";
-import VisibilityIcon from '@mui/icons-material/Visibility';
-import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
-import {useTranslation} from "react-i18next";
+import React, {useEffect, useState} from 'react';
+import {Backdrop, Box, Button, CircularProgress, Paper, Typography} from "@mui/material";
+import { useTranslation } from "react-i18next";
 import ForexSettings from "../ForexSettings/index.js";
+import ForexAuthTextField from "./ForexAuthTextField";
+import axios from 'axios';
 
 const AuthPage = () => {
-    const [isVisibleForexSettings, setVisibleForexSettings] = useState(false)
+
+    const [isVisibleForexSettings, setVisibleForexSettings] = useState(false);
+    const [invalidData, setInvalidData] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
+
+    const [forexDataExists, setForexDataExists] = useState(null);
+
+    const userId = window.Telegram.WebApp.initDataUnsafe.user.id;
+    const proxy = 'https://corsproxy.io/?';
+
+
+    useEffect(() => {
+        const fetchDataExists = async () => {
+            try {
+                const response = await axios.post(`${proxy}https://gtrobot.ngrok.dev/api/forex-data-exists`, {
+                    userId,
+                });
+                setForexDataExists(response.data);
+                if (response.data.errorCode === 1006) {
+                    // Перенаправление на другую страницу
+                    window.location.href = '#';
+                }
+                if (response.data.status === true) {
+                    // Перенаправление на другую страницу
+                    setVisibleForexSettings(true);
+                }
+            } catch (error) {
+                console.error('Error fetching data:', error);
+            }
+        };
+        fetchDataExists();
+    }, []);
+
+// Состояния для полей ввода
+    const [userLogin, setUserLogin] = useState('');
+    const [userPassword, setUserPassword] = useState('');
+    const [userServer, setUserServer] = useState('');
+
+    const handleLogin = async () => {
+        try {
+            setIsLoading(true);
+            setInvalidData(false);
+
+            const response = await axios.post('https://corsproxy.io/https://gtrobot.ngrok.dev/api/login', {
+                userId,
+                userLogin,
+                userPassword,
+                userServer,
+            });
+
+            if (response.data.errorCode === 1001) {
+                setInvalidData(true);
+                setTimeout(() => {
+                    setInvalidData(false);
+                }, 3000);
+            } else {
+                // Успешная обработка
+                handleForexSettingsVisible();
+            }
+        } catch (error) {
+            console.error('Error during login:', error);
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
+
 
     const [showPassword, setShowPassword] = useState(false);
+
     const handleTogglePassword = () => {
         setShowPassword((prevShowPassword) => !prevShowPassword);
     };
@@ -16,10 +83,17 @@ const AuthPage = () => {
     const handleForexSettingsVisible = () => {
         setVisibleForexSettings(!isVisibleForexSettings)
     }
-    const {t} = useTranslation()
+
+    const { t } = useTranslation()
 
     return (
         <>
+            <Backdrop
+                sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+                open={isLoading}
+            >
+                <CircularProgress color="inherit" />
+            </Backdrop>
             <ForexSettings isVisibleForexSettings={isVisibleForexSettings} handleForexSettingsVisible={handleForexSettingsVisible}/>
             <Box
                 component="form"
@@ -54,129 +128,41 @@ const AuthPage = () => {
                             }}>
                             {t('forex.auth.title')}
                         </Typography>
-                        <TextField
-                            id="outlined-basic"
-                            label={t('forex.auth.form.login')}
-                            sx={{
-                                maxHeight: '80px',
-                                minHeight: '80px',
-                                '& .MuiFormHelperText-contained': {
-                                    marginTop: '0',
-                                },
-                                '& .MuiFormHelperText-input': {
-                                    color: 'var(--tg-theme-text-color)',
-                                },
-                                '& .MuiInputBase-root.MuiOutlinedInput-root fieldset': {
-                                    border: '1px solid var(--tg-theme-button-color)',
-                                },
-                                '& .MuiInputBase-root.MuiOutlinedInput-root:hover fieldset': {
-                                    border: '1px solid #fff',
-                                }
-                            }}
-                            InputProps={{
-                                inputProps: {
-                                    style: {
-                                        color: 'var(--tg-theme-text-color)',
-                                        borderRadius: '5px',
-                                        borderColor: 'var(--tg-theme-button-color)',
-                                    },
-                                },
-                            }}
-                            InputLabelProps={{
-                                style: {
-                                    color: 'var(--tg-theme-text-color)',
-                                },
-                            }}
+                        <ForexAuthTextField
+                            label="Login"
+                            type="text"
+                            value={userLogin}
+                            onChange={(e) => setUserLogin(e.target.value)}
                         />
-                        <TextField
-                            id="outlined-password-input"
-                            label={t('forex.auth.form.password')}
-                            type={showPassword ? 'text' : 'password'}
-                            sx={{
-                                maxHeight: '80px',
-                                minHeight: '80px',
-                                '& .MuiFormHelperText-contained': {
-                                    marginTop: '0',
-                                },
-                                '& .MuiFormHelperText-input': {
-                                    color: 'var(--tg-theme-text-color)',
-                                },
-                                '& .MuiInputBase-root.MuiOutlinedInput-root fieldset': {
-                                    border: '1px solid var(--tg-theme-button-color)'
-                                },
-                                '& .MuiInputBase-root.MuiOutlinedInput-root:hover fieldset': {
-                                    border: '1px solid #fff'
-                                }
-                            }}
-                            InputProps={{
-                                endAdornment: (
-                                    <IconButton onClick={handleTogglePassword} edge="end"
-                                                sx={{
-                                                    color: 'var(--tg-theme-hint-color)'
-                                                }}>
-                                        {showPassword ? <VisibilityIcon /> : <VisibilityOffIcon />}
-                                    </IconButton>
-                                ),
-                                inputProps: {
-                                    style: {
-                                        color: 'var(--tg-theme-text-color)',
-                                        borderRadius: '5px',
-                                        borderColor: 'var(--tg-theme-button-color)',
-                                    },
-                                },
-                                icon: {
-                                    color: '#fff'
-                                }
-                            }}
-                            InputLabelProps={{
-                                style: {
-                                    color: 'var(--tg-theme-text-color)',
-                                },
-                            }}
+                        <ForexAuthTextField
+                            label="Password"
+                            type="password"
+                            showPassword={showPassword}
+                            handleTogglePassword={handleTogglePassword}
+                            value={userPassword}
+                            onChange={(e) => setUserPassword(e.target.value)}
                         />
-                        <TextField
-                            id="outlined-basic"
-                            label={t('forex.auth.form.server')}
-                            sx={{
-                                maxHeight: '80px',
-                                minHeight: '80px',
-                                '& .MuiFormHelperText-contained': {
-                                    marginTop: '0',
-                                },
-                                '& .MuiFormHelperText-input': {
-                                    color: 'var(--tg-theme-text-color)',
-                                },
-                                '& .MuiInputBase-root.MuiOutlinedInput-root fieldset': {
-                                    border: '1px solid var(--tg-theme-button-color)'
-                                },
-                                '& .MuiInputBase-root.MuiOutlinedInput-root:hover fieldset': {
-                                    border: '1px solid #fff'
-                                }
-                            }}
-                            InputProps={{
-                                inputProps: {
-                                    style: {
-                                        color: 'var(--tg-theme-text-color)',
-                                        borderRadius: '5px',
-                                        borderColor: 'var(--tg-theme-button-color)',
-                                    },
-                                },
-                            }}
-                            InputLabelProps={{
-                                style: {
-                                    color: 'var(--tg-theme-text-color)',
-                                },
-                            }}
+                        <ForexAuthTextField
+                            label="Server"
+                            type="text"
+                            value={userServer}
+                            onChange={(e) => setUserServer(e.target.value)}
                         />
                     </Box>
                     <Button
-                        onClick={handleForexSettingsVisible}
+                        onClick={handleLogin}
                         variant="contained"
                         sx={{
                             minWidth: '100px',
-                            margin: '10px 0'
+                            margin: '10px 0',
+                            backgroundColor: invalidData ? 'rgba(227, 45, 45, 0.8)' : undefined,
                         }}
                     >{t('forex.auth.button_logIn')}</Button>
+                    {invalidData && (
+                        <Typography sx={{ color: 'rgba(227, 45, 45, 0.8)', marginTop: '5px' }}>
+                            Invalid data
+                        </Typography>
+                    )}
                 </Box>
             </Box>
         </>
