@@ -1,8 +1,18 @@
 import React from 'react';
 import {Box, Button, CardMedia, Typography} from "@mui/material";
 import gif from './assets/AnimatedSticker.gif'
+import {useTranslation} from "react-i18next";
 
 const NoSubscribe = () => {
+    window.Telegram.WebApp.BackButton.isVisible = true;
+    window.Telegram.WebApp.ready();
+    window.Telegram.WebApp.BackButton.onClick(async () => {
+        window.Telegram.WebApp.HapticFeedback.notificationOccurred('error');
+
+        window.location.href = '/';
+    });
+
+    const { t } = useTranslation();
     return (
         <>
             <Box
@@ -12,7 +22,7 @@ const NoSubscribe = () => {
                 alignItems: 'center',
                 height: 'var(--tg-viewport-height)',
                 backgroundColor: 'var(--tg-theme-bg-color)',
-                color: 'var(--tg-theme-text-color)'
+                color: 'var(--tg-theme-text-color)',
             }}>
                 <Box>
                     <CardMedia
@@ -31,7 +41,7 @@ const NoSubscribe = () => {
                         textAlign: 'center',
                         fontSize: '18px',
                         fontWeight: '500'
-                    }}>Кажется, вы не купили подписку</Typography>
+                    }}>{t('noSubscribe.title')}</Typography>
                     <Typography
                         sx={{
                             margin: '20px',
@@ -39,11 +49,18 @@ const NoSubscribe = () => {
                             fontSize: '14px',
                             fontWeight: '500'
                         }}
-                    >Приобретите подписку, которая открывает такие функции, как Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aliquid aspernatur </Typography>
+                    >{t('noSubscribe.text')}</Typography>
                 </Box>
                 <Box>
                     <Button
-                    variant="contained">Приобрести подписку</Button>
+                        onClick={() => {
+                            window.Telegram.WebApp.openTelegramLink('https://t.me/UZBCommunityBot?start=cGxhbg')
+                            window.Telegram.WebApp.close()
+                        }}
+                    variant="contained"
+                    sx={{
+                        color: 'var(--tg-theme-text-color)'
+                    }}>{t('noSubscribe.button')}</Button>
                 </Box>
             </Box>
         </>

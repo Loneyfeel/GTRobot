@@ -1,8 +1,11 @@
-import React from 'react';
+import React, {lazy} from 'react';
 import { Box, Typography } from '@mui/material';
-import AutoButton from './AutoButton';
+import {useTranslation} from "react-i18next";
 
-const BalancePanel = ({ balance, tradeIsEnabled, onToggle, onSnackClick, onSnackOffClick }) => {
+const AutoButton = lazy(() => import('./AutoButton'));
+
+const BalancePanel = ({ balance, tradeIsEnabled, onToggle }) => {
+    const {t} = useTranslation();
     return (
         <Box
             sx={{
@@ -30,8 +33,12 @@ const BalancePanel = ({ balance, tradeIsEnabled, onToggle, onSnackClick, onSnack
                             color: 'var(--tg-theme-hint-color)',
                         }}
                     >
-                        Баланс
+                        {t('forex.settings.balance')}
                     </Typography>
+                    <Box
+                    sx={{
+                        display: 'flex'
+                    }}>
                     <Typography
                         sx={{
                             display: 'flex',
@@ -43,16 +50,17 @@ const BalancePanel = ({ balance, tradeIsEnabled, onToggle, onSnackClick, onSnack
                         }}
                     >
                         {balance}
-                        <Typography
-                            sx={{
-                                paddingLeft: '5px',
-                                fontSize: '25px',
-                                color: 'var(--tg-theme-hint-color)',
-                            }}
-                        >
-                            $
-                        </Typography>
                     </Typography>
+                            <Typography
+                                sx={{
+                                    paddingLeft: '5px',
+                                    fontSize: '25px',
+                                    color: 'var(--tg-theme-hint-color)',
+                                }}
+                            >
+                                $
+                            </Typography>
+                        </Box>
                 </Box>
                 <Box
                     sx={{
@@ -64,7 +72,6 @@ const BalancePanel = ({ balance, tradeIsEnabled, onToggle, onSnackClick, onSnack
                     <AutoButton
                         isEnabled={tradeIsEnabled}
                         onClick={onToggle}
-                        onSnackClick={onSnackClick}
                         label="ON"
                         fontSize="18px"
                         width="85px"
@@ -73,7 +80,6 @@ const BalancePanel = ({ balance, tradeIsEnabled, onToggle, onSnackClick, onSnack
                     <AutoButton
                         isEnabled={!tradeIsEnabled}
                         onClick={onToggle}
-                        onSnackClick={onSnackOffClick}
                         label="OFF"
                         fontSize="18px"
                         width="85px"
@@ -83,6 +89,6 @@ const BalancePanel = ({ balance, tradeIsEnabled, onToggle, onSnackClick, onSnack
             </Box>
         </Box>
     );
-};
+}
 
 export default BalancePanel;

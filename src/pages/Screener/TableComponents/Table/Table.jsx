@@ -1,4 +1,4 @@
-import React, {useEffect, useLayoutEffect, useRef, useState} from "react"
+import React, {useEffect, useRef, useState} from "react"
 
 import {TableContainer, Paper, Table, TableHead, TableRow, TableCell, IconButton, TableSortLabel, Typography, TableBody, } from "@mui/material";
 import RotateLeftIcon from '@mui/icons-material/RotateLeft';
@@ -110,7 +110,7 @@ const TableScreener = ({ filteredData, page, rowsPerPage, orderBy, setOrderBy, o
 
     return (
         <>
-            <DelayedModal iconButtonRect={iconButtonRect} />
+            {/*<DelayedModal iconButtonRect={iconButtonRect} />*/}
             <TableContainer component={Paper}
                             sx={{
                                 overflow: "hidden",

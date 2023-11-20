@@ -1,13 +1,12 @@
 import React from 'react';
 import { Button } from '@mui/material';
 
-const AutoButton = ({ isEnabled, onClick, onSnackClick, label, fontSize, width, height }) => {
+const AutoButton = ({ isEnabled, onClick, label, fontSize, width, height }) => {
     return (
         <Button
             disabled={isEnabled}
             onClick={() => {
                 onClick();
-                onSnackClick();
             }}
             sx={{
                 fontSize: fontSize,

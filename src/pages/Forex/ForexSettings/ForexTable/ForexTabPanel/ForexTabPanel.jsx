@@ -5,25 +5,26 @@ import { FixedSizeList } from 'react-window';
 import ListItem from '@mui/material/ListItem';
 import ListItemText from '@mui/material/ListItemText';
 
-const ForexTabPanel = ({ value, label }) => {
+const ForexTabPanel = ({ value, label, accountData }) => {
     let renderFunction;
     let itemCount;
+    const currentDate = new Date();
 
     switch (value) {
         case "1":
-            renderFunction = renderHourlyTable;
-            itemCount = 24; // 24 часа
+            renderFunction = () => renderTable(accountData, currentDate, (currentDate, timestamp) => currentDate - timestamp * 1000 < 24 * 60 * 60 * 1000);
+            itemCount = renderFunction().length;
             break;
         case "2":
-            renderFunction = renderWeeklyTable;
-            itemCount = 7; // 7 дней
+            renderFunction = () => renderTable(accountData, currentDate, (currentDate, timestamp) => currentDate - timestamp * 1000 < 7 * 24 * 60 * 60 * 1000);
+            itemCount = renderFunction().length;
             break;
         case "3":
-            renderFunction = renderMonthlyTable;
-            itemCount = 30; // 30 дней
+            renderFunction = () => renderTable(accountData, currentDate, (currentDate, timestamp) => currentDate - timestamp * 1000 < 30 * 24 * 60 * 60 * 1000);
+            itemCount = renderFunction().length;
             break;
         default:
-            renderFunction = () => null;
+            renderFunction = () => [];
             itemCount = 0;
     }
 
@@ -66,75 +67,55 @@ const ForexTabPanel = ({ value, label }) => {
     );
 };
 
-export default ForexTabPanel
+export default ForexTabPanel;
 
-function renderHourlyTable() {
-    const currentHour = new Date().getHours();
-    const hours = Array.from({ length: 24 }, (_, i) => (currentHour - i - 1 + 24) % 24);
+const listItemStyles = {
+    borderBottom: '1px solid var(--tg-theme-secondary-bg-color)',
+    display: 'flex',
+    alignItems: 'center',
+};
 
-    return hours.map((hour) => (
-        <ListItem
-            key={hour}
-            component="div"
-            disablePadding
+const renderListItem = (timestamp, formattedDate, formattedTime, profit) => (
+    <ListItem
+        key={timestamp}
+        component="div"
+        disablePadding
+        sx={{
+            ...listItemStyles,
+        }}
+    >
+        <div>
+            <ListItemText primary={`${formattedDate} ${formattedTime}:`} />
+        </div>
+        <Typography
             sx={{
-                borderBottom: '1px solid var(--tg-theme-secondary-bg-color)',
+                ml: '15px',
             }}
         >
-            <ListItemText primary={`${hour < 10 ? '0' : ''}${hour}.00:`} sx={{ maxWidth: '20%' }} />
-            <Typography>text</Typography>
-        </ListItem>
-    ));
-}
+            {profit}
+        </Typography>
+        <Typography
+            sx={{
+                paddingLeft: '5px',
+                color: 'var(--tg-theme-hint-color)',
+            }}
+        >
+            $
+        </Typography>
+    </ListItem>
+);
 
-function formatDate(date) {
-    const day = date.getDate();
-    const month = date.getMonth() + 1;
-    return `${day < 10 ? '0' : ''}${day}.${month < 10 ? '0' : ''}${month}`;
-}
+const renderTable = (accountData, currentDate, filterFunction) => {
+    const filteredTimestamps = accountData?.data?.statistics
+        ?.filter(dataPoint => filterFunction(currentDate, dataPoint.timestamp))
+        .map(dataPoint => dataPoint.timestamp);
 
-function renderWeeklyTable() {
-    const currentDate = new Date();
-    const days = Array.from({ length: 7 }, (_, i) => {
-        const date = new Date();
-        date.setDate(currentDate.getDate() - i - 1); // уменьшаем на 1, чтобы получить предыдущий день
-        return date;
+    return filteredTimestamps.map(timestamp => {
+        const dataPoint = accountData?.data?.statistics?.find(point => point.timestamp === timestamp);
+        const date = new Date(timestamp * 1000);
+        const formattedDate = `${date.getDate() < 10 ? '0' : ''}${date.getDate()}-${(date.getMonth() + 1) < 10 ? '0' : ''}${date.getMonth() + 1}`;
+        const formattedTime = `${date.getHours() < 10 ? '0' : ''}${date.getHours()}:${date.getMinutes() < 10 ? '0' : ''}${date.getMinutes()}`;
+
+        return renderListItem(timestamp, formattedDate, formattedTime, dataPoint?.profit);
     });
-
-    return days.map((date) => (
-        <ListItem
-            key={date}
-            component="div"
-            disablePadding
-            sx={{
-                borderBottom: '1px solid var(--tg-theme-secondary-bg-color)',
-            }}
-        >
-            <ListItemText primary={formatDate(date)} sx={{ maxWidth: '20%' }} />
-            <Typography>text</Typography>
-        </ListItem>
-    ));
-}
-
-function renderMonthlyTable() {
-    const currentDate = new Date();
-    const days = Array.from({ length: 30 }, (_, i) => {
-        const date = new Date();
-        date.setDate(currentDate.getDate() - i - 1); // уменьшаем на 1, чтобы получить предыдущий день
-        return date;
-    });
-
-    return days.map((date) => (
-        <ListItem
-            key={date}
-            component="div"
-            disablePadding
-            sx={{
-                borderBottom: '1px solid var(--tg-theme-secondary-bg-color)',
-            }}
-        >
-            <ListItemText primary={formatDate(date)} sx={{ maxWidth: '20%' }} />
-            <Typography>text</Typography>
-        </ListItem>
-    ));
-}
+};

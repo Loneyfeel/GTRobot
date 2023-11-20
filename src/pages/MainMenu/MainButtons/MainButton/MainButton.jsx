@@ -6,7 +6,8 @@ const MainButton = ({icon, text, url}) => {
 
     // Открываем ссылку
     const handleClick = () => {
-        window.location.href = url
+        window.Telegram.WebApp.openTelegramLink(url)
+        window.Telegram.WebApp.close()
     };
     return (
         <>

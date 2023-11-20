@@ -1,49 +1,65 @@
-{
-  "mainMenu": {
-    "title": "Asosiy menyu",
-    "buttons": {
-      "trading": "Savdo vositalari",
-      "bot_descr": "Bot qanday ishlaydi",
-      "call": "Bog'lanish",
-      "about": "Biz haqimizda",
-      "referal": "Yo'llanma"
-    }
-  },
-  "toolsMenu": {
-    "title": "Savdo vositalari",
-    "buttons": {
-      "analysis": "Tahlil va signal",
-      "monitoring": "Monitoring"
-    }
-  },
-  "screener": {
-    "table_title": "Binance birjasida zichlik skriningi",
-    "table_header": {
-      "name": "Tanga",
-      "raz": "Kuch",
-      "price": "Narxi",
-      "cd": "Zichl",
-      "dal": "Masofa"
-    },
-    "chart_lang": "uz"
-  },
-  "forex": {
-    "auth":{
-      "title": "Forex hisobiga kirish",
-      "form": {
-        "login": "Login",
-        "password": "Parol",
-        "server": "Server"
-      },
-      "button_logIn": "Kirish",
-      "button_logOut": "Chiqish"
-    },
-    "settings": {
-      "balance": "Balansi",
-      "alerts": {
-        "success": "Avtomatik savdo yoqilgan!",
-        "info": "Avtomatik savdo o'chirilgan."
-      }
-    }
-  }
+{ 
+  "mainMenu": { 
+    "title": "Asosiy menyu", 
+    "buttons": { 
+      "trading": "Ish qurollari", 
+      "bot_descr": "Bot qanday ishlaydi", 
+      "call": "Murojaat", 
+      "about": "Biz haqimizda", 
+      "referal": "Referal" 
+    } 
+  }, 
+  "toolsMenu": { 
+    "title": "Ish Qurollari", 
+    "buttons": { 
+      "analysis": "Tahlil & Signal", 
+      "monitoring": "Monitoring" 
+    } 
+  }, 
+  "screener": { 
+    "table_title": "Binance birjasida zichlik skrineri", 
+    "table_header": { 
+      "name": "Tanga", 
+      "raz": "Kuch", 
+      "price": "Narxi", 
+      "cd": "Zichlik", 
+      "dal": "Masofa" 
+    }, 
+    "chart_lang": "uz" 
+  }, 
+  "forex": { 
+    "auth":{ 
+      "title": "Akkauntni ulash", 
+      "form": { 
+        "login": "Login", 
+        "password": "Parol", 
+        "server": "Server" 
+      }, 
+      "button_logIn": "Kirish", 
+      "button_logOut": "Chiqish", 
+      "error": "Ma'lumotlar noto'g'ri kiritilgan" 
+    }, 
+    "settings": { 
+      "balance": "Balans", 
+      "alerts": { 
+        "success": "Avtomatik savdo yoqilgan!", 
+        "info": "Avtomatik savdo o'chirilgan.", 
+        "error": "Server xatosi", 
+        "error400": "Xatosi 400" 
+      }, 
+      "table": { 
+        "tab": { 
+          "hour": "soat", 
+          "day": "kun" 
+        }, 
+        "panel": "Umumiy foyda" 
+      }, 
+      "logOut_message": "Ishonchingiz komilmi?" 
+    } 
+  }, 
+  "noSubscribe": { 
+    "title": "Voy, siz obuna sotib olmaganga o'xshaysiz", 
+    "text": "Yangi imkoniyatlarni ochadigan obunani sotib oling!", 
+    "button": "Obuna sotib oling" 
+  } 
 }

@@ -3,7 +3,7 @@ import MainTitle from "./MainTitle/index.js";
 import {Box} from "@mui/material";
 
 const MainMenu = () => {
-    window.Telegram.WebApp.BackButton.isVisible = true;
+    window.Telegram.WebApp.BackButton.isVisible = false;
     window.Telegram.WebApp.ready();
     window.Telegram.WebApp.BackButton.onClick(async () => {
         window.Telegram.WebApp.HapticFeedback.notificationOccurred('error');
