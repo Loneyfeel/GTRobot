@@ -13,7 +13,8 @@
     "title": "Торговые инструменты",
     "buttons": {
       "analysis": "Аналитика и сигнал",
-      "monitoring": "Мониторинг"
+      "monitoring": "Мониторинг",
+      "forex": "100% Автомат"
     }
   },
   "screener": {

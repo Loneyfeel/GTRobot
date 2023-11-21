@@ -1,6 +1,6 @@
 import './App.css'
 
-// import MainMenu from "./pages/MainMenu";
+import MainMenu from "./pages/MainMenu";
 // import ToolsMenu from "./pages/ToolsMenu";
 // import Screener from "./pages/Screener";
 // import Forex from "./pages/Forex";
@@ -23,9 +23,9 @@ function App() {
         const fetchUserLanguage = async () => {
             try {
                 const response = await axios.post(`${proxy}https://gtrobot.ngrok.dev/api/user-locale`, { userId });
-                setLanguage(response.data);
                 setLoading(false);
                 console.log('Полученный язык:', response.data);
+                setLanguage(response.data);
             } catch (error) {
                 console.error('Произошла ошибка при выполнении POST-запроса:', error);
             }
@@ -101,7 +101,7 @@ function App() {
     return (
         <>
             <ThemeProvider theme={theme}>
-                {/*<MainMenu/>*/}
+                <MainMenu/>
                 {/*<ToolsMenu/>*/}
                 {/*<Screener/>*/}
                 {/*<Forex/>*/}

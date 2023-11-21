@@ -13,7 +13,8 @@
     "title": "Ish Qurollari", 
     "buttons": { 
       "analysis": "Tahlil & Signal", 
-      "monitoring": "Monitoring" 
+      "monitoring": "Monitoring",
+      "forex": "100% Avtomatik"
     } 
   }, 
   "screener": { 
