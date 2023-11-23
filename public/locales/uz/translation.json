@@ -45,8 +45,7 @@
       "alerts": { 
         "success": "Avtomatik savdo yoqilgan!", 
         "info": "Avtomatik savdo o'chirilgan.", 
-        "error": "Server xatosi", 
-        "error400": "Xatosi 400" 
+        "error": "Xatosi"
       }, 
       "table": { 
         "tab": { 

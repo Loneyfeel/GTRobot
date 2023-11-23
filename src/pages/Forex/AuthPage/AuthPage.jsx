@@ -6,6 +6,8 @@ import ForexAuthTextField from "./ForexAuthTextField";
 import ForexServerAutocomplete from "./ForexServerAutocomplete/index.js";
 import CustomAlert from "../CustomAlert/index.js";
 
+import {initData, userId} from '../../../shared/telegram/telegram.js'
+import {host} from "../../../shared/host/host.js";
 const ForexSettings = lazy(() => import('../ForexSettings'));
 
 const AuthPage = () => {
@@ -14,30 +16,24 @@ const AuthPage = () => {
     const [invalidData, setInvalidData] = useState(false);
     const [isLoading, setIsLoading] = useState(true);
 
-    const userId = window.Telegram.WebApp.initDataUnsafe.user.id;
-    const proxy = 'https://corsproxy.io/?';
-
-
     useEffect(() => {
         const fetchDataExists = async () => {
             try {
                 const response = await axios.post(
-                    `/api/forex-data-exists`,
+                    `${host}/api/forex-data-exists`,
                     {
                         userId,
                     }
                 );
-                console.log(response, 'при загрузке страницы');
-                if (response.data.errorCode === 1006) {
-                    // Перенаправление на другую страницу
-                    window.location.href = '#';
-                }
                 if (response.data.status === true) {
-                    // Перенаправление на другую страницу
                     setVisibleForexSettings(true);
                 }
             } catch (error) {
                 console.error('Error fetching data:', error);
+                if (error.response.data.errorCode === 1006) {
+                    // Перенаправление на другую страницу
+                    window.location.href = '/premium';
+                }
             } finally {
                 // Set loading to false after data fetching is complete
                 setIsLoading(false);
@@ -47,7 +43,6 @@ const AuthPage = () => {
     }, []);
 
 // Состояния для полей ввода
-    const userInit = window.Telegram.WebApp.initData;
     const [userLogin, setUserLogin] = useState('');
     const [userPassword, setUserPassword] = useState('');
     const [userServer, setUserServer] = useState('');
@@ -57,15 +52,13 @@ const AuthPage = () => {
         try {
             setIsLoading(true);
             setInvalidData(false);
-            console.log('log)', userLogin, '  pas)', userPassword, '  ser)', userServer)
-            const response = await axios.post(`/api/save-forex-data`, {
-                userInit,
+            const response = await axios.post(`${host}/api/save-forex-data`, {
+                initData,
                 userId,
                 userLogin,
                 userPassword,
                 userServer,
             });
-            console.log(response, 'если нужна регистрация')
             if (response.data.errorCode === 1001) {
                 setInvalidData(true);
                 setTimeout(() => {
@@ -77,17 +70,19 @@ const AuthPage = () => {
             }
         } catch (error) {
             console.error('Error updating forex status:', error);
-
-            if (error.response && error.response.status === 400) {
-                // Обработка ошибки 400 (некорректные данные запроса)
-                console.error('Invalid request data:', error.response.data);
-                setErrorAlert(true);
-                setTimeout(() => setErrorAlert(false), 3000);
-            } else {
-                // Обработка других ошибок
+            if (error.response.data.errorCode === 1001) {
+                setInvalidData(true);
+                setTimeout(() => {
+                    setInvalidData(false);
+                }, 3000);
+            }
+            if (error.response.data.errorCode === 1006) {
+                // Перенаправление на другую страницу
+                window.location.href = '/premium';
+            }
+            if (error.response) {
                 console.error('Other error:', error);
                 setErrorAlert(true);
-                Z
                 setTimeout(() => setErrorAlert(false), 3000);
             }
         } finally {
@@ -187,6 +182,7 @@ const AuthPage = () => {
                                     backgroundColor: invalidData ? 'rgba(227, 45, 45, 0.8)' : undefined,
                                 }}
                             >{t('forex.auth.button_logIn')}</Button>
+                            {console.log(invalidData)}
                             {invalidData && (
                                 <Typography sx={{color: 'rgba(227, 45, 45, 0.8)', marginTop: '5px'}}>
                                     {t('forex.auth.error')}
@@ -194,10 +190,10 @@ const AuthPage = () => {
                             )}
                         </Box>
                         <CustomAlert
-                            open={error400Alert}
-                            onClose={() => setError400Alert(false)}
+                            open={errorAlert}
+                            onClose={() => setErrorAlert(false)}
                             severity="error"
-                            message={t('forex.settings.alerts.error400')}
+                            message={t('forex.settings.alerts.error')}
                         />
                     </Box>
                 ))}

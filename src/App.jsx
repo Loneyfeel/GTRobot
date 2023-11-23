@@ -4,34 +4,32 @@ import MainMenu from "./pages/MainMenu";
 // import ToolsMenu from "./pages/ToolsMenu";
 // import Screener from "./pages/Screener";
 // import Forex from "./pages/Forex";
-// import NoSubscribe from "./pages/NoSuscribe/index.js";
+// import NoSubscribe from "./pages/NoSuscribe";
 
 import {useTranslation} from "react-i18next";
 import {useEffect, useState} from "react";
 import axios from "axios";
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import {useThemeParams} from "@vkruglikov/react-telegram-web-app";
+import {host} from "./shared/host/host.js";
+import {userId} from './shared/telegram/telegram.js'
 
 function App() {
     const [loading, setLoading] = useState(true);
     const [language, setLanguage] = useState('');
 
-    const proxy = 'https://corsproxy.io/?';
-    const userId = window.Telegram.WebApp.initDataUnsafe.user.id;
-
     useEffect(() => {
         const fetchUserLanguage = async () => {
             try {
-                const response = await axios.post(`/api/user-locale`, { userId });
+                const response = await axios.post(`${host}/api/user-locale`, { userId });
                 setLoading(false);
-                console.log('Полученный язык:', response.data);
                 setLanguage(response.data);
-                if (response.data.errorCode === 1006) {
+            } catch (error) {
+                console.error('Произошла ошибка при выполнении POST-запроса:', error);
+                if (error.response.data.errorCode === 1006) {
                     // Перенаправление на другую страницу
                     window.location.href = '/premium';
                 }
-            } catch (error) {
-                console.error('Произошла ошибка при выполнении POST-запроса:', error);
             }
         };
 

@@ -3,18 +3,18 @@ import React, {useEffect, useState} from 'react'
 import TableComponent from "./TableComponents/index.js";
 import {formatWordToNumber} from "./TableComponents/helps/FormatNumber/FormatNumber.js";
 import axios from "axios";
-
-
-const proxy = 'https://corsproxy.io/?'
+import {host} from '../../shared/host/host.js'
+import {initData} from "../../shared/telegram/telegram.js";
 
 const Screener = () => {
     const [data, setData] = useState([])
     const fetchData = async () => {
         try {
-            const response = await axios.post(`/api/screener`, {}, {
+            const response = await axios.post(`${host}/api/screener`, {}, {
                 headers: {
                     'Content-Type': 'application/json',
-                }
+                },
+                initData,
             });
             if (response.status === 200) {
                 const apiData = response.data;
@@ -33,7 +33,7 @@ const Screener = () => {
 
     useEffect(() => {
         fetchData();
-        const intervalId = setInterval(fetchData, 5000);
+        const intervalId = setInterval(fetchData, 3000);
         return () => clearInterval(intervalId);
     }, []);
 

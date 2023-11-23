@@ -1,9 +1,11 @@
 import React, {lazy, useEffect, useState} from 'react';
-import { Alert, Backdrop, Box, Button, CircularProgress, Snackbar, Stack } from "@mui/material";
+import { Backdrop, Box, Button, CircularProgress, Stack } from "@mui/material";
 import { useTranslation } from "react-i18next";
 
 import axios from 'axios';
 import CustomAlert from "../CustomAlert/index.js";
+import {initData, userId} from '../../../shared/telegram/telegram.js'
+import {host} from "../../../shared/host/host.js";
 
 const BalancePanel = lazy(() => import('./BalancePanel'));
 const ForexTable = lazy(() => import('./ForexTable'));
@@ -26,25 +28,28 @@ const ForexSettings = ({ isVisibleForexSettings, handleForexSettingsVisible }) =
         try {
             setIsLoading(true);
             const response = await axios.post(
-                `/api/get-forex-data`,
+                `${host}/api/get-forex-data`,
                 {
+                    initData,
                     userId,
                 }
-            );
-            console.log(response, 'данные об аккаунте');
-
-            if (response.data && response.data.data && response.data.data.status !== undefined) {
-                // Если запрос успешен, обновляем состояние accountData
-                setAccountData(response.data);
-                // Обновляем tradeIsEnabled с использованием безопасной проверки наличия свойства
-                setTradeIsEnabled(response.data.data.status || false);
-            } else {
-                console.error('Unexpected response format:', response.data);
-                setErrorAlert(true);
-                setTimeout(() => setErrorAlert(false), 3000);
-            }
+            )
+                if (response.data && response.data.data && response.data.data.status !== undefined) {
+                    // Если запрос успешен, обновляем состояние accountData
+                    setAccountData(response.data);
+                    // Обновляем tradeIsEnabled с использованием безопасной проверки наличия свойства
+                    setTradeIsEnabled(response.data.data.status || false);
+                } else {
+                    console.error('Unexpected response format:', response.data);
+                    setErrorAlert(true);
+                    setTimeout(() => setErrorAlert(false), 3000);
+                }
         } catch (error) {
             console.error('Error fetching account data:', error);
+            if (error.response.data.errorCode === 1006) {
+                // Перенаправление на другую страницу
+                window.location.href = '/premium';
+            }
             setErrorAlert(true);
             setTimeout(() => setErrorAlert(false), 3000);
         } finally {
@@ -55,8 +60,6 @@ const ForexSettings = ({ isVisibleForexSettings, handleForexSettingsVisible }) =
     const [isLoading, setIsLoading] = useState(false);
     const [tradeIsEnabled, setTradeIsEnabled] = useState(accountData?.data?.status || false);
     const [errorAlert, setErrorAlert] = useState(false);
-    const userId = window.Telegram.WebApp.initDataUnsafe.user.id;
-    const proxy = 'https://corsproxy.io/?';
 
     const [openSnackOn, setOpenSnackOn] = useState(false);
     const [openSnackOff, setOpenSnackOff] = useState(false);
@@ -69,14 +72,13 @@ const ForexSettings = ({ isVisibleForexSettings, handleForexSettingsVisible }) =
         try {
             setIsLoading(true);
             const response = await axios.post(
-                `/api/update-forex-status`,
+                `${host}/api/update-forex-status`,
                 {
+                    initData,
                     userId,
                     userStatus: !tradeIsEnabled,
                 }
             );
-            console.log('посылаю авто в', !tradeIsEnabled)
-            console.log(response, 'переключение авто')
             if (response.data.errorCode) {
                 console.error('Error updating forex status:', response.data.errorCode);
                 setErrorAlert(true);
@@ -93,6 +95,10 @@ const ForexSettings = ({ isVisibleForexSettings, handleForexSettingsVisible }) =
                 }
             }
         } catch (error) {
+            if (error.response.data.errorCode === 1006) {
+                // Перенаправление на другую страницу
+                window.location.href = '/premium';
+            }
             console.error('Error updating forex status:', error);
             setErrorAlert(true);
             setTimeout(() => setErrorAlert(false), 3000);
@@ -105,12 +111,12 @@ const ForexSettings = ({ isVisibleForexSettings, handleForexSettingsVisible }) =
         try {
             setIsLoading(true);
             const response = await axios.post(
-                `/api/delete-forex-data`, // Замените на правильный URL для выхода
+                `${host}/api/delete-forex-data`,
                 {
+                    initData,
                     userId,
                 }
             );
-            console.log(response, 'выход')
             if (response.data.errorCode) {
                 console.error('Error during logout:', response.data.errorCode);
                 setErrorAlert(true);
@@ -122,6 +128,10 @@ const ForexSettings = ({ isVisibleForexSettings, handleForexSettingsVisible }) =
             }
         } catch (error) {
             console.error('Error during logout:', error);
+            if (error.response.data.errorCode === 1006) {
+                // Перенаправление на другую страницу
+                window.location.href = '/premium';
+            }
             setErrorAlert(true);
             setTimeout(() => setErrorAlert(false), 3000);
         } finally {
