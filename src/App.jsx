@@ -22,10 +22,14 @@ function App() {
     useEffect(() => {
         const fetchUserLanguage = async () => {
             try {
-                const response = await axios.post(`${proxy}https://gtrobot.ngrok.dev/api/user-locale`, { userId });
+                const response = await axios.post(`/api/user-locale`, { userId });
                 setLoading(false);
                 console.log('Полученный язык:', response.data);
                 setLanguage(response.data);
+                if (response.data.errorCode === 1006) {
+                    // Перенаправление на другую страницу
+                    window.location.href = '/premium';
+                }
             } catch (error) {
                 console.error('Произошла ошибка при выполнении POST-запроса:', error);
             }
