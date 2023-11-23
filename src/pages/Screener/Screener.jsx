@@ -11,7 +11,7 @@ const Screener = () => {
     const [data, setData] = useState([])
     const fetchData = async () => {
         try {
-            const response = await axios.post(`${proxy}https://gtrobot.ngrok.dev/api/screener`, {}, {
+            const response = await axios.post(`/api/screener`, {}, {
                 headers: {
                     'Content-Type': 'application/json',
                 }

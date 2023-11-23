@@ -22,7 +22,7 @@ const AuthPage = () => {
         const fetchDataExists = async () => {
             try {
                 const response = await axios.post(
-                    `${proxy}https://ad7ab0c42e73.ngrok.app/api/forex-data-exists`,
+                    `/api/forex-data-exists`,
                     {
                         userId,
                     }
@@ -47,17 +47,19 @@ const AuthPage = () => {
     }, []);
 
 // Состояния для полей ввода
+    const userInit = window.Telegram.WebApp.initData;
     const [userLogin, setUserLogin] = useState('');
     const [userPassword, setUserPassword] = useState('');
     const [userServer, setUserServer] = useState('');
-    const [error400Alert, setError400Alert] = useState(false);
+    const [errorAlert, setErrorAlert] = useState(false);
 
     const handleLogin = async () => {
         try {
             setIsLoading(true);
             setInvalidData(false);
             console.log('log)', userLogin, '  pas)', userPassword, '  ser)', userServer)
-            const response = await axios.post(`${proxy}https://ad7ab0c42e73.ngrok.app/api/save-forex-data`, {
+            const response = await axios.post(`/api/save-forex-data`, {
+                userInit,
                 userId,
                 userLogin,
                 userPassword,
@@ -79,8 +81,8 @@ const AuthPage = () => {
             if (error.response && error.response.status === 400) {
                 // Обработка ошибки 400 (некорректные данные запроса)
                 console.error('Invalid request data:', error.response.data);
-                setError400Alert(true);
-                setTimeout(() => setError400Alert(false), 3000);
+                setErrorAlert(true);
+                setTimeout(() => setErrorAlert(false), 3000);
             } else {
                 // Обработка других ошибок
                 console.error('Other error:', error);

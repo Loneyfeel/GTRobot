@@ -26,7 +26,7 @@ const ForexSettings = ({ isVisibleForexSettings, handleForexSettingsVisible }) =
         try {
             setIsLoading(true);
             const response = await axios.post(
-                `${proxy}https://ad7ab0c42e73.ngrok.app/api/get-forex-data`,
+                `/api/get-forex-data`,
                 {
                     userId,
                 }
@@ -69,7 +69,7 @@ const ForexSettings = ({ isVisibleForexSettings, handleForexSettingsVisible }) =
         try {
             setIsLoading(true);
             const response = await axios.post(
-                `${proxy}https://ad7ab0c42e73.ngrok.app/api/update-forex-status`,
+                `/api/update-forex-status`,
                 {
                     userId,
                     userStatus: !tradeIsEnabled,
@@ -105,7 +105,7 @@ const ForexSettings = ({ isVisibleForexSettings, handleForexSettingsVisible }) =
         try {
             setIsLoading(true);
             const response = await axios.post(
-                `${proxy}https://ad7ab0c42e73.ngrok.app/api/delete-forex-data`, // Замените на правильный URL для выхода
+                `/api/delete-forex-data`, // Замените на правильный URL для выхода
                 {
                     userId,
                 }
