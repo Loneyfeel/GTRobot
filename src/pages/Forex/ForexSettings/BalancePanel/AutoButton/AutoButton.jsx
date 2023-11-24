@@ -20,8 +20,8 @@ const AutoButton = ({ isEnabled, onClick, label, fontSize, width, height }) => {
                 marginBlock: '5px',
                 '&:disabled': {
                     backgroundColor: 'unset',
-                    color: '#666',
-                    border: '1px solid #666',
+                    color: 'var(--tg-theme-button-color)',
+                    border: '1px solid var(--tg-theme-button-color)',
                     boxShadow: 'unset',
                 },
                 '&:active': {

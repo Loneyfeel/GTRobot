@@ -10,11 +10,10 @@ const Screener = () => {
     const [data, setData] = useState([])
     const fetchData = async () => {
         try {
-            const response = await axios.post(`${host}/api/screener`, {}, {
+            const response = await axios.post(`${host}/api/screener`, {initData}, {
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                initData,
             });
             if (response.status === 200) {
                 const apiData = response.data;

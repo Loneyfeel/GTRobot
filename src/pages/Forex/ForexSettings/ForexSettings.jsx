@@ -148,9 +148,6 @@ const ForexSettings = ({ isVisibleForexSettings, handleForexSettingsVisible }) =
                 <Box
                     sx={{
                         display: `${isVisibleForexSettings ? 'flex' : 'none'}`,
-                        position: 'absolute',
-                        top: '0',
-                        left: '0',
                         width: '100%',
                         backgroundColor: 'var(--tg-theme-secondary-bg-color)',
                         color: 'var(--tg-theme-text-color)',
@@ -180,11 +177,20 @@ const ForexSettings = ({ isVisibleForexSettings, handleForexSettingsVisible }) =
                         >
                             <Box
                             sx={{
-                                width: '360px'
+                                width: '98%'
                             }}>
                                 <ForexTable accountData={accountData}/>
                             </Box>
                         </Box>
+                    <Box
+                    sx={{
+                        display: 'flex',
+                        justifyContent: 'flex-end',
+                        position: 'fixed',
+                        bottom: '0',
+                        width: '100%',
+                        bgcolor: 'var(--tg-theme-secondary-bg-color)',
+                    }}>
                         <Button
                             onClick={() => {
                                 window.Telegram.WebApp.showConfirm(
@@ -206,6 +212,7 @@ const ForexSettings = ({ isVisibleForexSettings, handleForexSettingsVisible }) =
                         >
                             {t('forex.auth.button_logOut')}
                         </Button>
+                    </Box>
                     </Box>
                 </Box>
                 <CustomAlert

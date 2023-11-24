@@ -45,7 +45,8 @@
       "alerts": { 
         "success": "Avtomatik savdo yoqilgan!", 
         "info": "Avtomatik savdo o'chirilgan.", 
-        "error": "Xatosi"
+        "error": "Xatosi",
+        "error1002": "Mablag ' yetarli emas"
       }, 
       "table": { 
         "tab": { 

@@ -22,6 +22,7 @@ const AuthPage = () => {
                 const response = await axios.post(
                     `${host}/api/forex-data-exists`,
                     {
+                        initData,
                         userId,
                     }
                 );
@@ -47,6 +48,7 @@ const AuthPage = () => {
     const [userPassword, setUserPassword] = useState('');
     const [userServer, setUserServer] = useState('');
     const [errorAlert, setErrorAlert] = useState(false);
+    const [error1002Alert, setError1002Alert] = useState(false);
 
     const handleLogin = async () => {
         try {
@@ -74,6 +76,12 @@ const AuthPage = () => {
                 setInvalidData(true);
                 setTimeout(() => {
                     setInvalidData(false);
+                }, 3000);
+            }
+            if (error.response.data.errorCode === 1002) {
+                setError1002Alert(true);
+                setTimeout(() => {
+                    setError1002Alert(false);
                 }, 3000);
             }
             if (error.response.data.errorCode === 1006) {
@@ -182,7 +190,6 @@ const AuthPage = () => {
                                     backgroundColor: invalidData ? 'rgba(227, 45, 45, 0.8)' : undefined,
                                 }}
                             >{t('forex.auth.button_logIn')}</Button>
-                            {console.log(invalidData)}
                             {invalidData && (
                                 <Typography sx={{color: 'rgba(227, 45, 45, 0.8)', marginTop: '5px'}}>
                                     {t('forex.auth.error')}
@@ -194,6 +201,12 @@ const AuthPage = () => {
                             onClose={() => setErrorAlert(false)}
                             severity="error"
                             message={t('forex.settings.alerts.error')}
+                        />
+                        <CustomAlert
+                            open={error1002Alert}
+                            onClose={() => setError1002Alert(false)}
+                            severity="error"
+                            message={t('forex.settings.alerts.error1002')}
                         />
                     </Box>
                 ))}

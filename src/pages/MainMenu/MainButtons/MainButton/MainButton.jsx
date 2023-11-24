@@ -8,7 +8,7 @@ const MainButton = ({icon, text, url}) => {
     const handleClick = () => {
         if (url === "/tools")
         {
-            window.location.href(url)
+            window.location.href = url
         }
         else {
             window.Telegram.WebApp.openTelegramLink(url)

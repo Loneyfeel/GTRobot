@@ -1,10 +1,10 @@
 import './App.css'
 
 import MainMenu from "./pages/MainMenu";
-// import ToolsMenu from "./pages/ToolsMenu";
-// import Screener from "./pages/Screener";
-// import Forex from "./pages/Forex";
-// import NoSubscribe from "./pages/NoSuscribe";
+import ToolsMenu from "./pages/ToolsMenu";
+import Screener from "./pages/Screener";
+import Forex from "./pages/Forex";
+import NoSubscribe from "./pages/NoSuscribe";
 
 import {useTranslation} from "react-i18next";
 import {useEffect, useState} from "react";
@@ -103,7 +103,7 @@ function App() {
     return (
         <>
             <ThemeProvider theme={theme}>
-                <MainMenu/>
+                {/*<MainMenu/>*/}
                 {/*<ToolsMenu/>*/}
                 {/*<Screener/>*/}
                 {/*<Forex/>*/}

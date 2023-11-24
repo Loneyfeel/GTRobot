@@ -32,7 +32,7 @@ const ForexTabPanel = ({ value, label, accountData }) => {
         <TabPanel
             value={value}
             sx={{
-                padding: '5px',
+                padding: '5px 0 5px 0',
                 paddingBottom: '0',
                 bgcolor: 'var(--tg-theme-bg-color)',
                 borderRadius: '5px',
