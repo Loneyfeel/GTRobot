@@ -4,14 +4,6 @@ import gif from './assets/AnimatedSticker.gif'
 import {useTranslation} from "react-i18next";
 
 const NoSubscribe = () => {
-    window.Telegram.WebApp.BackButton.isVisible = true;
-    window.Telegram.WebApp.ready();
-    window.Telegram.WebApp.BackButton.onClick(async () => {
-        window.Telegram.WebApp.HapticFeedback.notificationOccurred('error');
-
-        window.location.href = '/';
-    });
-
     const { t } = useTranslation();
     return (
         <>
@@ -27,11 +19,13 @@ const NoSubscribe = () => {
                 <Box>
                     <CardMedia
                         component="img"
-                        height="170"
                         image={gif}
+                        loading="lazy"
                         alt="Utya Grustya"
                         sx={{
-                            margin: '40px 0'
+                            margin: '40px 0',
+                            width: '170px',
+                            height: '170px'
                         }}
                     />
                 </Box>

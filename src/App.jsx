@@ -107,7 +107,7 @@ function App() {
                 {/*<ToolsMenu/>*/}
                 {/*<Screener/>*/}
                 {/*<Forex/>*/}
-                {/*<NoSubscribe/>*/}
+                <NoSubscribe/>
             </ThemeProvider>
         </>
     )
