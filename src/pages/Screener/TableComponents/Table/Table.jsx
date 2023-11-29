@@ -10,7 +10,7 @@ import ResetButton from "../Reset Buttons";
 import BodyTableCell from "./BodyTableCell";
 
 import {useTranslation} from "react-i18next";
-import DelayedModal from "../../../../shared/Hint/Screener";
+import DelayedModal from "../../../../shared/components/Hint/Screener";
 
 const TableScreener = ({ filteredData, page, rowsPerPage, orderBy, setOrderBy, order, setOrder, openMiniTVwidget, onClose }) => {
 

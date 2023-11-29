@@ -4,15 +4,17 @@ import { TabContext, TabList } from '@mui/lab';
 
 import { useTranslation } from 'react-i18next';
 
-const ForexTab = lazy(() => import('./ForexTab'));
+const CustomTab = lazy(() => import('../../../../shared/components/Tabs/Tab/index.js'));
 const ForexTabPanel = lazy(() => import('./ForexTabPanel'));
 
 const ForexTable = ({ accountData }) => {
     const { t } = useTranslation();
     const [value, setValue] = useState('1');
 
+    const [selected, setSelected] = useState(false)
     const handleChange = (event, newValue) => {
         setValue(newValue);
+        setSelected(true)
     };
 
     const calculateTotalProfit = (interval) => {
@@ -40,9 +42,9 @@ const ForexTable = ({ accountData }) => {
         <TabContext value={value}>
             <Box>
                 <TabList>
-                    <ForexTab label={`24 ${t('forex.settings.table.tab.hour')}`} value="1" handleChange={handleChange} />
-                    <ForexTab label={`7 ${t('forex.settings.table.tab.day')}`} value="2" handleChange={handleChange} />
-                    <ForexTab label={`30 ${t('forex.settings.table.tab.day')}`} value="3" handleChange={handleChange} />
+                    <CustomTab label={`24 ${t('forex.settings.table.tab.hour')}`} value="1" selected={selected} handleChange={handleChange} />
+                    <CustomTab label={`7 ${t('forex.settings.table.tab.day')}`} value="2" selected={selected} handleChange={handleChange} />
+                    <CustomTab label={`30 ${t('forex.settings.table.tab.day')}`} value="3" selected={selected} handleChange={handleChange} />
                 </TabList>
             </Box>
             <Box sx={{

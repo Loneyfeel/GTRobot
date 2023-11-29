@@ -5,6 +5,7 @@ import ToolsMenu from "./pages/ToolsMenu";
 import Screener from "./pages/Screener";
 import Forex from "./pages/Forex";
 import NoSubscribe from "./pages/NoSuscribe";
+import Copyright from "./pages/Copyright";
 
 import {useTranslation} from "react-i18next";
 import {useEffect, useState} from "react";
@@ -107,7 +108,8 @@ function App() {
                 {/*<ToolsMenu/>*/}
                 {/*<Screener/>*/}
                 {/*<Forex/>*/}
-                <NoSubscribe/>
+                {/*<NoSubscribe/>*/}
+                <Copyright/>
             </ThemeProvider>
         </>
     )

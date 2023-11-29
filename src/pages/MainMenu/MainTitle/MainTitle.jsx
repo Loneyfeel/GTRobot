@@ -1,6 +1,6 @@
 import React from 'react';
 import {useTranslation} from "react-i18next";
-import MenuTitle from "../../../shared/MenuPages/Titles/MenuTitle.jsx";
+import MenuTitle from "../../../shared/components/MenuPages/Titles/MenuTitle.jsx";
 
 const MainTitle = () => {
     const {t} = useTranslation()

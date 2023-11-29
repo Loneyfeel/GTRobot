@@ -19,6 +19,7 @@
     "@mui/system": "^5.14.17",
     "@vkruglikov/react-telegram-web-app": "^2.1.5",
     "axios": "^1.6.0",
+    "framer-motion": "^10.6.8",
     "i18next": "^23.6.0",
     "i18next-browser-languagedetector": "^7.1.0",
     "i18next-http-backend": "^2.3.1",

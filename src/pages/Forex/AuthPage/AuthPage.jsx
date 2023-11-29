@@ -12,7 +12,7 @@ const ForexSettings = lazy(() => import('../ForexSettings'));
 
 const AuthPage = () => {
 
-    const [isVisibleForexSettings, setVisibleForexSettings] = useState(false);
+    const [isVisibleForexSettings, setVisibleForexSettings] = useState(true);
     const [invalidData, setInvalidData] = useState(false);
     const [isLoading, setIsLoading] = useState(true);
 
