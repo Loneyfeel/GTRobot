@@ -9,7 +9,7 @@ const CopyTableContainer = ({ children }) => (
                         width: '100%',
                         borderRadius: '0',
                         bgcolor: 'var(--tg-theme-secondary-bg-color)'
-    }}>
+                    }}>
         {children}
     </TableContainer>
 );

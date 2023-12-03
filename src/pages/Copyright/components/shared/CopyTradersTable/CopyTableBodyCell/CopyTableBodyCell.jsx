@@ -4,34 +4,34 @@ import CardContent from '@mui/material/CardContent';
 import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
 import StarOutlineRoundedIcon from '@mui/icons-material/StarOutlineRounded';
-import {Box} from "@mui/material";
+import { Box } from "@mui/material";
 
 const CopyTableBodyCell = ({ data }) => (
     <Card sx={getCardStyle()}>
         <CardContent
-        sx={{
-            display: 'flex',
-            flexDirection: 'column',
-            justifyContent: 'space-between',
-            height: '170px'
-        }}>
-            <Box
             sx={{
                 display: 'flex',
                 flexDirection: 'column',
                 justifyContent: 'space-between',
-                height: '100%'
+                height: '170px'
             }}>
-                <Box
+            <Box
                 sx={{
                     display: 'flex',
+                    flexDirection: 'column',
                     justifyContent: 'space-between',
-                    alignItems: 'center'
+                    height: '100%'
                 }}>
-                    <Typography
+                <Box
                     sx={{
-                        fontSize: '20px',
+                        display: 'flex',
+                        justifyContent: 'space-between',
+                        alignItems: 'center'
                     }}>
+                    <Typography
+                        sx={{
+                            fontSize: '20px',
+                        }}>
                         {data.trader}
                     </Typography>
                     <IconButton color="primary">
@@ -44,12 +44,12 @@ const CopyTableBodyCell = ({ data }) => (
                         justifyContent: 'space-around'
                     }}>
                     <Box
-                    sx={{
-                        display: 'flex',
-                        flexDirection: 'column',
-                        justifyContent: 'center',
-                        alignItems: 'center'
-                    }}>
+                        sx={{
+                            display: 'flex',
+                            flexDirection: 'column',
+                            justifyContent: 'center',
+                            alignItems: 'center'
+                        }}>
                         <Typography variant="body2" color="text.primary">
                             ROI:
                         </Typography>

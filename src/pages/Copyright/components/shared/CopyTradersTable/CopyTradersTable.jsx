@@ -1,95 +1,75 @@
 import React, { useState, useEffect } from 'react';
 import { Grid } from '@mui/material';
-import { motion, AnimatePresence } from 'framer-motion';
+import { useSpring, animated } from 'react-spring';
 import CopyTableBodyCell from './CopyTableBodyCell';
+import CopyTableHeader from './CustomTableHead';
 import CopyTableContainer from './CopyTableContainer';
-import CustomTableHead from './CustomTableHead';
 
 const generateRandomData = () => {
-    const randomData = [];
-    for (let i = 1; i <= 1000; i++) {
-        const trader = `Trader ${i}`;
-        const roi = Math.random() * 10000;
-        const pnl = Math.random() * 10000;
-        const subscribers = `${i}`;
-        randomData.push({ trader, roi, pnl, subscribers });
-    }
-    return randomData;
+    return Array.from({ length: 1000 }, (_, i) => ({
+        trader: `Trader ${i + 1}`,
+        roi: Math.random() * 10000,
+        pnl: Math.random() * 10000,
+        subscribers: `${i + 1}`,
+    }));
 };
-const tableOrder = ['roi', 'pnl', 'subscribers'];
 
 const CopyTradersTable = () => {
-    const [data] = useState(generateRandomData());
-    const [visibleTable, setVisibleTable] = useState('roi');
+    const [selectedTab, setSelectedTab] = useState(0);
     const [selectedPeriod, setSelectedPeriod] = useState('all');
-    const [rowsToShow, setRowsToShow] = useState(15);
+    const [tables, setTables] = useState([[], [], []]);
+    const [animProps, set] = useSpring(() => ({ opacity: 1, transform: 'translateX(0%)' }));
 
-    const handleScroll = () => {
-        if (window.innerHeight + document.documentElement.scrollTop === document.documentElement.offsetHeight) {
-            setRowsToShow((prevRows) => prevRows + 10);
-        }
+    const handleTabChange = (event, newValue) => {
+        set({ opacity: 0, display: 'none' });
+        setTimeout(() => {
+            setSelectedTab(newValue);
+            set({ opacity: 1, display: 'block' });
+        }, 300);
+    };
+
+    const handlePeriodChange = (event) => {
+        setSelectedPeriod(event.target.value);
     };
 
     useEffect(() => {
-        window.addEventListener('scroll', handleScroll);
-        return () => window.removeEventListener('scroll', handleScroll);
+        const tablesData = Array(3).fill().map(generateRandomData);
+        const sortedTables = tablesData.map((data, index) => sortData(data, index));
+        setTables(sortedTables);
     }, []);
 
-    const [slideDirection, setSlideDirection] = useState('left');
-    const updateVisibleTable = (table) => {
-        // Установите видимую таблицу
-        setVisibleTable(table);
+    const sortData = (data, tabIndex) => data.slice().sort((a, b) => b[getSortKey(tabIndex)] - a[getSortKey(tabIndex)]);
 
-        // Определите, с какой стороны находится новая таблица относительно текущей
-        const currentIndex = tableOrder.indexOf(visibleTable);
-        const newIndex = tableOrder.indexOf(table);
-        const isTableOnLeft = visibleTable && newIndex < currentIndex;
+    const getVisibleData = () => tables[selectedTab].slice(0, 15);
 
-        // Установите направление анимации в зависимости от расположения таблицы
-        setSlideDirection(isTableOnLeft ? 'left' : 'right');
-    };
+    const renderAnimatedDiv = (tabIndex) => (
+        <animated.div style={{ ...animProps, display: selectedTab === tabIndex ? 'block' : 'none', width: '100%' }}>
+            {getVisibleData().map((row, rowIndex) => (
+                <Grid item key={rowIndex} sx={{ width: '100%' }}>
+                    <CopyTableBodyCell data={row} />
+                </Grid>
+            ))}
+        </animated.div>
+    );
 
     return (
         <CopyTableContainer>
-            <Grid container justifyContent="center">
-                <Grid item>
-                    <CustomTableHead
-                        selectedPeriod={selectedPeriod}
-                        onSelectPeriod={(period) => setSelectedPeriod(period)}
-                        onTableChange={updateVisibleTable}
-                    />
-                </Grid>
-            </Grid>
+            <CopyTableHeader
+                selectedPeriod={selectedPeriod}
+                handlePeriodChange={handlePeriodChange}
+                selectedTab={selectedTab}
+                handleTabChange={handleTabChange}
+            />
             <Grid container>
-                <AnimatePresence mode="wait">
-                    <motion.div
-                        key={visibleTable}
-                        initial={{ x: slideDirection === 'left' ? -200 : 200, opacity: 0 }}
-                        animate={{ x: 0, opacity: 1 }}
-                        exit={{ x: slideDirection === 'left' ? -200 : 200, opacity: 0 }}
-                        transition={{ duration: 0.2, ease: "easeInOut" }}
-                        style={{ position: 'absolute', width: '100%' }}
-                    >
-                        {visibleTable === 'roi' && (
-                            data.slice(0, rowsToShow).map((row, index) => (
-                                <CopyTableBodyCell key={index} data={row} />
-                            ))
-                        )}
-                        {visibleTable === 'pnl' && (
-                            data.slice(0, rowsToShow).map((row, index) => (
-                                <CopyTableBodyCell key={index} data={row} />
-                            ))
-                        )}
-                        {visibleTable === 'subscribers' && (
-                            data.slice(0, rowsToShow).map((row, index) => (
-                                <CopyTableBodyCell key={index} data={row} />
-                            ))
-                        )}
-                    </motion.div>
-                </AnimatePresence>
+                {[0, 1, 2].map((tabIndex) => renderAnimatedDiv(tabIndex))}
             </Grid>
         </CopyTableContainer>
     );
+};
+
+const getSortKey = (tabIndex) => {
+    const keys = ['roi', 'pnl', 'subscribers'];
+    return keys[tabIndex] || 'roi';
 };
 
 export default CopyTradersTable;
