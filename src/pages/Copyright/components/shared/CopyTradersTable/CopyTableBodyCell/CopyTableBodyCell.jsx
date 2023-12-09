@@ -13,7 +13,11 @@ const CopyTableBodyCell = ({ data }) => (
                 display: 'flex',
                 flexDirection: 'column',
                 justifyContent: 'space-between',
-                height: '170px'
+                height: '110px',
+                padding: '10px',
+                '&.MuiCardContent-root: last-child':{
+                    paddingBottom: '10px',
+                }
             }}>
             <Box
                 sx={{
@@ -95,6 +99,7 @@ const getCardStyle = () => ({
     margin: '10px',
     textAlign: 'left',
     bgcolor: 'var(--tg-theme-bg-color)',
+    padding: '1px'
 });
 
 const format = (value) => (

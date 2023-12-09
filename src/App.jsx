@@ -1,12 +1,5 @@
 import './App.css'
 
-import MainMenu from "./pages/MainMenu";
-import ToolsMenu from "./pages/ToolsMenu";
-import Screener from "./pages/Screener";
-import Forex from "./pages/Forex";
-import NoSubscribe from "./pages/NoSuscribe";
-import Copyright from "./pages/Copyright";
-
 import {useTranslation} from "react-i18next";
 import {useEffect, useState} from "react";
 import axios from "axios";
@@ -14,6 +7,16 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import {useThemeParams} from "@vkruglikov/react-telegram-web-app";
 import {host} from "./shared/host/host.js";
 import {userId} from './shared/telegram/telegram.js'
+import { BrowserRouter as Router, Route, Routes} from 'react-router-dom';
+
+
+import MainMenu from "./pages/MainMenu";
+import ToolsMenu from "./pages/ToolsMenu";
+import Screener from "./pages/Screener";
+import Forex from "./pages/Forex";
+import NoSubscribe from "./pages/NoSuscribe";
+import Copyright from "./pages/Copyright";
+import Mining from "./pages/Mining";
 
 function App() {
     const [loading, setLoading] = useState(true);
@@ -109,7 +112,12 @@ function App() {
                 {/*<Screener/>*/}
                 {/*<Forex/>*/}
                 {/*<NoSubscribe/>*/}
-                <Copyright/>
+                {/*<Copyright/>*/}
+                <Router>
+                    <Routes>
+                        <Route path="/*" exact element={<Mining/>} />
+                    </Routes>
+                </Router>
             </ThemeProvider>
         </>
     )
