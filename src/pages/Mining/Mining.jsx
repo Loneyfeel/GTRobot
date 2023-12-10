@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link as RouterLink, Route, Routes, useLocation, useNavigate } from 'react-router-dom';
 import { BottomNavigation, BottomNavigationAction, Box, Typography } from '@mui/material';
 import PeopleIcon from '@mui/icons-material/People';
@@ -20,6 +20,7 @@ const menuItems = [
 
 const Mining = () => {
     const [value, setValue] = React.useState(0);
+    const [isHelpsVisible, setIsHelpsVisible] = React.useState(true);
     const location = useLocation();
     const navigate = useNavigate();
 
@@ -58,7 +59,7 @@ const Mining = () => {
                 <Box>
                     <Routes>
                         {menuItems.map((item, index) => (
-                            <Route key={index} path={item.to} element={<item.component/>}/>
+                            <Route key={index} path={item.to} element={<item.component />}/>
                         ))}
                     </Routes>
                 </Box>
@@ -95,18 +96,19 @@ const Mining = () => {
                 </BottomNavigation>
             </Box>
             <Box
-            sx={{
-                position: 'fixed',
-                top: '0',
-                height: '100%',
-                width: '100%',
-                bgcolor: '#555',
-                zIndex: '1000'
-            }}>
-                <Helps/>
+                sx={{
+                    position: 'fixed',
+                    top: '0',
+                    height: '100%',
+                    width: '100%',
+                    bgcolor: 'var(--tg-theme-bg-color)',
+                    zIndex: '1000',
+                    display: isHelpsVisible ? 'block' : 'none',
+                }}>
+                {isHelpsVisible && <Helps hideHelps={() => setIsHelpsVisible(false)} />}
             </Box>
         </>
     );
-}
+};
 
 export default Mining;

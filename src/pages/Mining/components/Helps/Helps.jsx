@@ -1,47 +1,77 @@
-import React from 'react';
+import React, { useState } from 'react';
 import IconButton from '@mui/material/IconButton';
 import EastIcon from '@mui/icons-material/East';
-import {Box, Typography} from "@mui/material";
+import { Box } from "@mui/material";
+import Start from "./Start/index.js";
+import ChangeCrypto from "./ChangeCrypto/index.js";
+import MoreMoney from "./MoreMoney/index.js";
+import Referrals from "./Referrals/index.js";
+import Collect from "./Collect/index.js";
+import GettingStart from "./GettingStart/index.js";
 
-const Helps = () => {
+const componentsList = [
+    <Start key="Start" />,
+    <ChangeCrypto key="ChangeCrypto" />,
+    <MoreMoney key="MoreMoney" />,
+    <Referrals key="Referrals" />,
+    <Collect key="Collect" />,
+    <GettingStart key="GettingStart" />
+];
+
+const Helps = ({ hideHelps }) => {
+    const [currentIndex, setCurrentIndex] = useState(0);
+    const [allComponentsViewed, setAllComponentsViewed] = useState(false);
+
+    const handleNextComponent = () => {
+        const nextIndex = (currentIndex + 1) % componentsList.length;
+        setCurrentIndex(nextIndex);
+
+        if (nextIndex === 0) {
+            // Если мы вернулись к первому компоненту, то проверяем, были ли все компоненты просмотрены
+            if (allComponentsViewed) {
+                // Если все компоненты были просмотрены и мы вернулись к первому компоненту,
+                // то скрываем Helps
+                hideHelps();
+            }
+        } else {
+            // Если мы переходим к следующему компоненту, помечаем, что текущий компонент просмотрен
+            setAllComponentsViewed(true);
+        }
+    };
+
     return (
-        <>
+        <Box>
             <Box
-            sx={{
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'center'
-            }}>
-                <Box
                 sx={{
                     display: 'flex',
                     justifyContent: 'flex-end',
                     width: '100%'
-                }}>
-                    <IconButton
-                        size='large'
-                        color="primary"
-                    >
-                        <EastIcon/>
-                    </IconButton>
-                </Box>
-                <Box
-                sx={{
-                    marginBlock: '40px',
-                    marginInline: '20px'
-                }}>
-                    <Typography
-                    sx={{
-                        fontSize: '30px'
-                    }}>
-                        Облачный майнинг - новый способ заработка
-                    </Typography>
-                </Box>
-                <Box>
-                    Далее облако с криптой
-                </Box>
+                }}
+            >
+                <IconButton
+                    color="primary"
+                    onClick={handleNextComponent}
+                >
+                    <EastIcon
+                        sx={{
+                            width: '30px',
+                            height: '30px',
+                        }}
+                    />
+                </IconButton>
             </Box>
-        </>
+            <Box
+                sx={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                    cursor: 'default'
+                }}
+            >
+                {componentsList[currentIndex]}
+            </Box>
+        </Box>
     );
-}
+};
+
 export default Helps;
