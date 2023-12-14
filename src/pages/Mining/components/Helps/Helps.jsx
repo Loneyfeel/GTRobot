@@ -1,13 +1,14 @@
-import React, { useState } from 'react';
-import IconButton from '@mui/material/IconButton';
-import EastIcon from '@mui/icons-material/East';
-import { Box } from "@mui/material";
+import React, {lazy, useState} from 'react';
+import { Box, IconButton } from "@mui/material";
+
 import Start from "./Start/index.js";
 import ChangeCrypto from "./ChangeCrypto/index.js";
 import MoreMoney from "./MoreMoney/index.js";
 import Referrals from "./Referrals/index.js";
 import Collect from "./Collect/index.js";
 import GettingStart from "./GettingStart/index.js";
+
+const EastIcon = lazy(() => import('@mui/icons-material/East'));
 
 const componentsList = [
     <Start key="Start" />,

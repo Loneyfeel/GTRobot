@@ -2,10 +2,11 @@ import React from 'react';
 import {motion} from "framer-motion";
 import {Typography} from "@mui/material";
 
-import bancknotes from '../../../assets/HelpsAnimations/GettingStart/Banknotes.svg'
+import banknotes from '../../../assets/HelpsAnimations/GettingStart/Banknotes.svg'
 import laptop from '../../../assets/HelpsAnimations/GettingStart/Laptop.svg'
 import character from '../../../assets/HelpsAnimations/GettingStart/Character.svg'
 import pig from '../../../assets/HelpsAnimations/GettingStart/Pig.svg'
+import DollarAnim from './DollarAnim'
 
 const GettingStart = () => {
     const containerVariants = {
@@ -121,7 +122,7 @@ const GettingStart = () => {
                         transition={{ ...transition, delay: 2 }}
                     />
                     <motion.img
-                        src={bancknotes}
+                        src={banknotes}
                         alt="Character 3"
                         style={{
                             position: 'absolute',
@@ -135,6 +136,7 @@ const GettingStart = () => {
                         animate="visible"
                         transition={{ ...transition, delay: 2.4 }}
                     />
+                    <DollarAnim/>
                 </motion.div>
             </motion.div>
         </>

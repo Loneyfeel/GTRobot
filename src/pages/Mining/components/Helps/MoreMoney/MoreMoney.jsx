@@ -2,6 +2,7 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { Typography } from '@mui/material';
 import Coins from '../../../assets/HelpsAnimations/moreMoney/Coins.svg';
+import PulsatingImages from "./PulsatingImages/PulsatingImages.jsx";
 
 const MoreMoney = () => {
     const containerVariants = {
@@ -62,6 +63,7 @@ const MoreMoney = () => {
                         width: '70%',
                     }}
                 />
+                <PulsatingImages/>
             </motion.div>
         </motion.div>
     );
