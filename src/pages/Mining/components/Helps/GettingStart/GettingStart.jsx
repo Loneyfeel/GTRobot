@@ -7,6 +7,7 @@ import laptop from '../../../assets/HelpsAnimations/GettingStart/Laptop.svg'
 import character from '../../../assets/HelpsAnimations/GettingStart/Character.svg'
 import pig from '../../../assets/HelpsAnimations/GettingStart/Pig.svg'
 import DollarAnim from './DollarAnim'
+import {useTranslation} from "react-i18next";
 
 const GettingStart = () => {
     const containerVariants = {
@@ -33,12 +34,10 @@ const GettingStart = () => {
         hidden: { opacity: 0, scale: 0.8 },
         visible: { opacity: 1, scale: 1 },
     };
-    const linesVariants = {
-        hidden: { opacity: 0 },
-        visible: { opacity: 1 },
-    };
 
     const transition = { duration: 0.3, ease: 'easeInOut' };
+
+    const {t} = useTranslation()
 
     return (
         <>
@@ -61,7 +60,7 @@ const GettingStart = () => {
                             position: 'relative',
                         }}
                     >
-                        Попробуйте облачный майнинг прямо сейчас
+                        {t('mining.components.helps.getting-start')}
                     </Typography>
                 </motion.div>
                 <motion.div
@@ -88,7 +87,6 @@ const GettingStart = () => {
                         animate="visible"
                         transition={{ ...transition, delay: 1.2 }}
                     />
-                    {/* Персонажи появляются по очереди с задержкой */}
                     <motion.img
                         src={character}
                         alt="Character 1"

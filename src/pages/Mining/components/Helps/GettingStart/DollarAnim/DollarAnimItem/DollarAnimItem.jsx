@@ -6,7 +6,7 @@ const DollarAnimItem = ({ imageSrc, startPosition, delay }) => {
 
     useEffect(() => {
         const animate = async () => {
-            while (true) {
+            for (let i = 0; i < 50; i++) {
                 await controls.start({
                     y: [startPosition.top - 30, startPosition.top + 30],
                     opacity: [0, 1, 0],
@@ -20,8 +20,6 @@ const DollarAnimItem = ({ imageSrc, startPosition, delay }) => {
         };
 
         animate();
-
-        // eslint-disable-next-line
     }, [controls, startPosition, delay]);
 
     return (

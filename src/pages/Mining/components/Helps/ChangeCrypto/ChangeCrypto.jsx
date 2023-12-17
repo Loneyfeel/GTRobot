@@ -6,6 +6,7 @@ import bitcoinIcon from '../../../assets/bitcoin-btc-logo.svg';
 import dogeIcon from '../../../assets/dogecoin-doge-logo.svg';
 import shibaIcon from '../../../assets/shiba-inu-shib-logo.svg';
 import tonIcon from '../../../assets/ton_symbol.svg';
+import {useTranslation} from "react-i18next";
 
 const ChangeCrypto = () => {
     const containerVariants = {
@@ -35,6 +36,8 @@ const ChangeCrypto = () => {
 
     const transition = { duration: 0.3, ease: "easeInOut" };
 
+    const {t} = useTranslation()
+
     return (
         <>
             <motion.div
@@ -55,7 +58,7 @@ const ChangeCrypto = () => {
                             color: 'var(--tg-theme-text-color)',
                             margin: '20px'
                         }}>
-                        Возможность выбора монеты для майнинга
+                        {t('mining.components.helps.change-crypto')}
                     </Typography>
                 </motion.div>
                 <motion.div

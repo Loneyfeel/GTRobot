@@ -10,12 +10,12 @@ import {userId} from './shared/telegram/telegram.js'
 import { BrowserRouter as Router, Route, Routes} from 'react-router-dom';
 
 
-import MainMenu from "./pages/MainMenu";
-import ToolsMenu from "./pages/ToolsMenu";
-import Screener from "./pages/Screener";
-import Forex from "./pages/Forex";
-import NoSubscribe from "./pages/NoSuscribe";
-import Copyright from "./pages/Copyright";
+// import MainMenu from "./pages/MainMenu";
+// import ToolsMenu from "./pages/ToolsMenu";
+// import Screener from "./pages/Screener";
+// import Forex from "./pages/Forex";
+// import NoSubscribe from "./pages/NoSuscribe";
+// import Copyright from "./pages/Copyright";
 import Mining from "./pages/Mining";
 
 function App() {
@@ -27,7 +27,7 @@ function App() {
             try {
                 const response = await axios.post(`${host}/api/user-locale`, { userId });
                 setLoading(false);
-                // setLanguage(response.data);
+                setLanguage(response.data);
             } catch (error) {
                 console.error('Произошла ошибка при выполнении POST-запроса:', error);
                 if (error.response.data.errorCode === 1006) {
@@ -38,21 +38,21 @@ function App() {
         };
 
         if (loading) {
-            // fetchUserLanguage();
+            fetchUserLanguage();
         }
     }, [loading]); // Выполняется только при изменении loading
 
 // Локализация
     const { i18n } = useTranslation();
-    // useEffect(() => {
-    //     const updateLanguage = async () => {
-    //         await i18n.changeLanguage(language);
-    //     };
-    //
-    //     if (!loading) {
-    //         updateLanguage();
-    //     }
-    // }, [i18n, language, loading]);
+    useEffect(() => {
+        const updateLanguage = async () => {
+            await i18n.changeLanguage(language);
+        };
+
+        if (!loading) {
+            updateLanguage();
+        }
+    }, [i18n, language, loading]);
 
 
     const [colorScheme, themeParams] = useThemeParams() //тг тема

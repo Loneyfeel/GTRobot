@@ -9,6 +9,7 @@ import character_3 from "../../../assets/HelpsAnimations/referrals/character-3.s
 import character_4 from "../../../assets/HelpsAnimations/referrals/character-4.svg";
 import Lines from "../../../assets/HelpsAnimations/referrals/Lines.svg";
 import Coin from '../../../assets/HelpsAnimations/Coin.svg'
+import {useTranslation} from "react-i18next";
 
 const Referrals = () => {
 
@@ -48,6 +49,8 @@ const Referrals = () => {
 
     const transition = { duration: 0.3, ease: 'easeInOut' };
 
+    const {t} = useTranslation()
+
     return (
         <>
             <motion.div
@@ -69,7 +72,7 @@ const Referrals = () => {
                             position: 'relative',
                         }}
                     >
-                        Больше друзей - больше добыча
+                        {t('mining.components.helps.referrals')}
                     </Typography>
                 </motion.div>
                 <motion.div

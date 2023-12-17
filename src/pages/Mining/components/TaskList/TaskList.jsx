@@ -1,11 +1,9 @@
-// TaskList.jsx
-
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent, Container, Typography } from '@mui/material';
 import { useTrail, animated } from 'react-spring';
+import { saveMiningUserTask } from '../Requests/Requests.js'; // Подключите вашу функцию сохранения задания
 
 const TaskList = ({ activeTasks }) => {
-
     const [tasks, setTasks] = useState([]);
 
     useEffect(() => {
@@ -29,12 +27,31 @@ const TaskList = ({ activeTasks }) => {
         config: { duration: 250, easing: (t) => t * (2 - t) },
     });
 
+    const handleTaskClick = async (taskId) => {
+        try {
+            // Отправка запроса на сохранение задания
+            await saveMiningUserTask(taskId);
+
+            // Обновление local.storage
+            const updatedTasks = tasks.filter((task) => task.id !== taskId);
+            localStorage.setItem('miningUserData', JSON.stringify({ ...JSON.parse(localStorage.getItem('miningUserData')), active_tasks: updatedTasks }));
+
+            // Обновление списка задач после выполнения
+            setTasks(updatedTasks);
+        } catch (error) {
+            console.error('Ошибка при сохранении задания:', error);
+        }
+    };
+
     return (
         <Container maxWidth="sm" sx={{ maxHeight: '300px', overflowY: 'auto' }}>
             {trail.map((props, index) => (
                 <animated.div key={tasks[index].id} style={props}>
                     <Card
-                        onClick={() => window.open(tasks[index].link, '_blank')}
+                        onClick={() => {
+                            window.open(tasks[index].link, '_blank');
+                            handleTaskClick(tasks[index].id);
+                        }}
                         style={{
                             cursor: 'pointer',
                             marginBottom: 10,

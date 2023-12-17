@@ -4,11 +4,12 @@ import { Box, Button } from '@mui/material';
 import Info from './Info';
 import Withdraw from './Withdraw';
 import ChangeCrypto from './ChangeCrypto';
+import {useTranslation} from "react-i18next";
 
 const Menu = () => {
     // Добавляем состояние для отслеживания открытого раздела
     const [isSectionOpen, setIsSectionOpen] = useState(false);
-
+    const { t } = useTranslation();
     return (
         <>
             <Box
@@ -29,21 +30,21 @@ const Menu = () => {
                             fontSize: '18px',
                             justifyContent: 'flex-start',
                             width: '100%'
-                        }}>Информация</Button>
+                        }}>{t('mining.pages.menu.info.menu_btn')}</Button>
                         <Button component={RouterLink} to="/menu/withdraw"
                         sx={{
                             color: 'var(--tg-theme-text-color)',
                             fontSize: '18px',
                             justifyContent: 'flex-start',
                             width: '100%'
-                        }}>Вывод</Button>
+                        }}>{t('mining.pages.menu.withdraw.menu_btn')}</Button>
                         <Button component={RouterLink} to="/menu/change-crypto"
                         sx={{
                             color: 'var(--tg-theme-text-color)',
                             fontSize: '18px',
                             justifyContent: 'flex-start',
                             width: '100%'
-                        }}>Смена криптовалюты</Button>
+                        }}>{t('mining.pages.menu.changeCrypto.menu_btn')}</Button>
                     </Box>
                 )}
             </Box>

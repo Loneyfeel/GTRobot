@@ -46,7 +46,7 @@ const Helps = ({ hideHelps }) => {
                 sx={{
                     display: 'flex',
                     justifyContent: 'flex-end',
-                    width: '100%'
+                    width: '100%',
                 }}
             >
                 <IconButton

@@ -12,18 +12,22 @@ const ChangeCrypto = ({ setIsSectionOpen }) => {
 
     useEffect(() => {
         setIsSectionOpen(true);
-        // Загрузка данных пользователя при монтировании компонента
-        getMiningUserData().then(response => {
-            const { crypto_currency } = response.data;
-            setSelectedCrypto(crypto_currency);
-        });
+        // Загрузка данных пользователя из local.storage при монтировании компонента
+        const storedData = JSON.parse(localStorage.getItem('miningUserData')) || {};
+        setSelectedCrypto(storedData.crypto_currency || 'btc');
 
         return () => setIsSectionOpen(false);
     }, [setIsSectionOpen]);
 
     const handleCardClick = (crypto) => {
-        // Обновление состояния выбранной криптовалюты
+        // Обновление локального состояния выбранной криптовалюты
         setSelectedCrypto(crypto);
+
+        // Сохранение данных в local.storage
+        const storedData = JSON.parse(localStorage.getItem('miningUserData')) || {};
+        storedData.crypto_currency = crypto;
+        localStorage.setItem('miningUserData', JSON.stringify(storedData));
+
         // Отправка запроса на изменение криптовалюты
         saveMiningUserCryptoCurrency(crypto);
     };

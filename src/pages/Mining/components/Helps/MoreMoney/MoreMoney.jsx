@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import { Typography } from '@mui/material';
 import Coins from '../../../assets/HelpsAnimations/moreMoney/Coins.svg';
 import PulsatingImages from "./PulsatingImages/PulsatingImages.jsx";
+import {useTranslation} from "react-i18next";
 
 const MoreMoney = () => {
     const containerVariants = {
@@ -21,6 +22,8 @@ const MoreMoney = () => {
     };
 
     const transition = { duration: 0.3, ease: 'easeInOut' };
+
+    const {t} = useTranslation()
 
     return (
         <motion.div
@@ -42,7 +45,7 @@ const MoreMoney = () => {
                         position: 'relative',
                     }}
                 >
-                    Больше добычи с подписками Уровень 1 и Уровень 2
+                    {t('mining.components.helps.more-money')}
                 </Typography>
             </motion.div>
             <motion.div

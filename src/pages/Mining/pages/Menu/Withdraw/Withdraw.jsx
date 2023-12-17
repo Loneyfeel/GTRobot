@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Alert, Box, Button, Snackbar, TextField, Typography } from "@mui/material";
+import {useTranslation} from "react-i18next";
 
 const Withdraw = ({ setIsSectionOpen }) => {
     const [withdrawAmount, setWithdrawAmount] = useState('');
@@ -7,7 +8,7 @@ const Withdraw = ({ setIsSectionOpen }) => {
     const [isSnackbarOpen, setIsSnackbarOpen] = useState(false);
     const [isWarningSnackbarOpen, setIsWarningSnackbarOpen] = useState(false);
     const [isErrorSnackbarOpen, setIsErrorSnackbarOpen] = useState(false);
-    const minWithdrawAmount = 0.0025;
+    const minWithdrawAmount = 100;
 
     useEffect(() => {
         setIsSectionOpen(true);
@@ -38,6 +39,16 @@ const Withdraw = ({ setIsSectionOpen }) => {
         }, 3000);
     }
 
+    const handleWithdrawAmountChange = (e) => {
+        // Проверка на ввод только чисел
+        const value = e.target.value;
+        if (/^\d*\.?\d*$/.test(value) || value === '') {
+            setWithdrawAmount(value);
+        }
+    }
+
+    const { t } = useTranslation();
+
     return (
         <>
             <Box
@@ -62,12 +73,12 @@ const Withdraw = ({ setIsSectionOpen }) => {
                             fontSize: '18px',
                             cursor: 'default'
                         }}>
-                        Вывод баланса
+                        {t('mining.pages.menu.withdraw.title')}
                     </Typography>
                     <TextField
                         id="withdraw-amount"
-                        label={`Сумма вывода`}
-                        helperText={`min= ${minWithdrawAmount}`}
+                        label={t('mining.pages.menu.withdraw.textField_1')}
+                        helperText={`min= ${minWithdrawAmount}$`}
                         sx={{
                             width: '95%',
                             marginBlock: '10px 10px',
@@ -82,11 +93,11 @@ const Withdraw = ({ setIsSectionOpen }) => {
                             }
                         }}
                         value={withdrawAmount}
-                        onChange={(e) => setWithdrawAmount(e.target.value)}
+                        onChange={handleWithdrawAmountChange}
                     />
                     <TextField
                         id="wallet-address"
-                        label="Адрес кошелька"
+                        label={t('mining.pages.menu.withdraw.textField_2')}
                         sx={{
                             width: '95%',
                             marginBlock: '15px 20px',
@@ -104,9 +115,9 @@ const Withdraw = ({ setIsSectionOpen }) => {
                         variant='contained'
                         onClick={() => {
                             window.Telegram.WebApp.showConfirm(
-                                `Сумма: ${withdrawAmount} \n` +
-                                `Адрес: ${walletAddress}\n\n` +
-                                'Все верно?',
+                                `${t('mining.pages.menu.withdraw.btn_helps.balance')}: ${withdrawAmount} \n` +
+                                `${t('mining.pages.menu.withdraw.btn_helps.address')}: ${walletAddress}\n\n` +
+                                `${t('mining.pages.menu.withdraw.btn_helps.question')}?`,
                                 (confirm) => {
                                     if (confirm) {
                                         handleWithdraw();
@@ -115,17 +126,16 @@ const Withdraw = ({ setIsSectionOpen }) => {
                             );
                         }}
                     >
-                        Вывести
+                        {t('mining.pages.menu.withdraw.main_btn')}
                     </Button>
                 </Box>
-                {/* Snackbar для успешного вывода */}
                 <Snackbar
                     open={isSnackbarOpen}
                     autoHideDuration={3000}
                     onClose={() => setIsSnackbarOpen(false)}
                 >
                     <Alert severity="success" sx={{ width: '100%' }}>
-                        Успешный вывод
+                        {t('mining.pages.menu.withdraw.snackbars.success')}
                     </Alert>
                 </Snackbar>
                 <Snackbar
@@ -134,7 +144,7 @@ const Withdraw = ({ setIsSectionOpen }) => {
                     onClose={() => setIsWarningSnackbarOpen(false)}
                 >
                     <Alert severity="error" sx={{ width: '100%' }}>
-                        Сумма вывода меньше минимальной
+                        {t('mining.pages.menu.withdraw.snackbars.error_balance')}
                     </Alert>
                 </Snackbar>
                 <Snackbar
@@ -143,7 +153,7 @@ const Withdraw = ({ setIsSectionOpen }) => {
                     onClose={() => setIsErrorSnackbarOpen(false)}
                 >
                     <Alert severity="error" sx={{ width: '100%' }}>
-                        Пожалуйста, заполните все поля
+                        {t('mining.pages.menu.withdraw.snackbars.error_full')}
                     </Alert>
                 </Snackbar>
             </Box>

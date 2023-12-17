@@ -1,93 +1,75 @@
-// Requests.js
 import axios from 'axios';
 import { host } from "../../../../shared/host/host.js";
 import { initData, userId } from '../../../../shared/telegram/telegram.js';
 
 const baseURL = `${host}/api`;
 
-export let miningUserDataResult = {};
-export let miningUserExistsResult = {};
-export let startMiningResult = {};
-export let miningTickersPriceResult = {};
-export let saveMiningUserTaskResult = {};
-export let saveMiningUserCryptoCurrencyResult = {};
-
-export let miningUserDataError = null;
-export let miningUserExistsError = null;
-export let startMiningError = null;
-export let miningTickersPriceError = null;
-export let saveMiningUserTaskError = null;
-export let saveMiningUserCryptoCurrencyError = null;
-
 const axiosInstance = axios.create({
     baseURL,
 });
 
-const handleError = (error, errorVar) => {
+const handleError = (error) => {
+    let errorMessage = '';
+
     if (error.response) {
-        errorVar = error.response.data;
+        errorMessage = error.response.data;
     } else if (error.request) {
-        errorVar = 'No response from the server';
+        errorMessage = 'No response from the server';
     } else {
-        errorVar = error.message;
+        errorMessage = error.message;
     }
+
+    return errorMessage;
 };
 
 export const getMiningUserData = async () => {
     try {
         const response = await axiosInstance.post('/get-mining-user-data', { initData, userId });
-        miningUserDataResult = response.data;
         return response.data;
     } catch (error) {
-        handleError(error, miningUserDataError);
+        return handleError(error);
     }
 };
 
 export const miningUserExists = async () => {
     try {
         const response = await axiosInstance.post('/mining-user-exists', { initData, userId });
-        miningUserExistsResult = response.data;
         return response.data;
     } catch (error) {
-        handleError(error, miningUserExistsError);
         return { status: false };
     }
 };
 
 export const startMining = async (miningType) => {
     try {
-        const response = await axiosInstance.post('/start-mining', { initData, userId, miningType });
-        startMiningResult = response.data;
+        await axiosInstance.post('/start-mining', { initData, userId, miningType });
+        console.log(miningType)
     } catch (error) {
-        handleError(error, startMiningError);
+        handleError(error);
     }
 };
 
 export const getMiningTickersPrice = async () => {
     try {
         const response = await axiosInstance.post('/mining-tickers-price', { initData });
-        miningTickersPriceResult = response.data;
         return response.data;
     } catch (error) {
-        handleError(error, miningTickersPriceError);
-        return { data: {} }; // Возвращаем пустой объект в случае ошибки
+        return { data: {} };
     }
 };
 
 export const saveMiningUserTask = async (taskId) => {
     try {
-        const response = await axiosInstance.post('/save-mining-user-task', { initData, userId, taskId });
-        saveMiningUserTaskResult = response.data;
+        await axiosInstance.post('/save-mining-user-task', { initData, userId, taskId });
     } catch (error) {
-        handleError(error, saveMiningUserTaskError);
+        handleError(error);
     }
 };
 
 export const saveMiningUserCryptoCurrency = async (cryptoCurrency) => {
     try {
-        const response = await axiosInstance.post('/save-mining-user-crypto-currency', { initData, userId, cryptoCurrency });
-        saveMiningUserCryptoCurrencyResult = response.data;
+        await axiosInstance.post('/save-mining-user-crypto-currency', { initData, userId, cryptoCurrency });
     } catch (error) {
-        handleError(error, saveMiningUserCryptoCurrencyError);
+        handleError(error);
     }
 };

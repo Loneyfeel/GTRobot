@@ -3,6 +3,7 @@ import {motion} from "framer-motion";
 import {Typography} from "@mui/material";
 import collectIcon from "../../../assets/HelpsAnimations/collect/collect.svg";
 import Coin from '../../../assets/HelpsAnimations/Coin.svg'
+import {useTranslation} from "react-i18next";
 
 const Collect = () => {
     const containerVariants = {
@@ -27,6 +28,8 @@ const Collect = () => {
 
     const transition = { duration: 0.3, ease: "easeInOut" };
 
+    const {t} = useTranslation()
+
     return (
         <motion.div
             variants={containerVariants}
@@ -46,7 +49,7 @@ const Collect = () => {
                         color: 'var(--tg-theme-text-color)',
                         margin: '20px'
                     }}>
-                    Собирайте прибыль несколько раз в день!
+                    {t('mining.components.helps.collect')}
                 </Typography>
             </motion.div>
             <motion.div

@@ -2,6 +2,7 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { Typography } from "@mui/material";
 import startIcon from '../../../assets/HelpsAnimations/Start/cloud-mining.svg';
+import {useTranslation} from "react-i18next";
 
 const Start = () => {
     const containerVariants = {
@@ -20,6 +21,8 @@ const Start = () => {
     };
 
     const transition = { duration: 0.3, ease: "easeInOut" };
+
+    const {t} = useTranslation()
 
     return (
         <motion.div
@@ -40,7 +43,7 @@ const Start = () => {
                         color: 'var(--tg-theme-text-color)',
                         margin: '20px'
                     }}>
-                    Облачный майнинг - новый способ заработка
+                    {t('mining.components.helps.start')}
                 </Typography>
             </motion.div>
             <motion.div

@@ -1,30 +1,17 @@
-import React, { useEffect, useState } from 'react';
-import { Box, Button, Fade, Typography, Snackbar, Alert } from "@mui/material";
+import React, { useState, useEffect } from 'react';
+import {Box, Button, Typography, Backdrop, CircularProgress, Snackbar, Alert, IconButton} from "@mui/material";
 import Lottie from 'lottie-react';
 import animationDataDay from '../../assets/AnimationDay.json';
 import animationDataNight from '../../assets/AnimationNight.json';
-
+import TouchAppIcon from '@mui/icons-material/TouchApp';
+import CloseIcon from '@mui/icons-material/Close';
+import TaskList from '../../components/TaskList';
+import {startMining, getMiningTickersPrice, getMiningUserData} from '../../components/Requests/Requests.js';
 import bitcoinIcon from '../../assets/bitcoin-btc-logo.svg';
 import dogeIcon from '../../assets/dogecoin-doge-logo.svg';
 import shibaIcon from '../../assets/shiba-inu-shib-logo.svg';
 import tonIcon from '../../assets/ton_symbol.svg';
-
-import TouchAppIcon from '@mui/icons-material/TouchApp';
-import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
-import {
-    getMiningUserData,
-    getMiningTickersPrice,
-    saveMiningUserTask,
-    startMining
-} from '../../components/Requests/Requests';
-import TaskList from '../../components/TaskList';
-import { Backdrop, CircularProgress } from "@mui/material";
-
-const animationStyle = {
-    width: '150px',
-    transform: 'scaleX(-1) scale(1.2)',
-    paddingBottom: '30px',
-};
+import {useTranslation} from "react-i18next";
 
 const determineAnimationData = () => {
     const currentHour = new Date().getHours();
@@ -35,185 +22,259 @@ const determineAnimationData = () => {
 
 const getIconByCurrency = (currency) => {
     switch (currency) {
-        case 'BTC':
+        case 'btc':
             return bitcoinIcon;
-        case 'DOGE':
+        case 'doge':
             return dogeIcon;
-        case 'SHIB':
+        case 'shib':
             return shibaIcon;
-        case 'TON':
+        case 'ton':
             return tonIcon;
         default:
             return bitcoinIcon;
     }
 };
 
+const Timer = ({ timeRemaining, cryptoCurrency }) => {
+    const formatTime = (time) => {
+        const hours = Math.floor(time / 3600);
+        const minutes = Math.floor((time % 3600) / 60);
+        const seconds = time % 60;
+
+        const pad = (value) => (value < 10 ? `0${value}` : value);
+
+        return `${pad(hours)}:${pad(minutes)}:${pad(seconds)}`;
+    };
+
+    return (
+        <Box
+            sx={{
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+            }}
+        >
+            <Typography
+                sx={{
+                    fontSize: '18px',
+                    fontWeight: '600',
+                    marginBottom: '8px',
+                }}
+            >
+                {formatTime(timeRemaining)}
+            </Typography>
+            <Box
+                sx={{
+                    display: 'flex',
+                    justifyContent: 'center',
+                    position: 'relative',
+                    overflow: 'hidden',
+                }}
+            >
+                <Lottie
+                    animationData={determineAnimationData()}
+                    style={{
+                        width: '150px',
+                        transform: 'scaleX(-1) scale(1.2)',
+                        paddingBottom: '30px',
+                    }}
+                />
+            </Box>
+            <Box
+                component="img"
+                src={getIconByCurrency(cryptoCurrency)}
+                alt={'Current coin'}
+                sx={{
+                    position: 'absolute',
+                    bottom: '90px',
+                    right: '140px',
+                    width: '30px',
+                }}
+            />
+        </Box>
+    );
+};
+
+const StartButton = ({ onClick, isDisabled, text }) => (
+    <Button
+        variant="contained"
+        onClick={onClick}
+        disabled={isDisabled}
+        sx={{
+            flexDirection: 'column',
+            paddingTop: '12px',
+            width: '125px',
+            height: '125px',
+            borderRadius: '100px',
+            color: 'var(--tg-theme-text-color)',
+        }}
+    >
+        <TouchAppIcon
+            sx={{
+                position: 'absolute',
+                top: '30px',
+                width: '40px',
+                height: '40px',
+            }}
+        />
+        <Typography
+            sx={{
+                fontSize: '12px',
+                fontWeight: '600',
+                marginTop: '50px'
+            }}
+        >
+            {text}
+        </Typography>
+    </Button>
+);
+
+const Balance = ({ showBalanceChange, randomIncrement, setRandomIncrement }) => {
+    const [cryptoPrices, setCryptoPrices] = useState({});
+    const [balance, setBalance] = useState(0);
+    const [cryptoCurrency, setCryptoCurrency] = useState('');
+    const [isCryptoDataLoaded, setIsCryptoDataLoaded] = useState(false);
+
+    useEffect(() => {
+        // Загружаем данные из local.storage при монтировании компонента
+        const storedData = JSON.parse(localStorage.getItem('miningUserData')) || {};
+        setBalance(storedData.daily_mining_balance || 0);
+        setCryptoCurrency(storedData.crypto_currency || 'btc');
+
+        // Запрашиваем цены криптовалют при монтировании компонента
+        const fetchCryptoPrices = async () => {
+            try {
+                const prices = JSON.parse(localStorage.getItem('prices')) || {};
+                setCryptoPrices(prices);
+
+                setIsCryptoDataLoaded(true);
+            } catch (error) {
+                console.error('Ошибка при получении цен криптовалют:', error);
+            }
+        };
+
+        fetchCryptoPrices();
+    }, []);
+
+    // Отображение баланса после получения цен криптовалют
+    const getDisplayedBalance = () => {
+        if (cryptoPrices[cryptoCurrency]) {
+            const price = cryptoPrices[cryptoCurrency];
+            const displayedBalance = balance / price;
+            return displayedBalance.toFixed(6);
+        } else {
+            // Если цена не найдена, возвращаем исходный баланс
+            return balance.toFixed(8);
+        }
+    };
+
+    useEffect(() => {
+        // Установка интервала для обновления числа каждые 5 секунд
+        const intervalId = setInterval(() => {
+            setRandomIncrement(0.00001 + Math.random() * (0.0001 - 0.000001));
+        }, 5000);
+
+        return () => {
+            clearInterval(intervalId);
+        };
+    }, []);
+
+    if (!isCryptoDataLoaded) {
+        // Пока данные о ценах криптовалют загружаются, можно показывать начальный баланс
+        return (
+            <Typography>
+                - - - - - - - - - -
+            </Typography>
+        );
+    }
+
+    return (
+        <Box
+            sx={{
+                position: 'relative',
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                width: '100%',
+            }}
+        >
+            <Typography
+                sx={{
+                    cursor: 'default'
+                }}
+            >
+                {getDisplayedBalance()} {cryptoCurrency.toUpperCase()}
+            </Typography>
+            {showBalanceChange && (
+                <Typography
+                    sx={{
+                        position: 'absolute',
+                        right: '3%',
+                        bottom: '12%',
+                        fontSize: '12px',
+                        color: 'rgba(45, 176, 25, 0.8)',
+                    }}
+                >
+                    {`+${randomIncrement.toFixed(7)} ${cryptoCurrency.toUpperCase()}`}
+                </Typography>
+            )}
+        </Box>
+    );
+};
+
+
 const SecMining = () => {
-    const [showLoader, setShowLoader] = useState(true);
-    const [userData, setUserData] = useState({});
-    const [activeTasks, setActiveTasks] = useState([]);
-    const [tickersPrice, setTickersPrice] = useState({});
-    const [isTimerActive, setIsTimerActive] = useState(false);
-    const [animationData, setAnimationData] = useState(determineAnimationData());
+    const { t } = useTranslation();
+
     const [timeRemaining, setTimeRemaining] = useState(0);
     const [showBalanceChange, setShowBalanceChange] = useState(false);
     const [randomIncrement, setRandomIncrement] = useState(0);
-    const [buttonState, setButtonState] = useState({
-        textVisible: true,
-        disabled: false,
-    });
+    const [activeTasks, setActiveTasks] = useState([]);
+    const [isMiningActive, setIsMiningActive] = useState(true);
+    const [endUserMiningTimestamp, setEndUserMiningTimestamp] = useState(null);
+    const [cryptoCurrency, setCryptoCurrency] = useState('');
     const [snackbarOpen, setSnackbarOpen] = useState(false);
+    const [hasUpdatedMiningData, setHasUpdatedMiningData] = useState(false);
+
+    const updateMiningData = (data) => {
+        const storedData = data ? data.data : JSON.parse(localStorage.getItem('miningUserData')) || {};
+        setActiveTasks(storedData.active_tasks || []);
+        setIsMiningActive(storedData.is_daily_mining_active || true);
+        setEndUserMiningTimestamp(storedData.end_user_daily_mining_timestamp || null);
+        setShowBalanceChange(storedData.end_user_daily_mining_timestamp !== null);
+        setCryptoCurrency(storedData.crypto_currency || 'btc');
+        if (storedData.active_tasks && storedData.active_tasks.length > 0) {
+            setSnackbarOpen(true);
+        }
+        if (storedData.end_user_daily_mining_timestamp !== null) {
+            const currentTime = Math.floor(Date.now() / 1000);
+            const remainingTime = storedData.end_user_daily_mining_timestamp - currentTime;
+            setTimeRemaining(remainingTime > 0 ? remainingTime : 0);
+        }
+    };
+
+    const onClickStartButton = async () => {
+        await startMining('daily');
+        const newData = await getMiningUserData();
+        updateMiningData(newData);
+        localStorage.setItem('miningUserData', JSON.stringify(newData.data));
+    };
 
     useEffect(() => {
-        let intervalId;
+        const intervalId = setInterval(() => {
+            setTimeRemaining(prevTime => (prevTime > 0 ? prevTime - 1 : 0));
+        }, 1000);
 
-        const updateRandomIncrement = () => {
-            // Генерируем случайное число от 0.000001 до 0.0001
-            const randomValue = (Math.random() * (0.0001 - 0.000001) + 0.000001).toFixed(7);
-            setRandomIncrement(randomValue);
-        };
-
-        // Запускаем первое обновление случайного значения
-        updateRandomIncrement();
-
-        // Задаем интервал для обновления случайного значения каждые 5 секунд, только если таймер активен
-        intervalId = setInterval(() => {
-            if (isTimerActive) {
-                updateRandomIncrement();
-            }
-        }, 5000);
-
-        // Очищаем интервал при размонтировании компонента
+        // Функция возвращается из useEffect и будет вызвана при размонтировании компонента
         return () => clearInterval(intervalId);
-    }, [isTimerActive]);
-
-    useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const [userDataResponse, tickersPriceResponse] = await Promise.all([
-                    getMiningUserData(),
-                    getMiningTickersPrice()
-                ]);
-
-                console.log(userDataResponse);
-                console.log(tickersPriceResponse);
-
-                setUserData(userDataResponse?.data || {});
-                setActiveTasks(userDataResponse?.data?.active_tasks || []);
-                setTickersPrice(tickersPriceResponse?.data || {});
-
-                // Отправляем запросы на сохранение заданий
-                userDataResponse?.data?.active_tasks.forEach(task => {
-                    saveMiningUserTask(task.task_id);
-                });
-
-                // Если у пользователя есть активные задания, сразу отображаем Snackbar с ошибкой
-                if (userDataResponse?.data?.active_tasks.length > 0) {
-                    setSnackbarOpen(true);
-                }
-
-                // Если у пользователя есть время окончания, сразу запускаем таймер
-                if (userDataResponse?.data?.end_user_daily_mining_timestamp !== null) {
-                    startTimer(userDataResponse?.data);
-                }
-
-                setTimeout(() => {
-                    setShowLoader(false);
-                }, 2000);
-
-            } catch (error) {
-                console.error('Error fetching data:', error);
-            }
-        };
-
-        fetchData();
     }, []);
 
     useEffect(() => {
-        let timer;
-
-        if (isTimerActive) {
-            timer = setInterval(() => {
-                setTimeRemaining((prevTime) => prevTime - 1000);
-            }, 1000);
+        if (!hasUpdatedMiningData) {
+            updateMiningData();
+            setHasUpdatedMiningData(true);
         }
-
-        return () => {
-            clearInterval(timer);
-        };
-    }, [isTimerActive]);
-
-    useEffect(() => {
-        if (timeRemaining <= 0) {
-            setIsTimerActive(false);
-            setAnimationData(determineAnimationData());
-            setButtonState({
-                icon: <TouchAppIcon
-                    sx={{
-                        position: 'absolute',
-                        top: '30px',
-                        width: '40px',
-                        height: '40px',
-                    }} />,
-                textVisible: true,
-                disabled: false,
-            });
-        }
-    }, [timeRemaining]);
-
-    const handleStartMining = async () => {
-        try {
-            // Отправляем запрос на старт майнинга с типом 'daily'
-            await startMining('daily');
-        } catch (error) {
-            console.error('Error starting mining:', error);
-        }
-    };
-
-    const startTimer = (userData) => {
-        if (userData && userData.active_tasks && userData.active_tasks.length > 0) {
-            // Показываем Snackbar с ошибкой, так как есть активные задания
-            setSnackbarOpen(true);
-            return;
-        }
-
-        setButtonState({
-            icon: <CheckCircleOutlineIcon
-                sx={{
-                    width: '40px',
-                    height: '40px',
-                }} />,
-            background: 'var(--tg-theme-button-color)',
-            textVisible: false,
-            disabled: true,
-        });
-
-        setShowBalanceChange(true);
-
-        setTimeout(() => {
-            setShowBalanceChange(false);
-            setAnimationData(determineAnimationData());
-
-            // Получаем timestamp текущего времени
-            const currentTimeStamp = new Date().getTime();
-
-            // Получаем timestamp времени окончания
-            const endMiningTimeStamp = userData.end_user_daily_mining_timestamp * 1000;
-
-            // Устанавливаем время до окончания в таймере
-            setTimeRemaining(endMiningTimeStamp - currentTimeStamp);
-            handleStartMining();
-
-            setIsTimerActive(true);
-        }, 2000);
-    };
-
-    const formatTime = () => {
-        const hours = Math.floor(timeRemaining / 3600000);
-        const minutes = Math.floor((timeRemaining % 3600000) / 60000);
-        const seconds = Math.floor((timeRemaining % 60000) / 1000);
-        return `${hours}:${minutes < 10 ? `0${minutes}` : minutes}:${seconds < 10 ? `0${seconds}` : seconds}`;
-    };
+    }, [hasUpdatedMiningData]);
 
     return (
         <>
@@ -224,157 +285,63 @@ const SecMining = () => {
                     color: 'var(--tg-theme-text-color)',
                 }}
             >
-                <Box>
+                <Box
+                    sx={{
+                        display: 'flex',
+                        flexDirection: 'column',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        position: 'relative',
+                        height: '270px',
+                    }}
+                >
                     <Box
                         sx={{
                             display: 'flex',
-                            flexDirection: 'column',
-                            justifyContent: 'center',
                             alignItems: 'center',
-                            position: 'relative',
-                            height: '270px',
+                            height: '140px',
                         }}
                     >
-                        <Box
-                            sx={{
-                                display: 'flex',
-                                alignItems: 'center',
-                                height: '140px',
-                            }}
-                        >
-                            <Button
-                                variant="contained"
-                                onClick={startTimer}
-                                disabled={buttonState.disabled}
-                                sx={{
-                                    display: isTimerActive ? 'none' : 'flex', // условие для видимости кнопки
-                                    flexDirection: 'column',
-                                    paddingTop: '12px',
-                                    width: '125px',
-                                    height: '125px',
-                                    borderRadius: '100px',
-                                    color: 'var(--tg-theme-text-color)',
-                                    backgroundColor: buttonState.background,
-                                    '&.Mui-disabled': {
-                                        bgcolor: 'var(--tg-theme-button-color)',
-                                        color: '#fff'
-                                    }
-                                }}
-                            >
-                                {buttonState.icon}
-                                {buttonState.textVisible && (
-                                    <Typography
-                                        sx={{
-                                            fontSize: '12px',
-                                            fontWeight: '600',
-                                            marginTop: '50px'
-                                        }}
-                                    >
-                                        запустить
-                                    </Typography>
-                                )}
-                            </Button>
-                            {isTimerActive && (
-                                <Box
-                                    sx={{
-                                        display: 'flex',
-                                        flexDirection: 'column',
-                                        alignItems: 'center',
-                                    }}
-                                >
-                                    <Typography
-                                        sx={{
-                                            fontSize: '18px',
-                                            fontWeight: '600',
-                                            marginBottom: '8px',
-                                        }}
-                                    >
-                                        {formatTime()}
-                                    </Typography>
-                                    <Box
-                                        sx={{
-                                            display: 'flex',
-                                            justifyContent: 'center',
-                                            position: 'relative',
-                                            overflow: 'hidden',
-                                        }}
-                                    >
-                                        <Lottie
-                                            animationData={animationData}
-                                            style={animationStyle}
-                                        />
-                                        <Box
-                                            component="img"
-                                            src={getIconByCurrency(userData.crypto_currency)}
-                                            alt={'Current coin'}
-                                            sx={{
-                                                position: 'absolute',
-                                                bottom: '58px',
-                                                right: '20px',
-                                                width: '30px',
-                                            }}
-                                        />
-                                    </Box>
-                                </Box>
-                            )}
-                        </Box>
-                        <Box
-                            sx={{
-                                position: 'relative',
-                                display: 'flex',
-                                justifyContent: 'center',
-                                width: '100%',
-                            }}
-                        >
-                            <Typography
-                                sx={{
-                                    cursor: 'default'
-                                }}
-                            >
-                                {userData.daily_mining_balance !== undefined && tickersPrice[userData.crypto_currency.toLowerCase()] !== undefined
-                                    ? (userData.daily_mining_balance / tickersPrice[userData.crypto_currency.toLowerCase()]).toFixed(8)
-                                    : '0'} {userData && userData.crypto_currency && userData.crypto_currency.toUpperCase()}
-                            </Typography>
-                            <Fade in={showBalanceChange}>
-                                <Typography
-                                    sx={{
-                                        position: 'absolute',
-                                        right: '7%',
-                                        bottom: '12%',
-                                        fontSize: '12px',
-                                        color: 'rgba(45, 176, 25, 0.8)',
-                                    }}
-                                >
-                                    +{isTimerActive ? randomIncrement : '0.0000523'} {userData.crypto_currency}
-                                </Typography>
-                            </Fade>
-                        </Box>
+                        {!endUserMiningTimestamp && (
+                            <StartButton
+                                onClick={onClickStartButton}
+                                isDisabled={activeTasks.length > 0 || !isMiningActive}
+                                text={t('mining.pages.mainMining.start_btn')}
+                            />
+                        )}
+                        {endUserMiningTimestamp !== null && (
+                            <Timer timeRemaining={timeRemaining} cryptoCurrency={cryptoCurrency} />
+                        )}
                     </Box>
+                    <Balance
+                        showBalanceChange={showBalanceChange}
+                        randomIncrement={randomIncrement}
+                        setRandomIncrement={setRandomIncrement}
+                    />
                 </Box>
-                <Box>
-                    <TaskList activeTasks={activeTasks} />
-                </Box>
+                <TaskList activeTasks={activeTasks} />
             </Box>
-            {/* Snackbar при наличии активных заданий */}
             <Snackbar
                 open={snackbarOpen}
-                autoHideDuration={2000}
+                autoHideDuration={null}
                 onClose={() => setSnackbarOpen(false)}
             >
-                <Alert severity="error" sx={{ width: '100%' }}>
-                    Вы не выполнили задание
+                <Alert
+                    severity="error"
+                    sx={{
+                        width: '100%' ,
+                        display: 'flex',
+                        alignItems: 'center'
+                    }}
+                    action={
+                        <IconButton onClick={() => setSnackbarOpen(false)}>
+                            <CloseIcon/>
+                        </IconButton>
+                    }
+                >
+                    {t('mining.pages.mainMining.error_alert')}
                 </Alert>
             </Snackbar>
-            <Backdrop
-                sx={{
-                    color: '#fff',
-                    bgcolor: 'var(--tg-theme-bg-color)',
-                    zIndex: (theme) => theme.zIndex.drawer + 1
-                }}
-                open={showLoader}
-            >
-                <CircularProgress color="inherit" />
-            </Backdrop>
         </>
     );
 };
