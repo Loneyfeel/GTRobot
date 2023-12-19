@@ -164,7 +164,7 @@ const Balance = ({ showBalanceChange, randomIncrement, setRandomIncrement }) => 
             return displayedBalance.toFixed(6);
         } else {
             // Если цена не найдена, возвращаем исходный баланс
-            return balance.toFixed(8);
+            return balance.toFixed(6);
         }
     };
 

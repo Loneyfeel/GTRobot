@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent, Container, Typography } from '@mui/material';
 import { useTrail, animated } from 'react-spring';
-import { saveMiningUserTask } from '../Requests/Requests.js'; // Подключите вашу функцию сохранения задания
+import { saveMiningUserTask } from '../Requests/Requests.js';
 
 const TaskList = ({ activeTasks }) => {
     const [tasks, setTasks] = useState([]);

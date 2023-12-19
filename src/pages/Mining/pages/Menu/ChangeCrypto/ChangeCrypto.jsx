@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Box, Typography } from "@mui/material";
 import CoinCard from './CoinCard';
-import { getMiningUserData, saveMiningUserCryptoCurrency } from '../../../components/Requests/Requests.js';
+import { saveMiningUserCryptoCurrency } from '../../../components/Requests/Requests.js';
 import bitcoinIcon from '../../../assets/bitcoin-btc-logo.svg';
 import dogeIcon from '../../../assets/dogecoin-doge-logo.svg';
 import shibaIcon from '../../../assets/shiba-inu-shib-logo.svg';

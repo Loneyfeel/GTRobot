@@ -106,7 +106,11 @@ const Referrals = () => {
                             color: 'var(--tg-theme-text-color)',
                         }}
                     >
-                        {t('mining.pages.ref.btn')}
+                        <Typography
+                            sx={{
+                                marginTop: '2px',
+                                fontSize: '14px',
+                            }}>{t('mining.pages.ref.btn')}</Typography>
                     </Button>
                 </Box>
                 <Box>

@@ -1,4 +1,4 @@
-import React, {lazy, useState} from 'react';
+import React, { lazy, useState } from 'react';
 import { Box, IconButton } from "@mui/material";
 
 import Start from "./Start/index.js";
@@ -7,16 +7,14 @@ import MoreMoney from "./MoreMoney/index.js";
 import Referrals from "./Referrals/index.js";
 import Collect from "./Collect/index.js";
 import GettingStart from "./GettingStart/index.js";
+import FunctionalChangeCrypto from "./FunctionalChangeCrypto/index.js";
 
 const EastIcon = lazy(() => import('@mui/icons-material/East'));
 
 const componentsList = [
-    <Start key="Start" />,
-    <ChangeCrypto key="ChangeCrypto" />,
-    <MoreMoney key="MoreMoney" />,
-    <Referrals key="Referrals" />,
     <Collect key="Collect" />,
-    <GettingStart key="GettingStart" />
+    <FunctionalChangeCrypto key="FunctionalChangeCrypto" />,
+    <GettingStart key="GettingStart" />,
 ];
 
 const Helps = ({ hideHelps }) => {
@@ -28,25 +26,35 @@ const Helps = ({ hideHelps }) => {
         setCurrentIndex(nextIndex);
 
         if (nextIndex === 0) {
-            // Если мы вернулись к первому компоненту, то проверяем, были ли все компоненты просмотрены
             if (allComponentsViewed) {
-                // Если все компоненты были просмотрены и мы вернулись к первому компоненту,
-                // то скрываем Helps
                 hideHelps();
             }
         } else {
-            // Если мы переходим к следующему компоненту, помечаем, что текущий компонент просмотрен
             setAllComponentsViewed(true);
         }
     };
 
+    const handleOverlayClick = () => {
+        // Проверяем, можно ли нажать на зону
+        if (componentsList[currentIndex].type !== FunctionalChangeCrypto) {
+            handleNextComponent();
+        }
+    };
+
     return (
-        <Box>
+        <Box
+            sx={{
+                position: 'relative',
+                width: '100%',
+                height: '100%',
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'flex-end',
+            }}
+        >
             <Box
                 sx={{
-                    display: 'flex',
-                    justifyContent: 'flex-end',
-                    width: '100%',
+                    cursor: 'pointer',
                 }}
             >
                 <IconButton
@@ -61,18 +69,33 @@ const Helps = ({ hideHelps }) => {
                     />
                 </IconButton>
             </Box>
+            {componentsList[currentIndex].type !== FunctionalChangeCrypto &&
+                <Box
+                    onClick={handleOverlayClick}
+                    sx={{
+                        position: 'absolute',
+                        top: '45px',
+                        width: '50%',
+                        height: '100%',
+                        zIndex: 100,
+                        cursor: 'pointer',
+                    }}
+                />
+            }
             <Box
                 sx={{
                     display: 'flex',
                     flexDirection: 'column',
                     alignItems: 'center',
-                    cursor: 'default'
+                    cursor: 'default',
+                    position: 'relative',
+                    zIndex: 1,
                 }}
             >
                 {componentsList[currentIndex]}
             </Box>
         </Box>
     );
-};
+}
 
 export default Helps;

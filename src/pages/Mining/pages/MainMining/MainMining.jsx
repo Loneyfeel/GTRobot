@@ -5,6 +5,7 @@ import animationDataDay from '../../assets/AnimationDay.json';
 import animationDataNight from '../../assets/AnimationNight.json';
 import TouchAppIcon from '@mui/icons-material/TouchApp';
 import CloseIcon from '@mui/icons-material/Close';
+import InfoIcon from '@mui/icons-material/Info';
 import TaskList from '../../components/TaskList';
 import { startMining, getMiningTickersPrice, getMiningUserData } from '../../components/Requests/Requests.js';
 import bitcoinIcon from '../../assets/bitcoin-btc-logo.svg';
@@ -12,6 +13,7 @@ import dogeIcon from '../../assets/dogecoin-doge-logo.svg';
 import shibaIcon from '../../assets/shiba-inu-shib-logo.svg';
 import tonIcon from '../../assets/ton_symbol.svg';
 import {useTranslation} from "react-i18next";
+import {useNavigate} from "react-router-dom";
 
 const determineAnimationData = () => {
     const currentHour = new Date().getHours();
@@ -172,7 +174,7 @@ const Balance = ({ showBalanceChange, randomIncrement, setRandomIncrement }) => 
         // Установка интервала для обновления числа каждые 5 секунд
         const intervalId = setInterval(() => {
             setRandomIncrement(0.00001 + Math.random() * (0.0001 - 0.000001));
-        }, 5000);
+        }, 1000);
 
         return () => {
             clearInterval(intervalId);
@@ -193,24 +195,26 @@ const Balance = ({ showBalanceChange, randomIncrement, setRandomIncrement }) => 
             sx={{
                 position: 'relative',
                 display: 'flex',
+                flexDirection: 'column',
                 justifyContent: 'center',
                 alignItems: 'center',
                 width: '100%',
+                height: '60px'
             }}
         >
-            <Typography
-                sx={{
-                    cursor: 'default'
-                }}
-            >
-                {getDisplayedBalance()} {cryptoCurrency.toUpperCase()}
-            </Typography>
+            <Box>
+                <Typography
+                    sx={{
+                        cursor: 'default'
+                    }}
+                >
+                    {getDisplayedBalance()} {cryptoCurrency.toUpperCase()}
+                </Typography>
+
+            </Box>
             {showBalanceChange && (
                 <Typography
                     sx={{
-                        position: 'absolute',
-                        right: '3%',
-                        bottom: '12%',
                         fontSize: '12px',
                         color: 'rgba(45, 176, 25, 0.8)',
                     }}
@@ -222,8 +226,39 @@ const Balance = ({ showBalanceChange, randomIncrement, setRandomIncrement }) => 
     );
 };
 
+const getRandomHashrate = () => {
+    const characters = 'abcdefghijklmnopqrstuvwxyz01234567890123456789';
+    const randomText = Array.from({ length: 40 }, () => characters[Math.floor(Math.random() * characters.length)]);
+    return `${randomText.join('')}`;
+};
 
-const MainMining = () => {
+const RandomTextComponent = () => {
+    const [randomText, setRandomText] = useState(getRandomHashrate());
+
+    useEffect(() => {
+        const intervalId = setInterval(() => {
+            setRandomText(getRandomHashrate());
+        }, 1000);
+
+        // Очистка интервала при размонтировании компонента
+        return () => clearInterval(intervalId);
+    }, []);
+
+    return (
+        <Typography
+            sx={{
+                marginBlock: '12px',
+                textAlign: 'center',
+                fontSize: '12px',
+                color: 'var(--tg-theme-hint-color)'
+            }}
+        >
+            {randomText}
+        </Typography>
+    );
+};
+
+const MainMining = ({setValue}) => {
     const { t } = useTranslation();
 
     const [timeRemaining, setTimeRemaining] = useState(0);
@@ -276,30 +311,63 @@ const MainMining = () => {
         }
     }, [hasUpdatedMiningData]);
 
+    const navigate = useNavigate();
+
     return (
         <>
             <Box
                 sx={{
-                    minHeight: '90vh',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    minHeight: '80vh',
+                    justifyContent: 'center',
+                    alignItems: 'center',
                     bgcolor: 'var(--tg-theme-bg-color)',
                     color: 'var(--tg-theme-text-color)',
                 }}
             >
                 <Box
+                sx={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                }}
+                >
+                    <IconButton
+                        onClick={() => {
+                            navigate('/menu/info')
+                            setValue(3)
+                        }}
+                        sx={{
+                            position: 'absolute',
+                            top: '44px',
+                            right: '0',
+                            color: 'var(--tg-theme-text-color)'
+                        }}
+                    >
+                        <InfoIcon />
+                    </IconButton>
+                <Box
                     sx={{
                         display: 'flex',
                         flexDirection: 'column',
-                        justifyContent: 'center',
                         alignItems: 'center',
-                        position: 'relative',
-                        height: '270px',
+                        width: '100%'
                     }}
                 >
+                    <Box
+                    sx={{
+                        position: 'absolute',
+                        top: '44px',
+                        cursor: 'default'
+                    }}>
+                        {true && (
+                            <RandomTextComponent />
+                        )}
+                    </Box>
                     <Box
                         sx={{
                             display: 'flex',
                             alignItems: 'center',
-                            height: '140px',
                         }}
                     >
                         {!endUserMiningTimestamp && (
@@ -319,33 +387,52 @@ const MainMining = () => {
                         setRandomIncrement={setRandomIncrement}
                     />
                 </Box>
-                <TaskList activeTasks={activeTasks} />
-            </Box>
-            <Snackbar
-                open={snackbarOpen}
-                autoHideDuration={null}
-                onClose={() => setSnackbarOpen(false)}
-                sx={{
-                    zIndex: '1500'
-                }}
-            >
-                <Alert
-                    severity="error"
-                    sx={{
-                        width: '100%' ,
-                        display: 'flex',
-                        alignItems: 'center',
-                        zIndex: '1500'
+                {/*<TaskList activeTasks={activeTasks} />*/}
+                </Box>
+                <Button
+                    onClick={() => {
+                        navigate('/menu/withdraw')
+                        setValue(3)
                     }}
-                    action={
-                        <IconButton onClick={() => setSnackbarOpen(false)}>
-                            <CloseIcon/>
-                        </IconButton>
-                    }
+                    variant='contained'
+                    sx={{
+                        marginTop: '20px',
+                        width: 'max-content',
+                        borderRadius: '7px'
+                    }}
                 >
-                    {t('mining.pages.mainMining.error_alert')}
-                </Alert>
-            </Snackbar>
+                    <Typography
+                        sx={{
+                            marginTop: '2px',
+                            fontSize: '14px',
+                        }}>{t('mining.pages.menu.withdraw.main_btn')}</Typography>
+                </Button>
+            </Box>
+            {/*<Snackbar*/}
+            {/*    open={snackbarOpen}*/}
+            {/*    autoHideDuration={null}*/}
+            {/*    onClose={() => setSnackbarOpen(false)}*/}
+            {/*    sx={{*/}
+            {/*        zIndex: '1500'*/}
+            {/*    }}*/}
+            {/*>*/}
+            {/*    <Alert*/}
+            {/*        severity="error"*/}
+            {/*        sx={{*/}
+            {/*            width: '100%' ,*/}
+            {/*            display: 'flex',*/}
+            {/*            alignItems: 'center',*/}
+            {/*            zIndex: '1500'*/}
+            {/*        }}*/}
+            {/*        action={*/}
+            {/*            <IconButton onClick={() => setSnackbarOpen(false)}>*/}
+            {/*                <CloseIcon/>*/}
+            {/*            </IconButton>*/}
+            {/*        }*/}
+            {/*    >*/}
+            {/*        {t('mining.pages.mainMining.error_alert')}*/}
+            {/*    </Alert>*/}
+            {/*</Snackbar>*/}
         </>
     );
 };

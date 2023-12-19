@@ -86,7 +86,8 @@ const Withdraw = ({ setIsSectionOpen }) => {
                                 color: 'var(--tg-theme-hint-color)'
                             },
                             '& .MuiOutlinedInput-notchedOutline': {
-                                borderColor: 'var(--tg-theme-text-color)'
+                                borderColor: 'var(--tg-theme-text-color)',
+                                borderRadius: '7px',
                             },
                             '& .MuiFormHelperText-root': {
                                 color: 'var(--tg-theme-hint-color)'
@@ -99,13 +100,15 @@ const Withdraw = ({ setIsSectionOpen }) => {
                         id="wallet-address"
                         label={t('mining.pages.menu.withdraw.textField_2')}
                         sx={{
+                            borderRadius: '7px',
                             width: '95%',
                             marginBlock: '15px 20px',
                             '& .MuiFormLabel-colorPrimary': {
                                 color: 'var(--tg-theme-hint-color)'
                             },
                             '& .MuiOutlinedInput-notchedOutline': {
-                                borderColor: 'var(--tg-theme-text-color)'
+                                borderColor: 'var(--tg-theme-text-color)',
+                                borderRadius: '7px',
                             },
                         }}
                         value={walletAddress}
@@ -125,8 +128,15 @@ const Withdraw = ({ setIsSectionOpen }) => {
                                 }
                             );
                         }}
+                        sx={{
+                            borderRadius: '7px'
+                        }}
                     >
-                        {t('mining.pages.menu.withdraw.main_btn')}
+                        <Typography
+                            sx={{
+                                marginTop: '2px',
+                                fontSize: '14px',
+                        }}>{t('mining.pages.menu.withdraw.main_btn')}</Typography>
                     </Button>
                 </Box>
                 <Snackbar

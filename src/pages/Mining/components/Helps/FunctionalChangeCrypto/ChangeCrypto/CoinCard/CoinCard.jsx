@@ -36,7 +36,7 @@ const CoinCard = ({ icon, text, selected, onClick }) => {
                     sx={{
                         width: '50px',
                         marginBottom: '5px'
-                    }}
+                    }}Я
                 />
                 <Typography variant="h6" component="div"
                             sx={{

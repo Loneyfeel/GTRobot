@@ -143,7 +143,11 @@
         "collect": "Kuniga bir necha marta daromad to'plang!",
         "getting-start": "Hoziroq Cloud Mayningni sinab ko'ring!",
         "more-money": "Obuna bilan ko'proq ishlang",
-        "referrals": "Ko'proq do'stlar-ko'proq daromad"
+        "referrals": "Ko'proq do'stlar-ko'proq daromad",
+        "functionalChangeCrypto": {
+          "change": "Kriptovalyutani tanlang",
+          "success": "Tanlandi"
+        }
       }
     }
   }
