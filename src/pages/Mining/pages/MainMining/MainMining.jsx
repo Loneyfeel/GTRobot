@@ -202,29 +202,40 @@ const Balance = ({ showBalanceChange, randomIncrement, setRandomIncrement }) => 
                 height: '60px'
             }}
         >
-            <Box>
-                <Typography
+            <Typography
+                sx={{
+                    cursor: 'default'
+                }}
+            >
+                {getDisplayedBalance()} {cryptoCurrency.toUpperCase()}
+            </Typography>
+            {showBalanceChange && (
+                <Box
                     sx={{
-                        cursor: 'default'
+                        display: 'flex',
                     }}
                 >
-                    {getDisplayedBalance()} {cryptoCurrency.toUpperCase()}
-                </Typography>
-
-            </Box>
-            {showBalanceChange && (
-                <Typography
+                    <Typography
+                        sx={{
+                            fontSize: '12px',
+                            color: 'rgba(45, 176, 25, 0.8)',
+                        }}
+                    >
+                        {`+${randomIncrement.toFixed(7)} ${cryptoCurrency.toUpperCase()}`}
+                    </Typography>
+                    <Typography
                     sx={{
                         fontSize: '12px',
                         color: 'rgba(45, 176, 25, 0.8)',
-                    }}
-                >
-                    {`+${randomIncrement.toFixed(7)} ${cryptoCurrency.toUpperCase()}`}
-                </Typography>
+                        marginLeft: '10px'
+                    }}>
+                        Boost +0%
+                    </Typography>
+                </Box>
             )}
         </Box>
     );
-};
+}
 
 const getRandomHashrate = () => {
     const characters = 'abcdefghijklmnopqrstuvwxyz01234567890123456789';
