@@ -38,10 +38,8 @@ const ChangeCrypto = ({ setIsSectionOpen }) => {
                 sx={{
                     bgcolor: 'var(--tg-theme-bg-color)',
                     color: 'var(--tg-theme-text-color)',
-                    minHeight: '90vh',
+                    minHeight: '30vh',
                     width: '100%',
-                    position: 'absolute',
-                    top: '44px'
                 }}
             >
                 <Box

@@ -14,6 +14,7 @@ const CloseIcon = lazy(() => import('@mui/icons-material/Close'));
 
 const Referrals = () => {
     const [isSnackbarOpen, setIsSnackbarOpen] = useState(false);
+    const [isLinkOpen, setisLinkrOpen] = useState(false);
     const [referralBonus, setReferralBonus] = useState(0);
     const [referralCode, setReferralCode] = useState('');
     const [referrals, setReferrals] = useState([]);
@@ -40,6 +41,7 @@ const Referrals = () => {
         try {
             await navigator.clipboard.writeText(referralLink);
             setIsSnackbarOpen(true);
+            setisLinkrOpen(true)
         } catch (err) {
             console.error('Failed to copy text: ', err);
         }
@@ -53,7 +55,7 @@ const Referrals = () => {
         setIsSnackbarOpen(false);
     };
 
-    const { t } = useTranslation();
+    const {t} = useTranslation();
 
     return (
         <>
@@ -95,6 +97,8 @@ const Referrals = () => {
                 <Box
                     sx={{
                         display: 'flex',
+                        flexDirection: 'column',
+                        alignItems: 'center',
                         justifyContent: 'center',
                         marginBlock: '10px',
                     }}
@@ -112,6 +116,21 @@ const Referrals = () => {
                                 fontSize: '14px',
                             }}>{t('mining.pages.ref.btn')}</Typography>
                     </Button>
+                    <Box
+                        sx={{
+                            height: '40px',
+                            width: '100%'
+                        }}>
+                        {isLinkOpen && (
+                            <Typography
+                                sx={{
+                                    margin: '10px 5px 5px 15px',
+                                    fontSize: '14px'
+                                }}>
+                                {referralLink}
+                            </Typography>
+                        )}
+                    </Box>
                 </Box>
                 <Box>
                     <Typography
@@ -120,13 +139,13 @@ const Referrals = () => {
                             cursor: 'default',
                         }}
                     >
-                        {t('mining.pages.ref.list')}
+                        {t('mining.pages.ref.list')}:
                     </Typography>
                     {referrals.length > 0 ? (
                         <ul
-                        style={{
-                            marginLeft: '15px'
-                        }}>
+                            style={{
+                                marginLeft: '15px'
+                            }}>
                             {referrals.map((user, index) => (
                                 <li key={index}>{user.user_id}</li>
                             ))}
@@ -155,13 +174,13 @@ const Referrals = () => {
                     message={t('mining.pages.ref.snackbar_text')}
                     action={
                         <IconButton size="small" color="inherit" onClick={handleCloseSnackbar}>
-                            <CloseIcon fontSize="small" />
+                            <CloseIcon fontSize="small"/>
                         </IconButton>
                     }
                 />
             </Snackbar>
         </>
     );
-};
+}
 
 export default Referrals;

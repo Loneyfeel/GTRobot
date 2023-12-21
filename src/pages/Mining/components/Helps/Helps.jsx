@@ -12,6 +12,10 @@ import FunctionalChangeCrypto from "./FunctionalChangeCrypto/index.js";
 const EastIcon = lazy(() => import('@mui/icons-material/East'));
 
 const componentsList = [
+    <Start key='Start'/>,
+    <ChangeCrypto key='ChangeCrypto'/>,
+    <MoreMoney key='MoreMoney'/>,
+    <Referrals key='Referrals'/>,
     <Collect key="Collect" />,
     <FunctionalChangeCrypto key="FunctionalChangeCrypto" />,
     <GettingStart key="GettingStart" />,
@@ -24,13 +28,21 @@ const Helps = ({ hideHelps }) => {
     const handleNextComponent = () => {
         const nextIndex = (currentIndex + 1) % componentsList.length;
         setCurrentIndex(nextIndex);
-
-        if (nextIndex === 0) {
-            if (allComponentsViewed) {
-                hideHelps();
-            }
-        } else {
+        console.log(currentIndex)
+        console.log(nextIndex)
+        console.log(allComponentsViewed)
+        // if (currentIndex===5 && nextIndex === 6) {
+        //     if (allComponentsViewed) {
+        //         hideHelps();
+        //     } else {
+        //         setAllComponentsViewed(true);
+        //     }
+        // }
+        if(nextIndex === 6){
             setAllComponentsViewed(true);
+        }
+        if(allComponentsViewed){
+            hideHelps();
         }
     };
 

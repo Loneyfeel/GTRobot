@@ -1,6 +1,6 @@
 import axios from 'axios';
-import { host } from "../../../../shared/host/host.js";
-import { initData, userId } from '../../../../shared/telegram/telegram.js';
+import {host} from "../../../../shared/host/host.js";
+import {initData, userId} from '../../../../shared/telegram/telegram.js';
 
 const baseURL = `${host}/api`;
 
@@ -60,9 +60,11 @@ export const getMiningTickersPrice = async () => {
 
 export const saveMiningUserTask = async (taskId) => {
     try {
-        await axiosInstance.post('/save-mining-user-task', { initData, userId, taskId });
+        return await axiosInstance.post('/save-mining-user-task', {initData, userId, taskId});  // Вернуть результат выполнения запроса
     } catch (error) {
         handleError(error);
+        // Если возникла ошибка, можно вернуть объект с информацией об ошибке
+        return { status: error};
     }
 };
 

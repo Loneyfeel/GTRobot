@@ -16,7 +16,7 @@ import TaskList from "./components/TaskList/index.js";
 const PeopleIcon = lazy(() => import('@mui/icons-material/People'));
 const MenuIcon = lazy(() => import('@mui/icons-material/Menu'));
 const CurrencyExchangeIcon = lazy(() => import('@mui/icons-material/CurrencyExchange'));
-const SavingsIcon = lazy(() => import('@mui/icons-material/Savings'));
+const FilterDramaIcon = lazy(() => import('@mui/icons-material/FilterDrama'));
 
 // Main component
 const Mining = () => {
@@ -34,8 +34,28 @@ const Mining = () => {
     const [isComponentsLoaded, setIsComponentsLoaded] = React.useState(false);
     const [activeTasks, setActiveTasks] = useState([]);
 
+    const [activeMenuSection, setActiveMenuSection]=useState('')
+
     const location = useLocation();
     const navigate = useNavigate();
+
+    useEffect(() => {
+        const checkUserExists = async () => {
+            try {
+                const userExistsResponse = await miningUserExists();
+
+                console.log('aboba,', userExistsResponse.status);
+
+                if (!userExistsResponse.status) {
+                    setIsHelpsVisible(true);
+                }
+            } catch (error) {
+                console.error('Error checking user existence:', error);
+            }
+        };
+
+        checkUserExists(); // Выполняется только один раз
+    }, []);
 
     useEffect(() => {
         const fetchDataAndUpdateLocalStorage = async () => {
@@ -48,13 +68,18 @@ const Mining = () => {
                     localStorage.setItem('miningQueryId', currentQueryId);
                     localStorage.setItem('miningData', JSON.stringify(userDataResponse.data));
                     localStorage.setItem('miningUserData', JSON.stringify(userDataResponse));
-                    console.log(localStorage)
+
                     setIsDataLoaded(true);
+
+                    // Вызываем fetchLocalStorageTasks после успешного получения данных из API
+                    await fetchLocalStorageTasks();
                 }
             } catch (error) {
                 console.error('Error fetching user data:', error);
             }
         };
+
+        fetchDataAndUpdateLocalStorage();
 
         const fetchTickersPricesAndUpdateLocalStorage = async () => {
             try {
@@ -71,40 +96,23 @@ const Mining = () => {
             try {
                 const storedData = JSON.parse(localStorage.getItem('miningUserData')) || {};
                 setActiveTasks(storedData.active_tasks || []);
-
             } catch (error) {
                 console.error('Error fetching tasks:', error);
             }
         };
 
         fetchTickersPricesAndUpdateLocalStorage();
-        fetchLocalStorageTasks()
-        fetchDataAndUpdateLocalStorage();
 
         const intervalId = setInterval(() => {
             fetchTickersPricesAndUpdateLocalStorage();
         }, 3 * 60 * 1000);
 
+        // Очистка интервала при размонтировании компонента
         return () => clearInterval(intervalId);
+
+        // Добавление зависимостей, если это необходимо
     }, []);
 
-    useEffect(() => {
-        const checkUserExists = async () => {
-            try {
-                const userExistsResponse = await miningUserExists();
-                const userExistsFlag = localStorage.getItem('miningUserExistsFlag');
-
-                if (!userExistsResponse.status && !userExistsFlag) {
-                    setIsHelpsVisible(true);
-                    localStorage.setItem('miningUserExistsFlag', 'true');
-                }
-            } catch (error) {
-                console.error('Error checking user existence:', error);
-            }
-        };
-
-        checkUserExists(); // Выполняется только один раз
-    }, []);
 
     useEffect(() => {
         if (isComponentsLoaded && value === null) {
@@ -184,8 +192,8 @@ const Mining = () => {
     ];
 
     const icons = [
+        <FilterDramaIcon />,
         <CurrencyExchangeIcon />,
-        <SavingsIcon />,
         <PeopleIcon />,
         <MenuIcon />,
     ];
@@ -213,20 +221,22 @@ const Mining = () => {
                             cursor: 'default'
                         }}
                     >
-                        {currentMenuItem ? currentMenuItem.title : `${t('mining.pages.mainMining.title')}`}
+                        {currentMenuItem ? currentMenuItem.title : `${t('mining.pages.menu.title')}`}
                     </Typography>
                 </Box>
-                <Box
-                    sx={{
-                        marginBottom: '56px'
-                    }}>
-                    <Routes>
-                        {menuItems.map((item, index) => (
-                            <Route key={index} path={item.to} element={<item.component setValue={setValue}/>} />
-                        ))}
-                        <Route path="/menu/*" element={<Menu />} />
-                    </Routes>
-                </Box>
+                {!isHelpsVisible && activeTasks.length === 0 && isComponentsLoaded && (
+                    <Box
+                        sx={{
+                            marginBottom: '56px'
+                        }}>
+                        <Routes>
+                            {menuItems.map((item, index) => (
+                                <Route key={index} path={item.to} element={<item.component setValue={setValue} setActiveMenuSection={setActiveMenuSection}/>} />
+                            ))}
+                            <Route path="/menu/*" element={<Menu activeMenuSection={activeMenuSection}/>} />
+                        </Routes>
+                    </Box>
+                )}
                 <BottomNavigation
                     value={value}
                     onChange={handleChange}
@@ -262,7 +272,7 @@ const Mining = () => {
                     ))}
                 </BottomNavigation>
             </Box>
-            {!!isHelpsVisible && (
+            {isHelpsVisible && (
                 <Box
                     sx={{
                         position: 'fixed',
@@ -290,8 +300,15 @@ const Mining = () => {
                         display: 'block',
                     }}
                 >
-                    <Typography>Выполните все задания:</Typography>
-                    <TaskList activeTasks={activeTasks} />
+                    <Typography
+                        sx={{
+                            margin: '15px',
+                            fontSize: '18px',
+                            color: 'var(--tg-theme-text-color)'
+                        }}
+                    >
+                        {t('mining.components.taskList')}:</Typography>
+                    <TaskList activeTasks={activeTasks} setActiveTasks={setActiveTasks} />
                 </Box>
             )}
         </>

@@ -47,10 +47,10 @@ const ChangeCrypto = () => {
     };
 
     const coinData = [
-        { crypto: 'btc', icon: bitcoinIcon, text: `${t('mining.pages.menu.info.text_btc')}` },
-        { crypto: 'doge', icon: dogeIcon, text: `${t('mining.pages.menu.info.text_doge')}` },
-        { crypto: 'ton', icon: tonIcon, text: `${t('mining.pages.menu.info.text_ton')}` },
-        { crypto: 'shib', icon: shibaIcon, text: `${t('mining.pages.menu.info.text_shib')}` },
+        { crypto: 'btc', icon: bitcoinIcon, text: `${t('mining.pages.menu.coins.text_btc')}` },
+        { crypto: 'doge', icon: dogeIcon, text: `${t('mining.pages.menu.coins.text_doge')}` },
+        { crypto: 'ton', icon: tonIcon, text: `${t('mining.pages.menu.coins.text_ton')}` },
+        { crypto: 'shib', icon: shibaIcon, text: `${t('mining.pages.menu.coins.text_shib')}` },
     ];
 
     return (
@@ -169,9 +169,10 @@ const ChangeCrypto = () => {
                         justifyContent: 'center'
                     }}>
                         <Button
+                            variant='contained'
                             onClick={handleButtonClick}
                             sx={{
-                                backgroundColor: buttonState.selected ? '#269926' : 'inherit',
+                                backgroundColor: buttonState.selected ? '#269926' : 'var(--tg-theme-button-color)',
                                 color: buttonState.selected ? 'var(--tg-theme-text-color)' : 'var(--tg-theme-text-color)',
                                 border: 'none',
                                 padding: '10px',
