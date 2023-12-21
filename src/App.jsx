@@ -115,7 +115,7 @@ function App() {
                 {/*<Copyright/>*/}
                 <Router>
                     <Routes>
-                        <Route path="mining/*" exact element={<Mining/>} />
+                        <Route path="/mining/*" exact element={<Mining/>} />
                     </Routes>
                 </Router>
             </ThemeProvider>
