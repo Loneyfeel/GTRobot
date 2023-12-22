@@ -13,21 +13,6 @@ import tonIcon from '../../assets/ton_symbol.svg';
 import {useTranslation} from "react-i18next";
 import {useNavigate} from "react-router-dom";
 
-const getIconByCurrency = (currency) => {
-    switch (currency) {
-        case 'btc':
-            return bitcoinIcon;
-        case 'doge':
-            return dogeIcon;
-        case 'shib':
-            return shibaIcon;
-        case 'ton':
-            return tonIcon;
-        default:
-            return bitcoinIcon;
-    }
-};
-
 const Timer = ({ timeRemaining }) => {
 
     const formatTime = (time) => {
@@ -331,6 +316,7 @@ const MainMining = ({setValue, setActiveMenuSection}) => {
                     <IconButton
                         onClick={() => {
                             startTransition(() => {
+                                setActiveMenuSection('mining')
                                 navigate('/menu');
                                 setValue(3);
                             });
@@ -389,7 +375,7 @@ const MainMining = ({setValue, setActiveMenuSection}) => {
                 <Button
                     onClick={() => {
                         startTransition(() => {
-                            setActiveMenuSection('mining')
+                            setActiveMenuSection('withdraw')
                             navigate('/menu');
                             setValue(3);
                         });
@@ -405,6 +391,7 @@ const MainMining = ({setValue, setActiveMenuSection}) => {
                         sx={{
                             marginTop: '2px',
                             fontSize: '14px',
+                            color: 'var(--tg-theme-text-color)'
                         }}>{t('mining.pages.menu.withdraw.main_btn')}</Typography>
                 </Button>
             </Box>

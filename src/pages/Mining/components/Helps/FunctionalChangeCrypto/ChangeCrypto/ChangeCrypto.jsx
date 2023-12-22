@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import {Box, Button, Typography} from "@mui/material";
+import {Alert, Box, Button, Snackbar, SnackbarContent, Typography} from "@mui/material";
 import CoinCard from './CoinCard';
 import { saveMiningUserCryptoCurrency } from '../../../Requests/Requests.js';
 import bitcoinIcon from '../../../../assets/bitcoin-btc-logo.svg';
@@ -16,6 +16,7 @@ const ChangeCrypto = () => {
         selected: false,
         text: `${t('mining.components.helps.functionalChangeCrypto.change')}`,
     });
+    const [isSnackbarOpen, setIsSnackbarOpen] = useState(false);
 
     useEffect(() => {
         const storedData = JSON.parse(localStorage.getItem('miningUserData')) || {};
@@ -43,6 +44,11 @@ const ChangeCrypto = () => {
                 selected: true,
                 text: `${t('mining.components.helps.functionalChangeCrypto.success')}`,
             });
+        }
+    };
+    const handleBoxClick = () => {
+        if (!buttonState.selected) {
+            setIsSnackbarOpen(true);
         }
     };
 
@@ -173,18 +179,51 @@ const ChangeCrypto = () => {
                             onClick={handleButtonClick}
                             sx={{
                                 backgroundColor: buttonState.selected ? '#269926' : 'var(--tg-theme-button-color)',
-                                color: buttonState.selected ? 'var(--tg-theme-text-color)' : 'var(--tg-theme-text-color)',
+                                color: 'var(--tg-theme-text-color)',
                                 border: 'none',
                                 padding: '10px',
                                 cursor: 'pointer',
                                 borderRadius: '5px',
                                 outline: 'none',
+                                marginTop: '10px',
+                                '&.MuiButtonBase-root:focus':{
+                                    backgroundColor: buttonState.selected ? '#269926' : 'var(--tg-theme-button-color)',
+                                }
                             }}
                         >
-                            {buttonState.text}
+                            <Typography
+                            sx={{
+                                paddingTop: '3px'
+                            }}>{buttonState.text}</Typography>
                         </Button>
                     </Box>
                 </Box>
+                <Box
+                    sx={{
+                        position: 'absolute',
+                        display: buttonState.selected ? 'none' : 'block',
+                        top: '-40px',
+                        right: '0',
+                        width: '50px',
+                        height: '40px',
+                    }}
+                    onClick={handleBoxClick}
+                />
+                <Snackbar
+                    open={isSnackbarOpen}
+                    autoHideDuration={2000}
+                    onClose={() => setIsSnackbarOpen(false)}
+                    anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+                >
+                    <Alert
+                        severity="error"
+                        sx={{
+                            width: '95%'
+                        }}
+                    >
+                        {t('mining.components.helps.functionalChangeCrypto.error')}
+                    </Alert>
+                </Snackbar>
             </motion.div>
         </>
     );

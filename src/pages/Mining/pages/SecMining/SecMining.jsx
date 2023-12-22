@@ -284,7 +284,7 @@ const MainMining = ({setValue}) => {
     };
 
     const onClickStartButton = async () => {
-        await startMining('regular');
+        await startMining('daily');
         const newData = await getMiningUserData();
         updateMiningData(newData);
         localStorage.setItem('miningUserData', JSON.stringify(newData.data));

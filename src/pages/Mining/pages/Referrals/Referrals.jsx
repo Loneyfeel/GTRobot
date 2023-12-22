@@ -25,7 +25,6 @@ const Referrals = () => {
             try {
                 // Получаем данные из local.storage
                 const storedData = JSON.parse(localStorage.getItem('miningUserData')) || {};
-                console.log(storedData)
                 setReferralBonus(storedData.referral_bonus || 0);
                 setReferralCode(storedData.referral_code || '');
                 setReferrals(storedData.referrals || []);
@@ -39,8 +38,8 @@ const Referrals = () => {
 
     const handleInviteClick = async () => {
         try {
-            await navigator.clipboard.writeText(referralLink);
-            setIsSnackbarOpen(true);
+            // await navigator.clipboard.writeText(referralLink);
+            // setIsSnackbarOpen(true);
             setisLinkrOpen(true)
         } catch (err) {
             console.error('Failed to copy text: ', err);

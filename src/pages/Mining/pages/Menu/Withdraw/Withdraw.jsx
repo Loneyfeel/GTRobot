@@ -8,7 +8,7 @@ const Withdraw = ({ setIsSectionOpen }) => {
     const [isSnackbarOpen, setIsSnackbarOpen] = useState(false);
     const [isWarningSnackbarOpen, setIsWarningSnackbarOpen] = useState(false);
     const [isErrorSnackbarOpen, setIsErrorSnackbarOpen] = useState(false);
-    const minWithdrawAmount = 100;
+    const minWithdrawAmount = 999999999999999999;
 
     useEffect(() => {
         setIsSectionOpen(true);
@@ -76,7 +76,6 @@ const Withdraw = ({ setIsSectionOpen }) => {
                     <TextField
                         id="withdraw-amount"
                         label={t('mining.pages.menu.withdraw.textField_1')}
-                        helperText={`min= ${minWithdrawAmount}$`}
                         sx={{
                             width: '95%',
                             marginBlock: '10px 10px',

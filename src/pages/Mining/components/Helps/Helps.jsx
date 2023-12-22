@@ -28,16 +28,6 @@ const Helps = ({ hideHelps }) => {
     const handleNextComponent = () => {
         const nextIndex = (currentIndex + 1) % componentsList.length;
         setCurrentIndex(nextIndex);
-        console.log(currentIndex)
-        console.log(nextIndex)
-        console.log(allComponentsViewed)
-        // if (currentIndex===5 && nextIndex === 6) {
-        //     if (allComponentsViewed) {
-        //         hideHelps();
-        //     } else {
-        //         setAllComponentsViewed(true);
-        //     }
-        // }
         if(nextIndex === 6){
             setAllComponentsViewed(true);
         }

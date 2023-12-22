@@ -34,7 +34,7 @@ const Mining = () => {
     const [isComponentsLoaded, setIsComponentsLoaded] = React.useState(false);
     const [activeTasks, setActiveTasks] = useState([]);
 
-    const [activeMenuSection, setActiveMenuSection]=useState('')
+    const [activeMenuSection, setActiveMenuSection] = useState(100);
 
     const location = useLocation();
     const navigate = useNavigate();
@@ -43,8 +43,6 @@ const Mining = () => {
         const checkUserExists = async () => {
             try {
                 const userExistsResponse = await miningUserExists();
-
-                console.log('aboba,', userExistsResponse.status);
 
                 if (!userExistsResponse.status) {
                     setIsHelpsVisible(true);
@@ -148,7 +146,7 @@ const Mining = () => {
                         navigate('/referrals');
                         break;
                     case 3:
-                        navigate('/menu/*');
+                        navigate('/menu');
                         break;
                     default:
                         navigate('/main-mining');
@@ -185,7 +183,7 @@ const Mining = () => {
         },
         {
             label: `${t('mining.buttons.menu')}`,
-            to: '/menu/*',
+            to: '/menu',
             component: Menu,
             title: `${t('mining.pages.menu.title')}`
         },
@@ -224,16 +222,15 @@ const Mining = () => {
                         {currentMenuItem ? currentMenuItem.title : `${t('mining.pages.menu.title')}`}
                     </Typography>
                 </Box>
-                {!isHelpsVisible && activeTasks.length === 0 && isComponentsLoaded && (
+                {!isHelpsVisible && (
                     <Box
                         sx={{
                             marginBottom: '56px'
                         }}>
                         <Routes>
                             {menuItems.map((item, index) => (
-                                <Route key={index} path={item.to} element={<item.component setValue={setValue} setActiveMenuSection={setActiveMenuSection}/>} />
+                                <Route key={index} path={item.to} element={<item.component setValue={setValue} setActiveMenuSection={setActiveMenuSection} activeMenuSection={activeMenuSection}/>} />
                             ))}
-                            <Route path="/menu/*" element={<Menu activeMenuSection={activeMenuSection}/>} />
                         </Routes>
                     </Box>
                 )}
@@ -287,7 +284,6 @@ const Mining = () => {
                     <Helps hideHelps={() => setIsHelpsVisible(false)} />
                 </Box>
             )}
-            {console.log('wasdwawdawdw', activeTasks)}
             {!isHelpsVisible && activeTasks.length > 0 && (
                 <Box
                     sx={{

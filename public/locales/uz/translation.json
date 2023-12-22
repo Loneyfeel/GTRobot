@@ -65,50 +65,50 @@
   },
   "mining": {
     "buttons": {
-      "mainMining": "Mayning",
+      "mainMining": "Cloud",
       "secMining": "GTRobot",
       "referrals": "Referal",
       "menu": "Menu"
     },
     "pages": {
       "mainMining": {
-        "title": "Cloud Mayning",
+        "title": "Cloud Mining",
         "start_btn": "Faollashtirish",
         "error_alert": "Siz vazifalarni bajarmadingiz"
       },
       "secMining": {
-        "title": "Qo'shimcha mayning"
+        "title": "GTRobot Mining"
       },
-        "menu": {
-          "title": "Menu",
-          "mining": {
-            "title": "Cloud Mayning",
-            "text_mining_2": "Cloud Mayning (Bulutli Mayning) - bu ma'lumotlar markazida masofaviy serverlarning quvvatini ijaraga oladigan kripto valyutasini qazib olish usuli. O'z uskunasiga sarmoya kiritish va uni saqlab qolish o'rniga, foydalanuvchi bulutli mayningdan provayderidan hisoblash resurslarini ijaraga oladi.",
-            "text_mining_3": "Bulutli mayningga asosiy xususiyatlariga quyidagilar kiradi:",
-            "text_mining_4": "1. Qulaylik: siz jismoniy jihozlarni sotib olishingiz va saqlashingiz shart emas. Butun jarayon masofadan turib amalga oshiriladi.",
-            "text_mining_5": "2. Pul sariflamasligiz: bulutli mayning provayderlari odatda sizning qazib olish operatsiyalaringizni boshqarish uchun oddiy interfeysni taqdim etadilar."
-          },
-          "gtrobot-mining": {
-            "title": "GTRobot Mayning",
-            "text_gtr_2": "GTRobot Mayning - Bu GTRobot bilan yuqori daromadli mayning bo'limi.",
-            "text_gtr_3": "Ushbu bo'limda siz 24 soatda bir marta mayningni faollashtirib, GTRobot maynigidan siz kuniga 10$ gacha daromad qilishingiz  mumkin.",
-            "text_gtr_4": "Minimal pul chiqarish miqdori: 100$."
-          },
-          "referral": {
-            "title": "Referal sistemasi",
-            "text_ref_2": "Cloud mayningda Referal taklifnoma tizimi mavjud. Bu qanday ishlaydi:",
-            "text_ref_3": "1. Siz Referal havola orqali foydalanuvchilarni taklif qilasiz.",
-            "text_ref_4": "2. Ular Cloud mayning bo'limiga o'tadilar va Mayningni faollashtiradilar.",
-            "text_ref_5": "3. Siz mayning tezligini oshirish uchun Boost olasiz. Bu sizga boshqa foydalanuvchilarga qaraganda ko'proq daromad qilishingizni afzalliklarini beradi.",
-            "text_ref_6": "Muhim: siz taklif qilganlar foydalanuvchilar mayningda faol bo'lishi kerak, aks holda sizning Boostingiz kamayadi."
-          },
-          "coins": {
-            "title": "Tangalari",
-            "text_btc": "Bitcoin (BTC) Satoshi Nakamoto tomonidan yaratilgan to'liq markazlashmagan raqamli kriptovalyutadir. Bitcoin tarmog'i 2009 yil 3 yanvarda, kripto inqilob boshlangan kunning o'zidayoq ishga tushirildi.",
-            "text_ton": "Toncoin (TON) - bu 2018 yilda Telegram messenjeri tomonidan ishlab chiqilgan markazlashtirilmagan birinchi qatlamli blokcheyn. Blokcheyn platformasi Pavel Durov tomonidan yaratilgan va Telegram jamoasi tomonidan ishlab chiqilgan.",
-            "text_shib": "Shiba Inu (SHIB) - 2020 yil avgust oyida \"Ryoshi\" taxallusi ostida anonim tarzda yaratilgan. Vitalik Buterin (ETH asoschisi) sarlavhalari va tvitlari bilan birgalikda sarmoyadorlar hamjamiyatini tanganing yoqimli jozibasi jalb qilgani uchun mem tangasi tezda qiziqish va qadriyatga ega bo'ldi. Bundan tashqari, bu kriptovalyuta endi Jeremy Davinci tomonidan qo'llab-quvvatlana boshladi, u 2013 yilda Bitcoinni kamida 1 dollarga sotib olishni so'radi.",
-            "text_doge": "Dogecoin (DOGE) - mashhur internet mem \"doge\" dan yaratilgan va uning logotipi сиба-ину itini tasvirlaydi. Tesla bosh direktori Elon Mask Dogecoin uning sevimli kriptovalyutasi ekanligini va shu tariqa kriptovalyutani yaxshi qo‘llab-quvvatlashini ta’kidlagan bir nechta tvitlar joylashtirib borilayapti."
-          },
+      "menu": {
+        "title": "Menu",
+        "mining": {
+          "title": "Cloud Mining",
+          "text_mining_2": "Cloud Mining (Bulutli Mayning) - bu ma'lumotlar markazida masofaviy serverlarning quvvatini ijaraga oladigan kripto valyutasini qazib olish usuli. O'z uskunasiga sarmoya kiritish va uni saqlab qolish o'rniga, foydalanuvchi bulutli mayningdan provayderidan hisoblash resurslarini ijaraga oladi.",
+          "text_mining_3": "Bulutli mayningga asosiy xususiyatlariga quyidagilar kiradi:",
+          "text_mining_4": "1. Qulaylik: siz jismoniy jihozlarni sotib olishingiz va saqlashingiz shart emas. Butun jarayon masofadan turib amalga oshiriladi.",
+          "text_mining_5": "2. Pul sariflamasligiz: bulutli mayning provayderlari odatda sizning qazib olish operatsiyalaringizni boshqarish uchun oddiy interfeysni taqdim etadilar."
+        },
+        "gtrobot-mining": {
+          "title": "GTRobot Mining",
+          "text_gtr_2": "GTRobot Mining - Bu GTRobot bilan yuqori daromadli mayning bo'limi.",
+          "text_gtr_3": "Ushbu bo'limda siz 24 soatda bir marta mayningni faollashtirib, GTRobot maynigidan siz kuniga 10$ gacha daromad qilishingiz  mumkin.",
+          "text_gtr_4": "Minimal pul chiqarish miqdori: 100$."
+        },
+        "referral": {
+          "title": "Referal sistemasi",
+          "text_ref_2": "Cloud Mining-da Referal taklifnoma tizimi mavjud. Bu qanday ishlaydi:",
+          "text_ref_3": "1. Siz Referal havola orqali foydalanuvchilarni taklif qilasiz.",
+          "text_ref_4": "2. Ular Cloud Mining bo'limiga o'tadilar va Mayning-ni faollashtiradilar.",
+          "text_ref_5": "3. Siz mayning tezligini oshirish uchun Boost olasiz. Bu sizga boshqa foydalanuvchilarga qaraganda ko'proq daromad qilishingizni afzalliklarini beradi.",
+          "text_ref_6": "Muhim: siz taklif qilganlar foydalanuvchilar mayningda faol bo'lishi kerak, aks holda sizning Boost-ingiz kamayadi."
+        },
+        "coins": {
+          "title": "Kriptovalyutalar",
+          "text_btc": "Bitcoin (BTC) Satoshi Nakamoto tomonidan yaratilgan to'liq markazlashmagan raqamli kriptovalyutadir. Bitcoin tarmog'i 2009 yil 3 yanvarda, kripto inqilob boshlangan kunning o'zidayoq ishga tushirildi.",
+          "text_ton": "Toncoin (TON) - bu 2018 yilda Telegram messenjeri tomonidan ishlab chiqilgan markazlashtirilmagan birinchi qatlamli blokcheyn. Blokcheyn platformasi Pavel Durov tomonidan yaratilgan va Telegram jamoasi tomonidan ishlab chiqilgan.",
+          "text_shib": "Shiba Inu (SHIB) - 2020 yil avgust oyida \"Ryoshi\" taxallusi ostida anonim tarzda yaratilgan. Vitalik Buterin (ETH asoschisi) sarlavhalari va tvitlari bilan birgalikda sarmoyadorlar hamjamiyatini tanganing yoqimli jozibasi jalb qilgani uchun mem tangasi tezda qiziqish va qadriyatga ega bo'ldi. Bundan tashqari, bu kriptovalyuta endi Jeremy Davinci tomonidan qo'llab-quvvatlana boshladi, u 2013 yilda Bitcoinni kamida 1 dollarga sotib olishni so'radi.",
+          "text_doge": "Dogecoin (DOGE) - mashhur internet mem \"doge\" dan yaratilgan va uning logotipi сиба-ину itini tasvirlaydi. Tesla bosh direktori Elon Mask Dogecoin uning sevimli kriptovalyutasi ekanligini va shu tariqa kriptovalyutani yaxshi qo‘llab-quvvatlashini ta’kidlagan bir nechta tvitlar joylashtirib borilayapti."
+        },
         "withdraw": {
           "menu_btn": "Kriptovalyutani chiqarish",
           "title": "Kriptovalyutani chiqarish",
@@ -116,7 +116,7 @@
           "textField_2": "Hamyon manzili:",
           "main_btn": "Chiqarish",
           "btn_helps": {
-            "balance": "Miqdor",
+            "balance": "Balans",
             "address": "Hamyon",
             "question": "Barchasi tog'ri"
           },
@@ -128,12 +128,12 @@
         },
         "changeCrypto": {
           "menu_btn": "Kriptovalyutani almashtirish",
-          "title": "Kriptovalyutani tanlang"
+          "title": "Kriptovalyutani tanlash"
         }
       },
       "ref": {
         "title": "Referal sistemasi",
-        "bonus": "Umumiy bonus",
+        "bonus": "Umumiy boost",
         "btn": "Foydalanuvchilarni taklif qilish",
         "list": "Taklif etilgan foydalanuvchilar",
         "no_referrals": "Taklif qilingan foydalanuvchilar yo'q",
@@ -142,18 +142,19 @@
     },
     "components": {
       "helps": {
-        "start": "Cloud Mayning-pul ishlashning yangi usuli",
+        "start": "Dunyo miqyosi bo’yicha Telegram tarmog’idagi ilk bor Cloud Mining",
         "change-crypto": "Kriptovalyutani tanlash imkoniyati",
         "collect": "Kuniga bir necha marta daromad to'plang!",
-        "getting-start": "Hoziroq Cloud Mayningni sinab ko'ring!",
-        "more-money": "Obuna bilan ko'proq ishlang",
+        "more-money": "Cloud Mining - pul ishlashning yangi usuli",
+        "getting-start": "Hoziroq Cloud Mining-ni sinab ko'ring!",
         "referrals": "Ko'proq do'stlar-ko'proq daromad",
         "functionalChangeCrypto": {
-          "change": "Kriptovalyutani tanlang",
-          "success": "Tanlandi"
+          "change": "Kriptovalyutani tanlash",
+          "success": "Tanlandi",
+          "error": "Kriptovalyutani tanlang"
         }
       },
-      "taskList": "Выполните все задания"
+      "taskList": "Barcha vazifalarni bajaring"
     }
   }
 }

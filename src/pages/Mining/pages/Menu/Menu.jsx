@@ -1,14 +1,14 @@
-import React, { lazy, useState } from 'react';
+import React, {lazy, useEffect, useState} from 'react';
 import { Accordion, AccordionDetails, AccordionSummary, Box, Typography } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { useTranslation } from 'react-i18next';
 
-const PeopleIcon = lazy(() => import('@mui/icons-material/People'));
-const CurrencyExchangeIcon = lazy(() => import('@mui/icons-material/CurrencyExchange'));
-const FilterDramaIcon = lazy(() => import('@mui/icons-material/FilterDrama'));
-const ChangeCircleIcon = lazy(() => import('@mui/icons-material/ChangeCircle'));
-const CurrencyBitcoinIcon = lazy(() => import('@mui/icons-material/CurrencyBitcoin'));
-const AccountBalanceWalletIcon = lazy(() => import('@mui/icons-material/AccountBalanceWallet'));
+import PeopleIcon from '@mui/icons-material/People'
+import CurrencyExchangeIcon from '@mui/icons-material/CurrencyExchange'
+import FilterDramaIcon from '@mui/icons-material/FilterDrama'
+import ChangeCircleIcon from '@mui/icons-material/ChangeCircle'
+import CurrencyBitcoinIcon from '@mui/icons-material/CurrencyBitcoin'
+import AccountBalanceWalletIcon from '@mui/icons-material/AccountBalanceWallet'
 
 import Mining from './Mining';
 import Withdraw from './Withdraw';
@@ -18,8 +18,16 @@ import Referrals from './Referrals/index.js';
 import Coins from './Coins/index.js';
 
 const Menu = ({activeMenuSection}) => {
+
     const { t } = useTranslation();
     const [expanded, setExpanded] = useState(false);
+
+    useEffect(() => {
+        if(activeMenuSection){
+            setExpanded(activeMenuSection)
+        }
+    }, []);
+
     const sections = [
         {
             id: 'mining',
