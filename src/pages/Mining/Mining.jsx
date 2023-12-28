@@ -66,7 +66,6 @@ const Mining = () => {
                     localStorage.setItem('miningQueryId', currentQueryId);
                     localStorage.setItem('miningData', JSON.stringify(userDataResponse.data));
                     localStorage.setItem('miningUserData', JSON.stringify(userDataResponse));
-
                     setIsDataLoaded(true);
 
                     // Вызываем fetchLocalStorageTasks после успешного получения данных из API
@@ -76,7 +75,6 @@ const Mining = () => {
                 console.error('Error fetching user data:', error);
             }
         };
-
         fetchDataAndUpdateLocalStorage();
 
         const fetchTickersPricesAndUpdateLocalStorage = async () => {
@@ -241,6 +239,7 @@ const Mining = () => {
                         position: 'fixed',
                         bottom: '0',
                         width: '100%',
+                        zIndex: '10',
                     }}
                 >
                     {menuItems.map((item, index) => (

@@ -6,6 +6,7 @@ import bitcoinIcon from '../../../assets/bitcoin-btc-logo.svg';
 import dogeIcon from '../../../assets/dogecoin-doge-logo.svg';
 import shibaIcon from '../../../assets/shiba-inu-shib-logo.svg';
 import tonIcon from '../../../assets/ton_symbol.svg';
+import {useTranslation} from "react-i18next";
 
 const ChangeCrypto = ({ setIsSectionOpen }) => {
     const [selectedCrypto, setSelectedCrypto] = useState('');
@@ -32,6 +33,8 @@ const ChangeCrypto = ({ setIsSectionOpen }) => {
         saveMiningUserCryptoCurrency(crypto);
     };
 
+    const {t} = useTranslation();
+
     return (
         <>
             <Box
@@ -57,7 +60,7 @@ const ChangeCrypto = ({ setIsSectionOpen }) => {
                             cursor: 'default'
                         }}
                     >
-                        Выбор монеты
+                        {t("mining.pages.menu.changeCrypto.title")}
                     </Typography>
                     <Box
                         sx={{

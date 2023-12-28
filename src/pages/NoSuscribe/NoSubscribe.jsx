@@ -48,7 +48,7 @@ const NoSubscribe = () => {
                 <Box>
                     <Button
                         onClick={() => {
-                            window.Telegram.WebApp.openTelegramLink('https://t.me/UZBCommunityBot?start=cGxhbg')
+                            window.Telegram.WebApp.openTelegramLink('https://t.me/GTRaibot?start=cGxhbg')
                             window.Telegram.WebApp.close()
                         }}
                     variant="contained"

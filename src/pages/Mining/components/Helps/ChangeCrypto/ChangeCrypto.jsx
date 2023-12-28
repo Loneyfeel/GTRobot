@@ -70,7 +70,7 @@ const ChangeCrypto = () => {
                         display: 'flex',
                         justifyContent: 'center',
                         position: 'relative',
-                        height: '100vh',
+                        height: '300px',
                     }}
                 >
                     <motion.div
@@ -86,7 +86,7 @@ const ChangeCrypto = () => {
                             alt="Bitcoin Icon"
                             style={{
                                 position: 'absolute',
-                                top: '15%',
+                                top: '25%',
                                 left: '10%',
                                 transform: 'translate(-50%, -50%)',
                                 width: '50px',
@@ -134,7 +134,7 @@ const ChangeCrypto = () => {
                             alt="TON Icon"
                             style={{
                                 position: 'absolute',
-                                top: '15%',
+                                top: '25%',
                                 right: '10%',
                                 transform: 'translate(-50%, -50%)',
                                 width: '50px',

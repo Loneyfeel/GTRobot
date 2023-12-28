@@ -1,34 +1,15 @@
-import React, { useState, useEffect } from 'react';
-import {Box, Button, Typography, IconButton} from "@mui/material";
+import React, {useState, useEffect, startTransition} from 'react';
+import {Box, Button, Typography, IconButton, Snackbar} from "@mui/material";
 import Lottie from 'lottie-react';
 import animationRobot1 from '../../assets/robot-mining-bitcoin.json';
 import animationRobot2 from '../../assets/robot-mining-bitcoin_2.json';
 import TouchAppIcon from '@mui/icons-material/TouchApp';
 import InfoIcon from '@mui/icons-material/Info';
-import { startMining, getMiningTickersPrice, getMiningUserData } from '../../components/Requests/Requests.js';
-import bitcoinIcon from '../../assets/bitcoin-btc-logo.svg';
-import dogeIcon from '../../assets/dogecoin-doge-logo.svg';
-import shibaIcon from '../../assets/shiba-inu-shib-logo.svg';
-import tonIcon from '../../assets/ton_symbol.svg';
+import { startMining, getMiningUserData } from '../../components/Requests/Requests.js';
 import {useTranslation} from "react-i18next";
 import {useNavigate} from "react-router-dom";
 
-const getIconByCurrency = (currency) => {
-    switch (currency) {
-        case 'btc':
-            return bitcoinIcon;
-        case 'doge':
-            return dogeIcon;
-        case 'shib':
-            return shibaIcon;
-        case 'ton':
-            return tonIcon;
-        default:
-            return bitcoinIcon;
-    }
-};
-
-const Timer = ({ timeRemaining, cryptoCurrency }) => {
+const Timer = ({ timeRemaining }) => {
     const formatTime = (time) => {
         const hours = Math.floor(time / 3600);
         const minutes = Math.floor((time % 3600) / 60);
@@ -107,7 +88,7 @@ const StartButton = ({ onClick, isDisabled, text }) => (
             sx={{
                 fontSize: '12px',
                 fontWeight: '600',
-                marginTop: '50px'
+                marginTop: '40px'
             }}
         >
             {text}
@@ -259,23 +240,19 @@ const MainMining = ({setValue}) => {
     const [timeRemaining, setTimeRemaining] = useState(0);
     const [showBalanceChange, setShowBalanceChange] = useState(false);
     const [randomIncrement, setRandomIncrement] = useState(0);
-    const [activeTasks, setActiveTasks] = useState([]);
     const [isMiningActive, setIsMiningActive] = useState(true);
     const [endUserMiningTimestamp, setEndUserMiningTimestamp] = useState(null);
     const [cryptoCurrency, setCryptoCurrency] = useState('');
-    const [snackbarOpen, setSnackbarOpen] = useState(false);
     const [hasUpdatedMiningData, setHasUpdatedMiningData] = useState(false);
+    const [daysUntilWithdrawal, setDaysUntilWithdrawal] = useState(null);
+    const [snackbarOpen, setSnackbarOpen] = useState(false);
 
     const updateMiningData = (data) => {
         const storedData = data ? data.data : JSON.parse(localStorage.getItem('miningUserData')) || {};
-        setActiveTasks(storedData.active_tasks || []);
         setIsMiningActive(storedData.is_daily_mining_active || true);
         setEndUserMiningTimestamp(storedData.end_user_daily_mining_timestamp || null);
         setShowBalanceChange(storedData.end_user_daily_mining_timestamp !== null);
         setCryptoCurrency(storedData.crypto_currency || 'btc');
-        if (storedData.active_tasks && storedData.active_tasks.length > 0) {
-            setSnackbarOpen(true);
-        }
         if (storedData.end_user_daily_mining_timestamp !== null) {
             const currentTime = Math.floor(Date.now() / 1000);
             const remainingTime = storedData.end_user_daily_mining_timestamp - currentTime;
@@ -305,6 +282,35 @@ const MainMining = ({setValue}) => {
             setHasUpdatedMiningData(true);
         }
     }, [hasUpdatedMiningData]);
+
+    useEffect(() => {
+        const storedData = JSON.parse(localStorage.getItem('miningUserData')) || {};
+        const registrationDate = storedData.registration_date || 0;
+
+        // Рассчитываем разницу в днях
+        const currentDate = new Date();
+        const registrationDateObject = new Date(registrationDate * 1000); // Преобразуем timestamp в объект Date
+        const timeDifference = currentDate - registrationDateObject;
+        const daysDifference = Math.floor(timeDifference / (1000 * 60 * 60 * 24));
+
+        setDaysUntilWithdrawal(20 - daysDifference);
+    }, []);
+
+    const handleWithdrawal = () => {
+        if (daysUntilWithdrawal >= 0) {
+            setSnackbarOpen(true);
+        } else {
+            startTransition(() => {
+                setActiveMenuSection('withdraw');
+                navigate('/menu');
+                setValue(3);
+            });
+        }
+    };
+
+    const handleCloseSnackbar = () => {
+        setSnackbarOpen(false);
+    };
 
     const navigate = useNavigate();
 
@@ -368,7 +374,7 @@ const MainMining = ({setValue}) => {
                             {!endUserMiningTimestamp && (
                                 <StartButton
                                     onClick={onClickStartButton}
-                                    isDisabled={activeTasks.length > 0 || !isMiningActive}
+                                    isDisabled={!isMiningActive}
                                     text={t('mining.pages.mainMining.start_btn')}
                                 />
                             )}
@@ -384,10 +390,7 @@ const MainMining = ({setValue}) => {
                     </Box>
                 </Box>
                 <Button
-                    onClick={() => {
-                        navigate('/menu/withdraw')
-                        setValue(3)
-                    }}
+                    onClick={handleWithdrawal}
                     variant='contained'
                     sx={{
                         marginTop: '20px',
@@ -399,9 +402,19 @@ const MainMining = ({setValue}) => {
                         sx={{
                             marginTop: '2px',
                             fontSize: '14px',
-                        }}>{t('mining.pages.menu.withdraw.main_btn')}</Typography>
+                            color: 'var(--tg-theme-text-color)'
+                        }}
+                    >
+                        {t('mining.pages.menu.withdraw.main_btn')}
+                    </Typography>
                 </Button>
             </Box>
+            <Snackbar
+                open={snackbarOpen}
+                autoHideDuration={6000}
+                onClose={handleCloseSnackbar}
+                message={`${t('mining.pages.mainMining.days_snackbar_1')} ${daysUntilWithdrawal} ${t('mining.pages.mainMining.days_snackbar_2')}`}
+            />
         </>
     );
 };

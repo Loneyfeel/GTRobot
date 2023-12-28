@@ -7,6 +7,7 @@ import PeopleIcon from '@mui/icons-material/People'
 import CurrencyExchangeIcon from '@mui/icons-material/CurrencyExchange'
 import FilterDramaIcon from '@mui/icons-material/FilterDrama'
 import ChangeCircleIcon from '@mui/icons-material/ChangeCircle'
+import SmartToyOutlinedIcon from '@mui/icons-material/SmartToyOutlined';
 import CurrencyBitcoinIcon from '@mui/icons-material/CurrencyBitcoin'
 import AccountBalanceWalletIcon from '@mui/icons-material/AccountBalanceWallet'
 
@@ -16,6 +17,7 @@ import ChangeCrypto from './ChangeCrypto';
 import GTRobotMining from './GTRobotMining/index.js';
 import Referrals from './Referrals/index.js';
 import Coins from './Coins/index.js';
+import GTRobotInfo from "./GTRobotInfo/index.js";
 
 const Menu = ({activeMenuSection}) => {
 
@@ -40,6 +42,12 @@ const Menu = ({activeMenuSection}) => {
             title: 'mining.pages.menu.gtrobot-mining.title',
             icon: <CurrencyExchangeIcon sx={{ width: '50px' }} />,
             component: <GTRobotMining setIsSectionOpen={setExpanded}/>,
+        },
+        {
+            id: 'gtrobot-info',
+            title: 'mining.pages.menu.gtrobot-info.title',
+            icon: <SmartToyOutlinedIcon sx={{ width: '50px' }} />,
+            component: <GTRobotInfo setIsSectionOpen={setExpanded}/>,
         },
         {
             id: 'referral',
@@ -89,7 +97,10 @@ const Menu = ({activeMenuSection}) => {
                         aria-controls={`${section.id}-content`}
                         id={`${section.id}-header`}
                     >
-                        {section.icon}
+                        <Box sx={{
+                            display: 'flex',
+                            alignItems:'center'
+                        }}>{section.icon}</Box>
                         <Typography sx={{ fontSize: '18px', width: '100%', marginLeft: '10px' }}>
                             {t(section.title)}
                         </Typography>

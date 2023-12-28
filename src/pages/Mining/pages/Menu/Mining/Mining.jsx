@@ -14,7 +14,6 @@ const Mining = ({ setIsSectionOpen }) => {
                 sx={{
                     bgcolor: 'var(--tg-theme-bg-color)',
                     color: 'var(--tg-theme-text-color)',
-                    minHeight: '90vh',
                     width: '100%',
                 }}>
                 <Box
@@ -33,13 +32,13 @@ const Mining = ({ setIsSectionOpen }) => {
                         sx={{
                             margin: '10px 10px 20px 10px',
                         }}>
-                            {t('mining.pages.menu.mining.text_mining_2')}
+                            ☁️{t('mining.pages.menu.mining.text_mining_2')}
                         </Typography>
                         <Typography
                         sx={{
                             margin: '10px',
                         }}>
-                            {t('mining.pages.menu.mining.text_mining_3')}
+                            📱{t('mining.pages.menu.mining.text_mining_3')}
                         </Typography>
                         <Typography
                         sx={{

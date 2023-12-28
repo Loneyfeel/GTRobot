@@ -8,6 +8,7 @@ import Referrals from "./Referrals/index.js";
 import Collect from "./Collect/index.js";
 import GettingStart from "./GettingStart/index.js";
 import FunctionalChangeCrypto from "./FunctionalChangeCrypto/index.js";
+import Survey from "./Survey/index.js";
 
 const EastIcon = lazy(() => import('@mui/icons-material/East'));
 
@@ -17,8 +18,9 @@ const componentsList = [
     <MoreMoney key='MoreMoney'/>,
     <Referrals key='Referrals'/>,
     <Collect key="Collect" />,
-    <FunctionalChangeCrypto key="FunctionalChangeCrypto" />,
     <GettingStart key="GettingStart" />,
+    <Survey key='survey'/>,
+    <FunctionalChangeCrypto key="FunctionalChangeCrypto" />,
 ];
 
 const Helps = ({ hideHelps }) => {
@@ -28,7 +30,7 @@ const Helps = ({ hideHelps }) => {
     const handleNextComponent = () => {
         const nextIndex = (currentIndex + 1) % componentsList.length;
         setCurrentIndex(nextIndex);
-        if(nextIndex === 6){
+        if(nextIndex === 7){
             setAllComponentsViewed(true);
         }
         if(allComponentsViewed){
@@ -56,6 +58,7 @@ const Helps = ({ hideHelps }) => {
         >
             <Box
                 sx={{
+                    display: componentsList[currentIndex].type === Survey ? 'none' : 'block',
                     cursor: 'pointer',
                 }}
             >
@@ -71,7 +74,7 @@ const Helps = ({ hideHelps }) => {
                     />
                 </IconButton>
             </Box>
-            {componentsList[currentIndex].type !== FunctionalChangeCrypto &&
+            {(componentsList[currentIndex].type !== FunctionalChangeCrypto && componentsList[currentIndex].type !== Survey) &&
                 <Box
                     onClick={handleOverlayClick}
                     sx={{
@@ -94,7 +97,16 @@ const Helps = ({ hideHelps }) => {
                     zIndex: 1,
                 }}
             >
-                {componentsList[currentIndex]}
+                {componentsList[currentIndex].type === FunctionalChangeCrypto ? (
+                    <FunctionalChangeCrypto
+                        key="FunctionalChangeCrypto"
+                        handleNextComponent={handleNextComponent}
+                    />
+                ) : componentsList[currentIndex].type === Survey ? (
+                    <Survey key="Survey" handleNextComponent={handleNextComponent} />
+                ) : (
+                    componentsList[currentIndex]
+                )}
             </Box>
         </Box>
     );

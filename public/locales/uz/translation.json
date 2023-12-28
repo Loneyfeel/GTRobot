@@ -74,7 +74,9 @@
       "mainMining": {
         "title": "Cloud Mining",
         "start_btn": "Faollashtirish",
-        "error_alert": "Siz vazifalarni bajarmadingiz"
+        "error_alert": "Siz vazifalarni bajarmadingiz",
+        "days_snackbar_1": "Kriptovalyutani chiqaraolishizga",
+        "days_snackbar_2": "kun qo’ldi"
       },
       "secMining": {
         "title": "GTRobot Mining"
@@ -93,6 +95,11 @@
           "text_gtr_2": "GTRobot Mining - Bu GTRobot bilan yuqori daromadli mayning bo'limi.",
           "text_gtr_3": "Ushbu bo'limda siz 24 soatda bir marta mayningni faollashtirib, GTRobot maynigidan siz kuniga 10$ gacha daromad qilishingiz  mumkin.",
           "text_gtr_4": "Minimal pul chiqarish miqdori: 100$."
+        },
+        "gtrobot-info": {
+          "title": "GTRobot mayningi ishlashi haqida",
+          "text_gtr_2": "GTRobot Cloud Mining-dan foydalanish imkoniyatini beradi. GTRobot faol ishtirokchilar soniga qarab, qazib olish tezligini aniqlab beradi. Kam faollik davrida ishtirokchilarning individual mukofotlari oshadi, ishtirokchilar soni ortishi bilan kriptovalyuta qazib olishi sekinlashadi. Shunday qilib, Cloud Mining-dan olingan daromadingiz boshqa ishtirokchilarga nisbatan faoliyatingiz bilan belgilanadi.",
+          "text_gtr_3": "Muhim: Cloud Mining - bu kelajakda daromad olish maqsadida kriptovalyutani qazib olish orqali siz kelajakga investitsiya kiritgan bo’lasiz. Cloud Mining orqali siz vaqt o'tishi bilan qiymati oshishi kutilayotgan kriptovalyutalar portfelini yaratasiz va vaqt o’tgan sari foydangiz osib boradi."
         },
         "referral": {
           "title": "Referal sistemasi",
@@ -137,7 +144,9 @@
         "btn": "Foydalanuvchilarni taklif qilish",
         "list": "Taklif etilgan foydalanuvchilar",
         "no_referrals": "Taklif qilingan foydalanuvchilar yo'q",
-        "snackbar_text": "Sizning Referal havolaingiz ko'chirildi"
+        "snackbar_text": "Sizning Referal havolaingiz ko'chirildi",
+        "graphic": "Takliflar jadvali:",
+        "null_error": "Foydalanuvchi"
       }
     },
     "components": {
@@ -152,6 +161,19 @@
           "change": "Kriptovalyutani tanlash",
           "success": "Tanlandi",
           "error": "Kriptovalyutani tanlang"
+        },
+        "survey": {
+          "question_1": "1: Kriptovalyuta Mayningi nimaligini bilasizmi?",
+          "text_1": "Mining - bu maxsus uskunalar yordamida raqamli valyutani qazib olish. Oddiy qilib aytganda, blokcheyn tranzaktsiyalarni tekshirish va qo'shish, bu odatda murakkab matematik muammolarni hal qilish orqali amalga oshiriladi. Ularning sa'y-harakatlari uchun maynerlar kriptovalyuta shaklida mukofot oladilar.",
+          "question_2": "2: Cloud Mining haqida ma’lumotingiz bormi?",
+          "text_2": "Cloud Mining (Bulutli mayning) - bu online vaqtida kompyuter uskunasiga egalik qilish yoki ishlatish zaruratisiz kriptovalyutalarni qazib olish. Foydalanuvchi masofaviy ma'lumotlar markazidagi kompyuter uskunalaridan foydalanib, evaziga hisoblash quvvatini ijaraga oladi va buning evaziga qazib olingan kriptovalyutani bir qismini oladi.",
+          "question_3": "3: GTRobot Cloud Miningi qanday ishlashini bilasizmi?",
+          "text_3_1": "GTRobot Cloud Mining-dan foydalanish imkoniyatini beradi. GTRobot faol ishtirokchilar soniga qarab, qazib olish tezligini aniqlab beradi. Kam faollik davrida ishtirokchilarning individual mukofotlari oshadi, ishtirokchilar soni ortishi bilan kriptovalyuta qazib olishi sekinlashadi. Shunday qilib, Cloud Mining-dan olingan daromadingiz boshqa ishtirokchilarga nisbatan faoliyatingiz bilan belgilanadi.",
+          "text_3_2": "Muhim: Cloud Mining - kriptovalyutani qazib olish orqali siz kelajakga investitsiya kiritgan bo’lasiz. Cloud Mining orqali siz vaqt o'tishi bilan qiymati oshishi kutilayotgan kriptovalyutalar portfelini yaratasiz va vaqt o’tgan sari foydangiz osib boradi.",
+          "yes": "Ha",
+          "no": "Yo'q",
+          "next": "Keyingi",
+          "details": "Batafsil ma’lumot"
         }
       },
       "taskList": "Barcha vazifalarni bajaring"

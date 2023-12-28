@@ -1,10 +1,10 @@
 import React, {useState} from 'react';
 import ChangeCrypto from './ChangeCrypto'
 
-const FunctionalChangeCrypto = () => {
+const FunctionalChangeCrypto = ({handleNextComponent}) => {
     return (
         <>
-            <ChangeCrypto/>
+            <ChangeCrypto handleNextComponent={handleNextComponent}/>
         </>
     );
 };

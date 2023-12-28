@@ -30,7 +30,6 @@ const TaskList = ({ activeTasks, setActiveTasks }) => {
         try {
             // Отправка запроса на сервер
             const response = await saveMiningUserTask(taskId);
-            console.log('wwwwwwwwwww', response)
 
             if (response.status === 200) {
                 const updatedTasks = tasks.filter((task) => task.task_id !== taskId);

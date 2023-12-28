@@ -14,7 +14,6 @@ const Referrals = ({ setIsSectionOpen }) => {
                 sx={{
                     bgcolor: 'var(--tg-theme-bg-color)',
                     color: 'var(--tg-theme-text-color)',
-                    minHeight: '75vh',
                     width: '100%',
                 }}>
                 <Box
@@ -28,7 +27,7 @@ const Referrals = ({ setIsSectionOpen }) => {
                         sx={{
                             margin: '10px 10px 20px 10px',
                         }}>
-                            {t('mining.pages.menu.referral.text_ref_2')}
+                            👥{t('mining.pages.menu.referral.text_ref_2')}
                         </Typography>
                         <Typography
                         sx={{
@@ -52,7 +51,7 @@ const Referrals = ({ setIsSectionOpen }) => {
                         sx={{
                             margin: '10px',
                         }}>
-                            {t('mining.pages.menu.referral.text_ref_6')}
+                            ☝🏻{t('mining.pages.menu.referral.text_ref_6')}
                         </Typography>
                     </Box>
                 </Box>

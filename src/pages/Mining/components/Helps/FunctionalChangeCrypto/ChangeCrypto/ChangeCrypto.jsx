@@ -9,7 +9,7 @@ import shibaIcon from '../../../../assets/shiba-inu-shib-logo.svg';
 import tonIcon from '../../../../assets/ton_symbol.svg';
 import {useTranslation} from "react-i18next";
 
-const ChangeCrypto = () => {
+const ChangeCrypto = ({handleNextComponent}) => {
     const { t } = useTranslation();
     const [selectedCrypto, setSelectedCrypto] = useState('');
     const [buttonState, setButtonState] = useState({
@@ -44,6 +44,9 @@ const ChangeCrypto = () => {
                 selected: true,
                 text: `${t('mining.components.helps.functionalChangeCrypto.success')}`,
             });
+            setTimeout(() => {
+                handleNextComponent();
+            }, 700);
         }
     };
     const handleBoxClick = () => {

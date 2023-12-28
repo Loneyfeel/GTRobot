@@ -7,14 +7,13 @@ import {
     IconButton,
     SnackbarContent,
 } from '@mui/material';
-import { getMiningUserData } from '../../components/Requests/Requests.js';
 import {useTranslation} from "react-i18next";
+import ReferralsChart from "./ReferralsChart/index.js";
 
 const CloseIcon = lazy(() => import('@mui/icons-material/Close'));
 
 const Referrals = () => {
     const [isSnackbarOpen, setIsSnackbarOpen] = useState(false);
-    const [isLinkOpen, setisLinkrOpen] = useState(false);
     const [referralBonus, setReferralBonus] = useState(0);
     const [referralCode, setReferralCode] = useState('');
     const [referrals, setReferrals] = useState([]);
@@ -38,9 +37,8 @@ const Referrals = () => {
 
     const handleInviteClick = async () => {
         try {
-            // await navigator.clipboard.writeText(referralLink);
-            // setIsSnackbarOpen(true);
-            setisLinkrOpen(true)
+            await navigator.clipboard.writeText(referralLink);
+            setIsSnackbarOpen(true)
         } catch (err) {
             console.error('Failed to copy text: ', err);
         }
@@ -50,7 +48,6 @@ const Referrals = () => {
         if (reason === 'clickaway') {
             return;
         }
-
         setIsSnackbarOpen(false);
     };
 
@@ -115,26 +112,18 @@ const Referrals = () => {
                                 fontSize: '14px',
                             }}>{t('mining.pages.ref.btn')}</Typography>
                     </Button>
-                    <Box
-                        sx={{
-                            height: '40px',
-                            width: '100%'
-                        }}>
-                        {isLinkOpen && (
-                            <Typography
-                                sx={{
-                                    margin: '10px 5px 5px 15px',
-                                    fontSize: '14px'
-                                }}>
-                                {referralLink}
-                            </Typography>
-                        )}
-                    </Box>
                 </Box>
+                <Typography
+                sx={{
+                    margin: '40px 0 10px 20px'
+                }}>
+                    {t('mining.pages.ref.graphic')}:
+                </Typography>
+                <ReferralsChart/>
                 <Box>
                     <Typography
                         sx={{
-                            margin: '30px 15px',
+                            margin: '0 15px',
                             cursor: 'default',
                         }}
                     >
@@ -143,16 +132,20 @@ const Referrals = () => {
                     {referrals.length > 0 ? (
                         <ul
                             style={{
-                                marginLeft: '15px'
+                                marginLeft: '15px',
+                                marginBottom: '20px'
                             }}>
                             {referrals.map((user, index) => (
-                                <li key={index}>{user.user_id}</li>
+                                <li key={index}>
+                                    {user.user_name == null ? 'Пользователь' : user.user_name}
+                                </li>
                             ))}
                         </ul>
                     ) : (
                         <Typography
                             sx={{
                                 marginTop: '70px',
+                                marginBottom: '100px',
                                 textAlign: 'center',
                             }}
                         >

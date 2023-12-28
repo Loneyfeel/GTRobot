@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, {startTransition, useEffect, useState} from 'react';
 import { Alert, Box, Button, Snackbar, TextField, Typography } from "@mui/material";
 import {useTranslation} from "react-i18next";
 
@@ -8,6 +8,8 @@ const Withdraw = ({ setIsSectionOpen }) => {
     const [isSnackbarOpen, setIsSnackbarOpen] = useState(false);
     const [isWarningSnackbarOpen, setIsWarningSnackbarOpen] = useState(false);
     const [isErrorSnackbarOpen, setIsErrorSnackbarOpen] = useState(false);
+    const [daysUntilWithdrawal, setDaysUntilWithdrawal] = useState(null);
+    const [snackbarOpen, setSnackbarOpen] = useState(false);
     const minWithdrawAmount = 999999999999999999;
 
     useEffect(() => {
@@ -47,6 +49,40 @@ const Withdraw = ({ setIsSectionOpen }) => {
         }
     }
 
+    useEffect(() => {
+        const storedData = JSON.parse(localStorage.getItem('miningUserData')) || {};
+        const registrationDate = storedData.registration_date || 0;
+
+        // Рассчитываем разницу в днях
+        const currentDate = new Date();
+        const registrationDateObject = new Date(registrationDate * 1000); // Преобразуем timestamp в объект Date
+        const timeDifference = currentDate - registrationDateObject;
+        const daysDifference = Math.floor(timeDifference / (1000 * 60 * 60 * 24));
+
+        setDaysUntilWithdrawal(20 - daysDifference);
+    }, []);
+
+    const handleWithdrawal = () => {
+        if (daysUntilWithdrawal >= 0) {
+            setSnackbarOpen(true);
+        } else {
+            window.Telegram.WebApp.showConfirm(
+                `${t('mining.pages.menu.withdraw.btn_helps.balance')}: ${withdrawAmount} \n` +
+                `${t('mining.pages.menu.withdraw.btn_helps.address')}: ${walletAddress}\n\n` +
+                `${t('mining.pages.menu.withdraw.btn_helps.question')}?`,
+                (confirm) => {
+                    if (confirm) {
+                        handleWithdraw();
+                    }
+                }
+            );
+        }
+    }
+
+    const handleCloseSnackbar = () => {
+        setSnackbarOpen(false);
+    };
+
     const { t } = useTranslation();
 
     return (
@@ -55,7 +91,7 @@ const Withdraw = ({ setIsSectionOpen }) => {
                 sx={{
                     bgcolor: 'var(--tg-theme-bg-color)',
                     color: 'var(--tg-theme-text-color)',
-                    minHeight: '70vh',
+                    minHeight: '50vh',
                     width: '100%',
                 }}>
                 <Box
@@ -113,18 +149,7 @@ const Withdraw = ({ setIsSectionOpen }) => {
                     />
                     <Button
                         variant='contained'
-                        onClick={() => {
-                            window.Telegram.WebApp.showConfirm(
-                                `${t('mining.pages.menu.withdraw.btn_helps.balance')}: ${withdrawAmount} \n` +
-                                `${t('mining.pages.menu.withdraw.btn_helps.address')}: ${walletAddress}\n\n` +
-                                `${t('mining.pages.menu.withdraw.btn_helps.question')}?`,
-                                (confirm) => {
-                                    if (confirm) {
-                                        handleWithdraw();
-                                    }
-                                }
-                            );
-                        }}
+                        onClick={handleWithdrawal}
                         sx={{
                             borderRadius: '7px'
                         }}
@@ -133,6 +158,7 @@ const Withdraw = ({ setIsSectionOpen }) => {
                             sx={{
                                 marginTop: '2px',
                                 fontSize: '14px',
+                                color: 'var(--tg-theme-text-color)'
                         }}>{t('mining.pages.menu.withdraw.main_btn')}</Typography>
                     </Button>
                 </Box>
@@ -163,6 +189,12 @@ const Withdraw = ({ setIsSectionOpen }) => {
                         {t('mining.pages.menu.withdraw.snackbars.error_full')}
                     </Alert>
                 </Snackbar>
+                <Snackbar
+                    open={snackbarOpen}
+                    autoHideDuration={6000}
+                    onClose={handleCloseSnackbar}
+                    message={`${t('mining.pages.mainMining.days_snackbar_1')} ${daysUntilWithdrawal} ${t('mining.pages.mainMining.days_snackbar_2')}`}
+                />
             </Box>
         </>
     );

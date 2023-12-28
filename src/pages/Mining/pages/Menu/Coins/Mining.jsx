@@ -18,9 +18,7 @@ const Mining = ({ setIsSectionOpen }) => {
                 sx={{
                     bgcolor: 'var(--tg-theme-bg-color)',
                     color: 'var(--tg-theme-text-color)',
-                    minHeight: '90vh',
                     width: '100%',
-                    paddingBottom: '30px'
                 }}>
                 <Box
                     sx={{
