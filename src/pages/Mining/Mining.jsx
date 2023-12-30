@@ -66,8 +66,8 @@ const Mining = () => {
                     localStorage.setItem('miningQueryId', currentQueryId);
                     localStorage.setItem('miningData', JSON.stringify(userDataResponse.data));
                     localStorage.setItem('miningUserData', JSON.stringify(userDataResponse));
+                    localStorage.setItem('isDailyMiningActivated', JSON.stringify(userDataResponse.is_daily_mining_activated));
                     setIsDataLoaded(true);
-
                     // Вызываем fetchLocalStorageTasks после успешного получения данных из API
                     await fetchLocalStorageTasks();
                 }
@@ -125,6 +125,7 @@ const Mining = () => {
     useEffect(() => {
         localStorage.setItem('bottomNavigationValue', value.toString());
     }, [value]);
+
 
     useEffect(() => {
         const bottomNavigationValue = JSON.parse(localStorage.getItem('bottomNavigationValue')) || {};

@@ -2,22 +2,37 @@ import React, { useState, useEffect } from 'react';
 import { Card, CardContent, Container, Typography } from '@mui/material';
 import { useTrail, animated } from 'react-spring';
 import { saveMiningUserTask } from '../Requests/Requests.js';
+import {useTranslation} from "react-i18next";
 
 const TaskList = ({ activeTasks, setActiveTasks }) => {
+    const { t, i18n } = useTranslation();
+
+    const locale = i18n.language;
+    const translateVariables = {
+        "subscribe_to": {"ru": "Подписаться на ", "uz": "ga obuna bo’ling"},
+        "like_to": {"ru": "Поставить лайк в ", "uz": "ga layk qo'ying"}
+    };
+
+    const translateText = (text) => {
+        const textParts = text.split(" ", 2);
+
+        if (translateVariables.hasOwnProperty(textParts[0])) {
+            textParts[0] = translateVariables[textParts[0]][locale];
+            if (locale === "uz") {
+                textParts.reverse();
+            }
+            return textParts.join("");
+        }
+        return text;
+    };
+
     const [tasks, setTasks] = useState([]);
 
     useEffect(() => {
-        console.log('www',activeTasks)
         if (activeTasks && activeTasks.length > 0) {
             setTasks(activeTasks);
         }
     }, [activeTasks]);
-
-// Дополнительный useEffect для выполнения действий после обновления tasks
-    useEffect(() => {
-        // Здесь вы можете выполнить дополнительные действия после обновления tasks
-        console.log('Updated tasks:', tasks);
-    }, [tasks]);
 
     const trail = useTrail(tasks.length, {
         opacity: 1,
@@ -85,7 +100,7 @@ const TaskList = ({ activeTasks, setActiveTasks }) => {
                             }}
                         >
                             <CardContent>
-                                <Typography variant="h6">{tasks[index].task_text}</Typography>
+                                <Typography variant="h6">{translateText(tasks[index].task_text)}</Typography>
                                 <Typography variant="body2">{tasks[index].task_link}</Typography>
                             </CardContent>
                         </Card>

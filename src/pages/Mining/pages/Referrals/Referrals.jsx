@@ -1,4 +1,4 @@
-import React, { lazy, useEffect, useState } from 'react';
+import React, {lazy, startTransition, useEffect, useState} from 'react';
 import {
     Box,
     Button,
@@ -17,7 +17,7 @@ const Referrals = () => {
     const [referralBonus, setReferralBonus] = useState(0);
     const [referralCode, setReferralCode] = useState('');
     const [referrals, setReferrals] = useState([]);
-    const referralLink = `https://t.me/UZBCommunityBot?start=${referralCode}`;
+    const referralLink = `https://t.me/GTRaibot?start=${referralCode}`;
 
     useEffect(() => {
         const fetchData = async () => {
@@ -36,13 +36,19 @@ const Referrals = () => {
     }, []);
 
     const handleInviteClick = async () => {
-        try {
-            await navigator.clipboard.writeText(referralLink);
-            setIsSnackbarOpen(true)
-        } catch (err) {
-            console.error('Failed to copy text: ', err);
-        }
-    };
+        startTransition(() => {
+            const textField = document.createElement('textarea');
+            textField.innerText = referralLink;
+            document.body.appendChild(textField);
+            textField.select();
+            document.execCommand('copy');
+            textField.remove();
+        });
+    }
+
+    const handleOpenSnackbar = () => {
+        setIsSnackbarOpen(true);
+    }
 
     const handleCloseSnackbar = (event, reason) => {
         if (reason === 'clickaway') {
@@ -101,7 +107,12 @@ const Referrals = () => {
                 >
                     <Button
                         variant="contained"
-                        onClick={handleInviteClick}
+                        onClick={()=>{
+                            startTransition(() => {
+                                handleInviteClick();
+                                setTimeout(() => handleOpenSnackbar(), 100);
+                            });
+                        }}
                         sx={{
                             color: 'var(--tg-theme-text-color)',
                         }}

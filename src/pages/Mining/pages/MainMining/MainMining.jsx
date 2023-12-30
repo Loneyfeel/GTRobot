@@ -1,11 +1,11 @@
-import React, {useState, useEffect, startTransition} from 'react';
-import {Box, Button, Typography, IconButton, Snackbar} from "@mui/material";
+import React, {startTransition, useEffect, useRef, useState} from 'react';
+import {Box, Button, CircularProgress, IconButton, Snackbar, Typography} from "@mui/material";
 import Lottie from 'lottie-react';
 import animationCloud from '../../assets/cloud-mining.json';
 import animationBtc from '../../assets/bitcoin-mining.json';
 import TouchAppIcon from '@mui/icons-material/TouchApp';
 import InfoIcon from '@mui/icons-material/Info';
-import { startMining, getMiningUserData } from '../../components/Requests/Requests.js';
+import {getMiningUserData, startMining} from '../../components/Requests/Requests.js';
 import {useTranslation} from "react-i18next";
 import {useNavigate} from "react-router-dom";
 
@@ -97,16 +97,45 @@ const StartButton = ({ onClick, isDisabled, text }) => (
     </Button>
 );
 
-const Balance = ({ showBalanceChange, randomIncrement, setRandomIncrement }) => {
+const Balance = ({ showBalanceChange, randomIncrement, setRandomIncrement, endUserMiningTimestamp, t }) => {
     const [cryptoPrices, setCryptoPrices] = useState({});
     const [balance, setBalance] = useState(0);
     const [cryptoCurrency, setCryptoCurrency] = useState('');
     const [isCryptoDataLoaded, setIsCryptoDataLoaded] = useState(false);
+    const [referralBonus, setReferralBonus] = useState(0);
+
+    const maxTotalLength = 12;
+    const startTimerRef = useRef(new Date().getTime())
+    const endTimerRef = endUserMiningTimestamp*1000
+    const [value, setValue] = useState(0);
+
+    useEffect(() => {
+        if (endTimerRef !== 0 && endTimerRef !== null) {
+            setValue(Math.abs(0.1 - (endTimerRef - startTimerRef.current) / 1000 * 0.000006));
+        }
+    }, [endTimerRef]); // Зависимость добавлена для пересчета значения при изменении endTimerRef
+
+    // Функция для обновления счетчика
+    const updateCounter = () => {
+        // Увеличиваем значение
+        setValue((prevValue) => prevValue + 0.000006);
+
+        // Увеличиваем start_timer
+        startTimerRef.current += 1;
+    };
+    // Вызываем функцию updateCounter каждую секунду
+    useEffect(() => {
+        const intervalId = setInterval(updateCounter, 1000);
+
+        // Очищаем интервал при размонтировании компонента
+        return () => clearInterval(intervalId);
+    }, []); // Пустой массив зависимостей, чтобы useEffect выполнился только при монтировании
 
     useEffect(() => {
         // Загружаем данные из local.storage при монтировании компонента
         const storedData = JSON.parse(localStorage.getItem('miningUserData')) || {};
         setBalance(storedData.balance || 0);
+        setReferralBonus(storedData.referral_bonus || 0);
         setCryptoCurrency(storedData.crypto_currency || 'btc');
 
         // Запрашиваем цены криптовалют при монтировании компонента
@@ -124,22 +153,45 @@ const Balance = ({ showBalanceChange, randomIncrement, setRandomIncrement }) => 
         fetchCryptoPrices();
     }, []);
 
+    function roundToDecimal(number, decimalPlaces) {
+        if(Math.floor(number) == 0 ){
+            return (number % 1).toFixed(decimalPlaces)
+        }
+        else {
+            return (number % 1).toFixed(decimalPlaces).replace(/^0/, '');
+        }
+    }
+
     // Отображение баланса после получения цен криптовалют
     const getDisplayedBalance = () => {
         if (cryptoPrices[cryptoCurrency]) {
             const price = cryptoPrices[cryptoCurrency];
             const displayedBalance = balance / price;
-            return displayedBalance.toFixed(6);
-        } else {
-            // Если цена не найдена, возвращаем исходный баланс
-            return balance.toFixed(6);
+            let newDisplayedBalance = Math.floor(displayedBalance).toString();
+            if (newDisplayedBalance.length < maxTotalLength - 1) {
+                newDisplayedBalance += roundToDecimal(displayedBalance, maxTotalLength - newDisplayedBalance.length-1);
+                newDisplayedBalance = newDisplayedBalance.toString().replace(/^0/, '');
+                return newDisplayedBalance;
+            }
         }
     };
 
+    const getTimerDisplayedBalance = () => {
+        if (cryptoPrices[cryptoCurrency]) {
+            const price = cryptoPrices[cryptoCurrency];
+            const displayedBalance = (balance + value) / price;
+            let newDisplayedBalance = Math.floor(displayedBalance).toString();
+            if (newDisplayedBalance.length < maxTotalLength - 1) {
+                newDisplayedBalance += roundToDecimal(displayedBalance, maxTotalLength - newDisplayedBalance.length-1);
+                newDisplayedBalance = newDisplayedBalance.toString().replace(/^0/, '');
+                return newDisplayedBalance;
+            }
+        }
+    }
+
     useEffect(() => {
-        // Установка интервала для обновления числа каждые 5 секунд
         const intervalId = setInterval(() => {
-            setRandomIncrement(0.00001 + Math.random() * (0.0001 - 0.000001));
+            setRandomIncrement(0.00001 + Math.random() * (0.000001 - 0.000008));
         }, 1000);
 
         return () => {
@@ -165,7 +217,7 @@ const Balance = ({ showBalanceChange, randomIncrement, setRandomIncrement }) => 
                 justifyContent: 'center',
                 alignItems: 'center',
                 width: '100%',
-                height: '60px'
+                height: '70px'
             }}
         >
             <Typography
@@ -173,7 +225,9 @@ const Balance = ({ showBalanceChange, randomIncrement, setRandomIncrement }) => 
                     cursor: 'default'
                 }}
             >
-                {getDisplayedBalance()} {cryptoCurrency.toUpperCase()}
+                {
+                    endUserMiningTimestamp !== null ? getTimerDisplayedBalance() : getDisplayedBalance()
+                } {cryptoCurrency.toUpperCase()}
             </Typography>
             {showBalanceChange && (
                 <Box
@@ -187,7 +241,7 @@ const Balance = ({ showBalanceChange, randomIncrement, setRandomIncrement }) => 
                             color: 'rgba(45, 176, 25, 0.8)',
                         }}
                     >
-                        {`+${randomIncrement.toFixed(7)} ${cryptoCurrency.toUpperCase()}`}
+                        {`+${randomIncrement.toFixed(7)}$`}
                     </Typography>
                     <Typography
                     sx={{
@@ -195,10 +249,21 @@ const Balance = ({ showBalanceChange, randomIncrement, setRandomIncrement }) => 
                         color: 'rgba(45, 176, 25, 0.8)',
                         marginLeft: '10px'
                     }}>
-                        Boost +0%
+                        Boost +{referralBonus}%
                     </Typography>
                 </Box>
             )}
+            <Typography
+                sx={{
+                    fontSize: '11px',
+                    marginTop: '10px'
+                }}>
+                {t("mining.pages.mainMining.future_balance_1")}: {
+                endUserMiningTimestamp !== null ?
+                    (100 * cryptoPrices[cryptoCurrency] * parseFloat(getTimerDisplayedBalance())).toFixed(5)
+                    : (100 * cryptoPrices[cryptoCurrency] *  parseFloat(getDisplayedBalance())).toFixed(5)}$
+                {t("mining.pages.mainMining.future_balance_2")}
+            </Typography>
         </Box>
     );
 }
@@ -235,22 +300,63 @@ const RandomTextComponent = () => {
     );
 };
 
+const CountdownTimer = () => {
+    const [timeRemaining, setTimeRemaining] = useState(calculateTimeRemaining());
+
+    useEffect(() => {
+        const intervalId = setInterval(() => {
+            setTimeRemaining(calculateTimeRemaining());
+        }, 1000);
+
+        return () => clearInterval(intervalId);
+    }, []);
+
+    function calculateTimeRemaining() {
+        const now = new Date();
+        const targetTime = new Date();
+        targetTime.setHours(16, 0, 0, 0); // Установка времени 16:00
+        const timezoneOffset = 5 * 60; // Смещение для Ташкента (UTC+5)
+        const targetTimeAdjusted = new Date(targetTime.getTime() + timezoneOffset * 60 * 1000);
+
+        let timeDiff = targetTimeAdjusted - now;
+        if (timeDiff < 0) {
+            // Если время прошло, устанавливаем таймер на следующий день
+            targetTimeAdjusted.setDate(targetTimeAdjusted.getDate() + 1);
+            timeDiff = targetTimeAdjusted - now;
+        }
+
+        const hours = Math.floor(timeDiff / (1000 * 60 * 60));
+        const minutes = Math.floor((timeDiff % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((timeDiff % (1000 * 60)) / 1000);
+
+        return { hours, minutes, seconds };
+    }
+
+    return (
+        <Typography>
+            {`${timeRemaining.hours}:${String(timeRemaining.minutes).padStart(2, '0')}:${String(timeRemaining.seconds).padStart(2, '0')}`}
+        </Typography>
+    );
+};
+
 const MainMining = ({setValue, setActiveMenuSection}) => {
     const {t} = useTranslation();
 
     const [timeRemaining, setTimeRemaining] = useState(0);
     const [showBalanceChange, setShowBalanceChange] = useState(false);
     const [randomIncrement, setRandomIncrement] = useState(0);
-    const [isMiningActive, setIsMiningActive] = useState(true);
+    const [isMiningActive, setIsMiningActive] = useState(false);
     const [endUserMiningTimestamp, setEndUserMiningTimestamp] = useState(null);
     const [cryptoCurrency, setCryptoCurrency] = useState('');
     const [hasUpdatedMiningData, setHasUpdatedMiningData] = useState(false);
     const [daysUntilWithdrawal, setDaysUntilWithdrawal] = useState(null);
     const [snackbarOpen, setSnackbarOpen] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
+    const [progress, setProgress] = useState(0);
 
     const updateMiningData = (data) => {
         const storedData = data ? data.data : JSON.parse(localStorage.getItem('miningUserData')) || {};
-        setIsMiningActive(storedData.is_mining_active || true);
+        setIsMiningActive(storedData.is_mining_active || false);
         setEndUserMiningTimestamp(storedData.end_user_mining_timestamp || null);
         setShowBalanceChange(storedData.end_user_mining_timestamp !== null);
         setCryptoCurrency(storedData.crypto_currency || 'btc');
@@ -262,11 +368,42 @@ const MainMining = ({setValue, setActiveMenuSection}) => {
     };
 
     const onClickStartButton = async () => {
-        await startMining('regular');
-        const newData = await getMiningUserData();
-        updateMiningData(newData);
-        localStorage.setItem('miningUserData', JSON.stringify(newData.data));
+        if (isMiningActive) {
+            setIsLoading(true);
+            let currentProgress = 0;
+
+            const intervalId = setInterval(async () => {
+                currentProgress += 20;
+                setProgress(currentProgress);
+
+                if (currentProgress >= 100) {
+                    clearInterval(intervalId);
+
+                    setTimeout(() => {
+                        setIsLoading(false);
+                    }, 100);
+
+                    // Выполняйте вашу логику для начала майнинга (startMining) здесь
+                    await startMining('regular');
+
+                    // Загружайте новые данные для таймера
+                    const newData = await getMiningUserData();
+                    updateMiningData(newData);
+                    localStorage.setItem('miningUserData', JSON.stringify(newData.data));
+                }
+            }, 1000);
+        } else {
+            window.Telegram.WebApp.showAlert(
+                `${t('mining.pages.mainMining.alert_1')}\n\n${t('mining.pages.mainMining.alert_2')}`
+            );
+        }
     };
+
+
+    // useEffect для сброса прогресса после монтирования компонента
+    useEffect(() => {
+        setProgress(0);
+    }, []);
 
     useEffect(() => {
         const intervalId = setInterval(() => {
@@ -327,6 +464,20 @@ const MainMining = ({setValue, setActiveMenuSection}) => {
                     color: 'var(--tg-theme-text-color)',
                 }}
             >
+                {!isMiningActive && (
+                    <Box
+                        sx={{
+                            margin: '20px',
+                            display: 'flex',
+                            flexDirection: 'column',
+                            alignItems: 'center'
+                        }}>
+                        <Typography>
+                            {t('mining.pages.mainMining.deactiveTimer')}:
+                        </Typography>
+                        <CountdownTimer/>
+                    </Box>
+                )}
                 <Box
                     sx={{
                         display: 'flex',
@@ -374,21 +525,50 @@ const MainMining = ({setValue, setActiveMenuSection}) => {
                                 alignItems: 'center',
                             }}
                         >
-                            {!endUserMiningTimestamp && (
+                            {isLoading &&
+                                <Box
+                                sx={{
+                                    position: 'relative',
+                                    height: '125px',
+                                    width: '100vw',
+                                    display: 'flex',
+                                    justifyContent: 'center',
+                                    alignItems: 'center'
+                                }}>
+                                    <CircularProgress
+                                        variant="determinate"
+                                        value={progress}
+                                        size={100}
+                                        sx={{
+                                            position: 'absolute',
+                                            top: '0',
+                                            left: '37%',
+                                    }}
+                                    />
+                                    <Typography
+                                    sx={{
+                                        paddingBottom: '25px'
+                                    }}>
+                                        {progress}%
+                                    </Typography>
+                                </Box>
+                            }
+                            {!isLoading && !endUserMiningTimestamp && (
                                 <StartButton
                                     onClick={onClickStartButton}
-                                    isDisabled={!isMiningActive}
                                     text={t('mining.pages.mainMining.start_btn')}
                                 />
                             )}
-                            {endUserMiningTimestamp !== null && (
-                                <Timer timeRemaining={timeRemaining} cryptoCurrency={cryptoCurrency}/>
+                            {!isLoading && endUserMiningTimestamp !== null && (
+                                <Timer timeRemaining={timeRemaining} cryptoCurrency={cryptoCurrency} />
                             )}
                         </Box>
                         <Balance
                             showBalanceChange={showBalanceChange}
                             randomIncrement={randomIncrement}
                             setRandomIncrement={setRandomIncrement}
+                            endUserMiningTimestamp={endUserMiningTimestamp}
+                            t={t}
                         />
                     </Box>
                 </Box>

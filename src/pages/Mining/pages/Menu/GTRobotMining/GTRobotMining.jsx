@@ -41,6 +41,12 @@ const GTRobotMining = ({ setIsSectionOpen }) => {
                         }}>
                             {t('mining.pages.menu.gtrobot-mining.text_gtr_4')}
                         </Typography>
+                        <Typography
+                        sx={{
+                            margin: '10px',
+                        }}>
+                            ❗ {t('mining.pages.menu.gtrobot-mining.text_gtr_5')}
+                        </Typography>
                     </Box>
                 </Box>
             </Box>

@@ -20,7 +20,7 @@ import Mining from "./pages/Mining";
 
 function App() {
     const [loading, setLoading] = useState(true);
-    const [language, setLanguage] = useState('');
+    const [language, setLanguage] = useState('uz');
 
     useEffect(() => {
         const fetchUserLanguage = async () => {
@@ -113,7 +113,7 @@ function App() {
                 {/*<Forex/>*/}
                 {/*<NoSubscribe/>*/}
                 {/*<Copyright/>*/}
-                <Router basename="">
+                <Router basename="/mining">
                     <Routes>
                         <Route path="/*" exact element={<Mining/>} />
                     </Routes>

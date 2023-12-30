@@ -14,7 +14,8 @@
     "buttons": {
       "analysis": "Tahlil & Signal",
       "monitoring": "Monitoring",
-      "forex": "100% Avtomatik"
+      "forex": "100% Avtomatik",
+      "mining": "Cloud Mining"
     }
   },
   "screener": {
@@ -75,17 +76,24 @@
         "title": "Cloud Mining",
         "start_btn": "Faollashtirish",
         "error_alert": "Siz vazifalarni bajarmadingiz",
+        "future_balance_1": "2030 yilda bu",
+        "future_balance_2": " bo’lishi mumkin",
         "days_snackbar_1": "Kriptovalyutani chiqaraolishizga",
-        "days_snackbar_2": "kun qo’ldi"
+        "days_snackbar_2": "kun qo’ldi",
+        "alert_1":"Cloud Miningdan foydalanishingiz mumkin bo'lgan vaqt oralig'i: 00:00 - 16:00",
+        "alert_2":"Soat 16:00 dan keyin Cloud Mining uchun protsessorlar o'chiriladi va mutaxassislar nosozliklarni oldini olish uchun tekshirishiruv boshlaydilar.",
+        "deactiveTimer": "Mayningacha vaqt qo’ldi"
       },
       "secMining": {
-        "title": "GTRobot Mining"
+        "title": "GTRobot Mining",
+        "text_alert_1": "Siz 100$-lik limitga yetdingiz. Mayning qilgan kriptovalyutadan foydalanish uchun ",
+        "text_alert_2": "ga murojaat qiling"
       },
       "menu": {
         "title": "Menu",
         "mining": {
           "title": "Cloud Mining",
-          "text_mining_2": "Cloud Mining (Bulutli Mayning) - bu ma'lumotlar markazida masofaviy serverlarning quvvatini ijaraga oladigan kripto valyutasini qazib olish usuli. O'z uskunasiga sarmoya kiritish va uni saqlab qolish o'rniga, foydalanuvchi bulutli mayningdan provayderidan hisoblash resurslarini ijaraga oladi.",
+          "text_mining_2": "Cloud Mining (Bulutli Mayning) - bu kriptovalyuta qazib olishni yangi usuli. Ushbu yondashuv foydalanuvchilarga boshqa maynerlar uskunasini ijaraga olgan holda tez va arzon kriptovalyuta qazib olish imkonini beradi.",
           "text_mining_3": "Bulutli mayningga asosiy xususiyatlariga quyidagilar kiradi:",
           "text_mining_4": "1. Qulaylik: siz jismoniy jihozlarni sotib olishingiz va saqlashingiz shart emas. Butun jarayon masofadan turib amalga oshiriladi.",
           "text_mining_5": "2. Pul sariflamasligiz: bulutli mayning provayderlari odatda sizning qazib olish operatsiyalaringizni boshqarish uchun oddiy interfeysni taqdim etadilar."
@@ -94,7 +102,8 @@
           "title": "GTRobot Mining",
           "text_gtr_2": "GTRobot Mining - Bu GTRobot bilan yuqori daromadli mayning bo'limi.",
           "text_gtr_3": "Ushbu bo'limda siz 24 soatda bir marta mayningni faollashtirib, GTRobot maynigidan siz kuniga 10$ gacha daromad qilishingiz  mumkin.",
-          "text_gtr_4": "Minimal pul chiqarish miqdori: 100$."
+          "text_gtr_4": "Minimal pul chiqarish miqdori: 100$.",
+          "text_gtr_5": "Iltimos, diqqat qiling: GTRobot mayningi orqali topgan mablag'ingiz robot tarif rejalarini sotib olish uchun chegirma sifatida ishlatilish mumkin. "
         },
         "gtrobot-info": {
           "title": "GTRobot mayningi ishlashi haqida",
@@ -145,7 +154,7 @@
         "list": "Taklif etilgan foydalanuvchilar",
         "no_referrals": "Taklif qilingan foydalanuvchilar yo'q",
         "snackbar_text": "Sizning Referal havolaingiz ko'chirildi",
-        "graphic": "Takliflar jadvali:",
+        "graphic": "Takliflar jadvali",
         "null_error": "Foydalanuvchi"
       }
     },
@@ -163,11 +172,11 @@
           "error": "Kriptovalyutani tanlang"
         },
         "survey": {
-          "question_1": "1: Kriptovalyuta Mayningi nimaligini bilasizmi?",
+          "question_1": "Kriptovalyuta Mayningi nimaligini bilasizmi?",
           "text_1": "Mining - bu maxsus uskunalar yordamida raqamli valyutani qazib olish. Oddiy qilib aytganda, blokcheyn tranzaktsiyalarni tekshirish va qo'shish, bu odatda murakkab matematik muammolarni hal qilish orqali amalga oshiriladi. Ularning sa'y-harakatlari uchun maynerlar kriptovalyuta shaklida mukofot oladilar.",
-          "question_2": "2: Cloud Mining haqida ma’lumotingiz bormi?",
+          "question_2": "Cloud Mining haqida ma’lumotingiz bormi?",
           "text_2": "Cloud Mining (Bulutli mayning) - bu online vaqtida kompyuter uskunasiga egalik qilish yoki ishlatish zaruratisiz kriptovalyutalarni qazib olish. Foydalanuvchi masofaviy ma'lumotlar markazidagi kompyuter uskunalaridan foydalanib, evaziga hisoblash quvvatini ijaraga oladi va buning evaziga qazib olingan kriptovalyutani bir qismini oladi.",
-          "question_3": "3: GTRobot Cloud Miningi qanday ishlashini bilasizmi?",
+          "question_3": "GTRobot Cloud Miningi qanday ishlashini bilasizmi?",
           "text_3_1": "GTRobot Cloud Mining-dan foydalanish imkoniyatini beradi. GTRobot faol ishtirokchilar soniga qarab, qazib olish tezligini aniqlab beradi. Kam faollik davrida ishtirokchilarning individual mukofotlari oshadi, ishtirokchilar soni ortishi bilan kriptovalyuta qazib olishi sekinlashadi. Shunday qilib, Cloud Mining-dan olingan daromadingiz boshqa ishtirokchilarga nisbatan faoliyatingiz bilan belgilanadi.",
           "text_3_2": "Muhim: Cloud Mining - kriptovalyutani qazib olish orqali siz kelajakga investitsiya kiritgan bo’lasiz. Cloud Mining orqali siz vaqt o'tishi bilan qiymati oshishi kutilayotgan kriptovalyutalar portfelini yaratasiz va vaqt o’tgan sari foydangiz osib boradi.",
           "yes": "Ha",

@@ -30,17 +30,17 @@ const Survey = ({ handleNextComponent }) => {
 
     const questions = [
         {
-            question: `${t('mining.components.helps.survey.question_1')}`,
+            question: `1: ${t('mining.components.helps.survey.question_1')}`,
             answers: [`${t('mining.components.helps.survey.yes')}`, `${t('mining.components.helps.survey.no')}`],
             text: `${t('mining.components.helps.survey.text_1')}`,
         },
         {
-            question: `${t('mining.components.helps.survey.question_2')}`,
+            question: `2: ${t('mining.components.helps.survey.question_2')}`,
             answers: [`${t('mining.components.helps.survey.yes')}`, `${t('mining.components.helps.survey.no')}`],
             text: `${t('mining.components.helps.survey.text_2')}`,
         },
         {
-            question: `${t('mining.components.helps.survey.question_3')}`,
+            question: `3: ${t('mining.components.helps.survey.question_3')}`,
             answers: [`${t('mining.components.helps.survey.yes')}`, `${t('mining.components.helps.survey.no')}`],
             text: <><br/>{t('mining.components.helps.survey.text_3_1')}</>,
         },

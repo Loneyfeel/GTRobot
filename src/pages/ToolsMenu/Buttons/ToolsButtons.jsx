@@ -6,6 +6,7 @@ import {lazy} from "react";
 const SearchIcon = lazy(() => import('@mui/icons-material/Search'));
 const AnalyticsOutlinedIcon = lazy(() => import('@mui/icons-material/AnalyticsOutlined'));
 const AutoModeIcon = lazy(() => import('@mui/icons-material/AutoMode'));
+const FilterDramaIcon = lazy(() => import('@mui/icons-material/FilterDrama'));
 
 function ToolsButtons() {
     const {t, i18n} = useTranslation()
@@ -29,6 +30,7 @@ function ToolsButtons() {
                 <ToolsButton id="Analysis" icon={<SearchIcon />} text={t('toolsMenu.buttons.analysis')} url={appendLocaleToUrl("/signals")}/>
                 <ToolsButton id="Monitoring" icon={<AnalyticsOutlinedIcon />} text={t('toolsMenu.buttons.monitoring')} url={appendLocaleToUrl("/klines")}/>
                 <ToolsButton id="Forex" icon={<AutoModeIcon />} text={t('toolsMenu.buttons.forex')} url={appendLocaleToUrl("/forex")}/>
+                <ToolsButton id="Mining" icon={<FilterDramaIcon />} text={t('toolsMenu.buttons.mining')} url={appendLocaleToUrl("/mining")}/>
             </Box>
         </>
     )
