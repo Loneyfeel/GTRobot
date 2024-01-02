@@ -93,7 +93,7 @@ const ChangeCrypto = ({handleNextComponent}) => {
                                 cursor: 'default',
                             }}
                         >
-                            Выбор монеты
+                            {t('mining.pages.menu.changeCrypto.title')}
                         </Typography>
                         <Box
                             sx={{

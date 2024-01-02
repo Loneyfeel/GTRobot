@@ -43,12 +43,12 @@ const Menu = ({activeMenuSection}) => {
             icon: <CurrencyExchangeIcon sx={{ width: '50px' }} />,
             component: <GTRobotMining setIsSectionOpen={setExpanded}/>,
         },
-        {
-            id: 'gtrobot-info',
-            title: 'mining.pages.menu.gtrobot-info.title',
-            icon: <SmartToyOutlinedIcon sx={{ width: '50px' }} />,
-            component: <GTRobotInfo setIsSectionOpen={setExpanded}/>,
-        },
+        // {
+        //     id: 'gtrobot-info',
+        //     title: 'mining.pages.menu.gtrobot-info.title',
+        //     icon: <SmartToyOutlinedIcon sx={{ width: '50px' }} />,
+        //     component: <GTRobotInfo setIsSectionOpen={setExpanded}/>,
+        // },
         {
             id: 'referral',
             title: 'mining.pages.menu.referral.title',
@@ -63,7 +63,7 @@ const Menu = ({activeMenuSection}) => {
         },
         {
             id: 'withdraw',
-            title: 'mining.pages.menu.withdraw.menu_btn',
+            title: 'mining.pages.menu.withdraw.title',
             icon: <AccountBalanceWalletIcon sx={{ width: '50px' }} />,
             component: <Withdraw setIsSectionOpen={setExpanded}/>,
         },

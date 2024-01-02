@@ -8,6 +8,7 @@ import InfoIcon from '@mui/icons-material/Info';
 import {getMiningUserData, startMining} from '../../components/Requests/Requests.js';
 import {useTranslation} from "react-i18next";
 import {useNavigate} from "react-router-dom";
+import { DateTime } from 'luxon';
 
 const Timer = ({ timeRemaining }) => {
 
@@ -15,16 +16,24 @@ const Timer = ({ timeRemaining }) => {
         const hours = Math.floor(time / 3600);
         const minutes = Math.floor((time % 3600) / 60);
         const seconds = time % 60;
-
         const pad = (value) => (value < 10 ? `0${value}` : value);
-
         return `${pad(hours)}:${pad(minutes)}:${pad(seconds)}`;
     };
 
-    // Определяем, осталось ли менее 2 часов
-    const isLessThanTwoHours = timeRemaining <= 7200;
-    // Выбираем соответствующую анимацию
-    const animationData = isLessThanTwoHours ? animationCloud : animationBtc;
+    const getAnimationData = () => {
+        const currentTime = new Date().getHours();
+        // Ваша логика для определения анимации в зависимости от времени
+        if (currentTime >= 0 && currentTime < 8) {
+            return animationCloud;
+        } else if (currentTime >= 8 && currentTime < 16) {
+            return animationBtc;
+        } else {
+            // Добавьте обработку других временных диапазонов, если необходимо
+            return animationCloud;
+        }
+    };
+
+    const animationData = getAnimationData();
 
     return (
         <Box
@@ -312,24 +321,38 @@ const CountdownTimer = () => {
     }, []);
 
     function calculateTimeRemaining() {
-        const now = new Date();
-        const targetTime = new Date();
-        targetTime.setHours(16, 0, 0, 0); // Установка времени 16:00
-        const timezoneOffset = 5 * 60; // Смещение для Ташкента (UTC+5)
-        const targetTimeAdjusted = new Date(targetTime.getTime() + timezoneOffset * 60 * 1000);
+        const now = DateTime.local();
+        const targetTime = setTargetTime(16, 0, 0, 0);
 
-        let timeDiff = targetTimeAdjusted - now;
-        if (timeDiff < 0) {
-            // Если время прошло, устанавливаем таймер на следующий день
-            targetTimeAdjusted.setDate(targetTimeAdjusted.getDate() + 1);
-            timeDiff = targetTimeAdjusted - now;
-        }
+        // Сначала переведем текущее время в часовой пояс Ташкента (+5)
+        const tashkentTimeZone = 'Asia/Tashkent';
+        const nowInTashkent = now.setZone(tashkentTimeZone);
 
-        const hours = Math.floor(timeDiff / (1000 * 60 * 60));
-        const minutes = Math.floor((timeDiff % (1000 * 60 * 60)) / (1000 * 60));
-        const seconds = Math.floor((timeDiff % (1000 * 60)) / 1000);
+        // Затем пересчитаем разницу между текущим временем в Ташкенте и целевым временем
+        const timeDiff = targetTime.diff(nowInTashkent, ['hours', 'minutes', 'seconds']).toObject();
+
+        const hours = Math.floor(timeDiff.hours);
+        const minutes = Math.floor(timeDiff.minutes);
+        const seconds = Math.floor(timeDiff.seconds);
 
         return { hours, minutes, seconds };
+    }
+
+    function setTargetTime(hours, minutes, seconds, milliseconds) {
+        const targetTime = DateTime.local().set({ hours, minutes, seconds, milliseconds });
+
+        // Устанавливаем целевое время на конец текущего дня
+        const endOfDay = DateTime.fromObject({
+            year: targetTime.year,
+            month: targetTime.month,
+            day: targetTime.day,
+            hour: 23,
+            minute: 59,
+            second: 59,
+            millisecond: 999,
+        }, { zone: 'Asia/Tashkent' });
+
+        return endOfDay;
     }
 
     return (
@@ -378,7 +401,7 @@ const MainMining = ({setValue, setActiveMenuSection}) => {
 
                 if (currentProgress >= 100) {
                     clearInterval(intervalId);
-
+                    currentProgress = 0
                     setTimeout(() => {
                         setIsLoading(false);
                     }, 100);

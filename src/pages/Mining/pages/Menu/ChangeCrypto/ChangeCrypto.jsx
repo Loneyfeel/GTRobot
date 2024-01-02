@@ -21,17 +21,24 @@ const ChangeCrypto = ({ setIsSectionOpen }) => {
     }, [setIsSectionOpen]);
 
     const handleCardClick = (crypto) => {
-        // Обновление локального состояния выбранной криптовалюты
-        setSelectedCrypto(crypto);
+        window.Telegram.WebApp.showConfirm(
+            `${t('mining.pages.menu.changeCrypto.change_alert_1')}\n\n${t('mining.pages.menu.changeCrypto.change_alert_2')}`,
+            (confirm) => {
+                if (confirm) {
+                    // Обновление локального состояния выбранной криптовалюты
+                    setSelectedCrypto(crypto);
 
-        // Сохранение данных в local.storage
-        const storedData = JSON.parse(localStorage.getItem('miningUserData')) || {};
-        storedData.crypto_currency = crypto;
-        localStorage.setItem('miningUserData', JSON.stringify(storedData));
+                    // Сохранение данных в local.storage
+                    const storedData = JSON.parse(localStorage.getItem('miningUserData')) || {};
+                    storedData.crypto_currency = crypto;
+                    localStorage.setItem('miningUserData', JSON.stringify(storedData));
 
-        // Отправка запроса на изменение криптовалюты
-        saveMiningUserCryptoCurrency(crypto);
-    };
+                    // Отправка запроса на изменение криптовалюты
+                    saveMiningUserCryptoCurrency(crypto);
+                }
+            }
+        )
+    }
 
     const {t} = useTranslation();
 

@@ -38,17 +38,11 @@ const Survey = ({ handleNextComponent }) => {
             question: `2: ${t('mining.components.helps.survey.question_2')}`,
             answers: [`${t('mining.components.helps.survey.yes')}`, `${t('mining.components.helps.survey.no')}`],
             text: `${t('mining.components.helps.survey.text_2')}`,
-        },
-        {
-            question: `3: ${t('mining.components.helps.survey.question_3')}`,
-            answers: [`${t('mining.components.helps.survey.yes')}`, `${t('mining.components.helps.survey.no')}`],
-            text: <><br/>{t('mining.components.helps.survey.text_3_1')}</>,
-        },
+        }
     ];
 
     const [currentQuestion, setCurrentQuestion] = useState(0);
     const [selectedAnswer, setSelectedAnswer] = useState(null);
-    const [showDetails, setShowDetails] = useState(false);
 
     const handleAnswer = (answer) => {
         setSelectedAnswer(answer);
@@ -61,9 +55,6 @@ const Survey = ({ handleNextComponent }) => {
 
     const handleFinalNext = () => {
         handleNextComponent();
-    };
-    const handleDetails = () => {
-        setShowDetails(true);
     };
 
     const isNextButtonVisible = () => {
@@ -97,54 +88,80 @@ const Survey = ({ handleNextComponent }) => {
                     {isFinalButtonVisible() ? (
                         <>
                             <Typography>{questions[currentQuestion].question}</Typography>
-                            {showDetails && (
+                            <Box
+                                sx={{
+                                    display: 'flex',
+                                    justifyContent: 'space-around'
+                                }}
+                            >
+                                <CustomCheckbox
+                                    answer={questions[currentQuestion].answers[0]}
+                                    checked={selectedAnswer === questions[currentQuestion].answers[0]}
+                                    onChange={handleAnswer}
+                                />
+                                <CustomCheckbox
+                                    answer={questions[currentQuestion].answers[1]}
+                                    checked={selectedAnswer === questions[currentQuestion].answers[1]}
+                                    onChange={handleAnswer}
+                                />
+                            </Box>
+                            <Typography
+                                sx={{
+                                    lineHeight: '21px'
+                                }}
+                            >
+                                {questions[currentQuestion].text}
+                            </Typography>
+                            <Box
+                                sx={{
+                                    display: 'flex',
+                                    justifyContent: 'flex-end',
+                                    width: '100%',
+                                }}
+                            >
+                                <Button onClick={handleFinalNext}>{t('mining.components.helps.survey.next')}</Button>
+                            </Box>
+                            {selectedAnswer === `${t('mining.components.helps.survey.no')}` && (
                                 <>
-                                    <Typography
-                                        sx={{
-                                            lineHeight: '21px'
-                                        }}
-                                    >
-                                        {questions[currentQuestion].text}
-                                    </Typography>
-                                    <Box
-                                        sx={{
-                                            display: 'flex',
-                                            justifyContent: 'flex-end',
-                                            width: '100%',
-                                        }}
-                                    >
-                                        <Button onClick={()=>{ window.Telegram.WebApp.showConfirm(
-                                            t('mining.components.helps.survey.text_3_2'),
-                                            (confirm) => {
-                                                if (confirm) {
-                                                    handleFinalNext()
-                                                }
-                                            }
-                                        )}}>{t('mining.components.helps.survey.next')}</Button>
-                                    </Box>
+                                    {isNextButtonVisible() && (
+                                        <Box
+                                            sx={{
+                                                display: 'flex',
+                                                justifyContent: 'flex-end',
+                                                width: '100%',
+                                            }}
+                                        >
+                                            <Button onClick={handleNext}>{t('mining.components.helps.survey.next')}</Button>
+                                        </Box>
+                                    )}
+                                </>
+                            )}
+                            {selectedAnswer === `${t('mining.components.helps.survey.yes')}` && (
+                                <>
+                                    {handleNext()}
                                 </>
                             )}
                         </>
                     ) : (
                         <>
                             <Typography>{questions[currentQuestion].question}</Typography>
-                            {currentQuestion === 2 ? (
+                            {currentQuestion === 1 ? (
                                 <Box
                                     sx={{
                                         display: 'flex',
-                                        justifyContent: 'flex-end',
-                                        flexDirection: 'column',
-                                        width: '100%',
+                                        justifyContent: 'space-around'
                                     }}
                                 >
-                                    <Button
-                                        onClick={() => {
-                                            handleDetails();
-                                            handleAnswer('');
-                                        }}
-                                    >
-                                        {t('mining.components.helps.survey.details')}
-                                    </Button>
+                                    <CustomCheckbox
+                                        answer={questions[currentQuestion].answers[0]}
+                                        checked={selectedAnswer === questions[currentQuestion].answers[0]}
+                                        onChange={handleFinalNext}
+                                    />
+                                    <CustomCheckbox
+                                        answer={questions[currentQuestion].answers[1]}
+                                        checked={selectedAnswer === questions[currentQuestion].answers[1]}
+                                        onChange={handleAnswer}
+                                    />
                                 </Box>
                             ) : (
                                 <Box

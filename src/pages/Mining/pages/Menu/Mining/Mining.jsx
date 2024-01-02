@@ -38,19 +38,13 @@ const Mining = ({ setIsSectionOpen }) => {
                         sx={{
                             margin: '10px',
                         }}>
-                            📱{t('mining.pages.menu.mining.text_mining_3')}
+                            {t('mining.pages.menu.mining.text_mining_3')}
                         </Typography>
                         <Typography
                         sx={{
                             margin: '10px',
                         }}>
-                            {t('mining.pages.menu.mining.text_mining_4')}
-                        </Typography>
-                        <Typography
-                        sx={{
-                            margin: '10px',
-                        }}>
-                            {t('mining.pages.menu.mining.text_mining_5')}
+                            ❕ {t('mining.pages.menu.mining.text_mining_4')}
                         </Typography>
                     </Box>
                 </Box>

@@ -27,18 +27,13 @@ const GTRobotMining = ({ setIsSectionOpen }) => {
                         sx={{
                             margin: '10px 10px 20px 10px',
                         }}>
-                            ⚙️{t('mining.pages.menu.gtrobot-mining.text_gtr_2')}
+                            ️{t('mining.pages.menu.gtrobot-mining.text_gtr_2')}
                         </Typography>
                         <Typography
                         sx={{
                             margin: '10px',
                         }}>
-                            💰{t('mining.pages.menu.gtrobot-mining.text_gtr_3')}
-                        </Typography>
-                        <Typography
-                        sx={{
-                            margin: '10px',
-                        }}>
+                            {t('mining.pages.menu.gtrobot-mining.text_gtr_3')}
                             {t('mining.pages.menu.gtrobot-mining.text_gtr_4')}
                         </Typography>
                         <Typography

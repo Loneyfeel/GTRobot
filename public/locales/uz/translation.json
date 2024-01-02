@@ -61,7 +61,7 @@
   },
   "noSubscribe": {
     "title": "Voy, siz obuna sotib olmaganga o'xshaysiz",
-    "text": "Yangi imkoniyatlarni ochadigan obunani sotib oling!",
+    "text": "Yangi imkoniyatlarni ochadigan obunani sotib oling !",
     "button": "Obuna sotib oling"
   },
   "mining": {
@@ -76,7 +76,7 @@
         "title": "Cloud Mining",
         "start_btn": "Faollashtirish",
         "error_alert": "Siz vazifalarni bajarmadingiz",
-        "future_balance_1": "2030 yilda bu",
+        "future_balance_1": "2026 yilda bu",
         "future_balance_2": " bo’lishi mumkin",
         "days_snackbar_1": "Kriptovalyutani chiqaraolishizga",
         "days_snackbar_2": "kun qo’ldi",
@@ -87,23 +87,24 @@
       "secMining": {
         "title": "GTRobot Mining",
         "text_alert_1": "Siz 100$-lik limitga yetdingiz. Mayning qilgan kriptovalyutadan foydalanish uchun ",
-        "text_alert_2": "ga murojaat qiling"
+        "text_alert_2": "ga murojaat qiling",
+        "gtrobot_alert_1": "GTRobot mayningi - bu GTRobot tariflarini imtiyoz bilan sotib olish uchun kriptovalyutaga sarmoya kiritish imkonini beruvchi vositadir !",
+        "gtrobot_alert_2": "Yig'ilgan mablag'ga faqat GTRobot tariflarini sotib olish mumkin !"
       },
       "menu": {
         "title": "Menu",
         "mining": {
           "title": "Cloud Mining",
           "text_mining_2": "Cloud Mining (Bulutli Mayning) - bu kriptovalyuta qazib olishni yangi usuli. Ushbu yondashuv foydalanuvchilarga boshqa maynerlar uskunasini ijaraga olgan holda tez va arzon kriptovalyuta qazib olish imkonini beradi.",
-          "text_mining_3": "Bulutli mayningga asosiy xususiyatlariga quyidagilar kiradi:",
-          "text_mining_4": "1. Qulaylik: siz jismoniy jihozlarni sotib olishingiz va saqlashingiz shart emas. Butun jarayon masofadan turib amalga oshiriladi.",
-          "text_mining_5": "2. Pul sariflamasligiz: bulutli mayning provayderlari odatda sizning qazib olish operatsiyalaringizni boshqarish uchun oddiy interfeysni taqdim etadilar."
+          "text_mining_3": "Cloud Mining-dan foydalanish qoidalari:\nGTRobot faol ishtirokchilar soniga qarab, qazib olish tezligini aniqlab beradi. Kam faollik davrida ishtirokchilarning individual mukofotlari oshadi, ishtirokchilar soni ortishi bilan kriptovalyuta qazib olishi sekinlashadi. Cloud Mining-dan olingan daromadingiz boshqa ishtirokchilarga nisbatan faol bolishingizga bog’liq.",
+          "text_mining_4": "Muhim: Cloud Mining orqali siz vaqt o'tishi bilan qiymati oshishi kutilayotgan kriptovalyutalar portfelini yaratasiz va vaqt o’tgan sari foydangiz osib boradi."
         },
         "gtrobot-mining": {
           "title": "GTRobot Mining",
-          "text_gtr_2": "GTRobot Mining - Bu GTRobot bilan yuqori daromadli mayning bo'limi.",
-          "text_gtr_3": "Ushbu bo'limda siz 24 soatda bir marta mayningni faollashtirib, GTRobot maynigidan siz kuniga 10$ gacha daromad qilishingiz  mumkin.",
-          "text_gtr_4": "Minimal pul chiqarish miqdori: 100$.",
-          "text_gtr_5": "Iltimos, diqqat qiling: GTRobot mayningi orqali topgan mablag'ingiz robot tarif rejalarini sotib olish uchun chegirma sifatida ishlatilish mumkin. "
+          "text_gtr_2": "GTRobot Mining - Bu GTRobot tariflariga pul yig’ish usuli.",
+          "text_gtr_3": "Ushbu bo'limda siz 24 soatda bir marta mayningni faollashtirib,",
+          "text_gtr_4": " 100$ gacha bo’lgan miqdorda mayning qilishingiz mumkin !",
+          "text_gtr_5": "Diqqat: GTRobot mayningi yordamida yig’ilgan mablag'ni faqat robot tarif rejalarini sotib olish uchun chegirma sifatida ishlatilish mumkin."
         },
         "gtrobot-info": {
           "title": "GTRobot mayningi ishlashi haqida",
@@ -144,7 +145,9 @@
         },
         "changeCrypto": {
           "menu_btn": "Kriptovalyutani almashtirish",
-          "title": "Kriptovalyutani tanlash"
+          "title": "Kriptovalyutani tanlang",
+          "change_alert_1": "Mayning uchun kriptovalyutani o’zgartirsangiz, siz barcha qazib olingan aktivlaringizni ushbu kriptovalyutaga o'tkazasiz.",
+          "change_alert_2": "Siz bunga rozimisiz?"
         }
       },
       "ref": {
@@ -164,7 +167,7 @@
         "change-crypto": "Kriptovalyutani tanlash imkoniyati",
         "collect": "Kuniga bir necha marta daromad to'plang!",
         "more-money": "Cloud Mining - pul ishlashning yangi usuli",
-        "getting-start": "Hoziroq Cloud Mining-ni sinab ko'ring!",
+        "getting-start": "Hoziroq Cloud Mining-ni sinab ko'ring !",
         "referrals": "Ko'proq do'stlar-ko'proq daromad",
         "functionalChangeCrypto": {
           "change": "Kriptovalyutani tanlash",

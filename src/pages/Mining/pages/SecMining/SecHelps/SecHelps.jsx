@@ -13,13 +13,6 @@ const Survey = ({ setIsDailyMiningActivated }) => {
         },
     ];
 
-    const [currentQuestion, setCurrentQuestion] = useState(0);
-    const [showDetails, setShowDetails] = useState(false);
-
-    const handleDetails = () => {
-        setShowDetails(true);
-    };
-
     const handleFinalNext = () => {
         setIsDailyMiningActivated(true);
         localStorage.setItem('isDailyMiningActivated', JSON.stringify(true));
@@ -35,7 +28,6 @@ const Survey = ({ setIsDailyMiningActivated }) => {
                         bgcolor: 'var(--tg-theme-bg-color)'
                     }}
                 >
-                    <Typography>{questions[currentQuestion].question}</Typography>
                     <Box
                         sx={{
                             display: 'flex',
@@ -44,23 +36,17 @@ const Survey = ({ setIsDailyMiningActivated }) => {
                             width: '100%',
                         }}
                     >
-                        <Button
-                            onClick={() => {
-                                handleDetails();
-                                handleAnswer('');
-                            }}
-                        >
-                            {t('mining.components.helps.survey.details')}
-                        </Button>
                     </Box>
-                    {showDetails && (
                         <>
                             <Typography
                                 sx={{
                                     lineHeight: '21px'
                                 }}
                             >
-                                {questions[currentQuestion].text}
+                                {t('mining.pages.secMining.gtrobot_alert_1')}
+                                <br/>
+                                <br/>
+                                {t('mining.pages.secMining.gtrobot_alert_2')}
                             </Typography>
                             <Box
                                 sx={{
@@ -70,22 +56,12 @@ const Survey = ({ setIsDailyMiningActivated }) => {
                                 }}
                             >
                                 <Button
-                                    onClick={() => {
-                                        window.Telegram.WebApp.showConfirm(
-                                            t('mining.components.helps.survey.text_3_2'),
-                                            (confirm) => {
-                                                if (confirm) {
-                                                    handleFinalNext();
-                                                }
-                                            }
-                                        );
-                                    }}
+                                    onClick={handleFinalNext()}
                                 >
                                     {t('mining.components.helps.survey.next')}
                                 </Button>
                             </Box>
                         </>
-                    )}
                 </Box>
     );
 };

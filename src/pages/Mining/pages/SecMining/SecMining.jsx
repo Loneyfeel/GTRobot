@@ -332,7 +332,7 @@ const MainMining = ({setValue, setActiveMenuSection}) => {
 
                 if (currentProgress >= 100) {
                     clearInterval(intervalId);
-
+                    currentProgress = 0
                     setIsLoading(false);
 
                     // Выполняйте вашу логику для начала майнинга (startMining) здесь
