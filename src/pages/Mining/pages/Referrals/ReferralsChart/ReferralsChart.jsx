@@ -45,6 +45,7 @@ const ReferralsChart = () => {
     // Преобразуем объект в массив значений
     const userCountList = dateList.map(date => userCountByDate[date]);
 
+
     useEffect(() => {
         setOptions(referralsChart('', userCountList, dateList));
     }, [userCountList.reverse(), dateList]);
@@ -65,7 +66,7 @@ function generateDateList() {
     const currentDate = new Date();
     const dateList = [];
 
-    for (let i = 0; i < 20; i++) {
+    for (let i = -3; i < 18; i++) {
         const newDate = new Date(currentDate);
         newDate.setDate(currentDate.getDate() - i);
 

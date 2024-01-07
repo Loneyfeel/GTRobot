@@ -113,7 +113,7 @@ function App() {
                 {/*<Forex/>*/}
                 {/*<NoSubscribe/>*/}
                 {/*<Copyright/>*/}
-                <Router basename="/mining">
+                <Router basename="/">
                     <Routes>
                         <Route path="/*" exact element={<Mining/>} />
                     </Routes>

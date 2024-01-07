@@ -9,6 +9,8 @@ import {getMiningUserData, startMining} from '../../components/Requests/Requests
 import {useTranslation} from "react-i18next";
 import {useNavigate} from "react-router-dom";
 import { DateTime } from 'luxon';
+import { motion, useAnimation } from 'framer-motion';
+import UserLevels from "./UserLevels/index.js";
 
 const Timer = ({ timeRemaining }) => {
 
@@ -120,14 +122,14 @@ const Balance = ({ showBalanceChange, randomIncrement, setRandomIncrement, endUs
 
     useEffect(() => {
         if (endTimerRef !== 0 && endTimerRef !== null) {
-            setValue(Math.abs(0.1 - (endTimerRef - startTimerRef.current) / 1000 * 0.000006));
+            setValue(Math.abs(0.1 - (endTimerRef - startTimerRef.current) / 1000 * 0.000002));
         }
     }, [endTimerRef]); // Зависимость добавлена для пересчета значения при изменении endTimerRef
 
     // Функция для обновления счетчика
     const updateCounter = () => {
         // Увеличиваем значение
-        setValue((prevValue) => prevValue + 0.000006);
+        setValue((prevValue) => prevValue + 0.000002);
 
         // Увеличиваем start_timer
         startTimerRef.current += 1;
@@ -309,7 +311,7 @@ const RandomTextComponent = () => {
     );
 };
 
-const CountdownTimer = () => {
+const CountdownTimer = ({fetchDataAndUpdateLocalStorage}) => {
     const [timeRemaining, setTimeRemaining] = useState(calculateTimeRemaining());
 
     useEffect(() => {
@@ -324,24 +326,25 @@ const CountdownTimer = () => {
         const now = DateTime.local();
         const targetTime = setTargetTime(16, 0, 0, 0);
 
-        // Сначала переведем текущее время в часовой пояс Ташкента (+5)
         const tashkentTimeZone = 'Asia/Tashkent';
         const nowInTashkent = now.setZone(tashkentTimeZone);
 
-        // Затем пересчитаем разницу между текущим временем в Ташкенте и целевым временем
         const timeDiff = targetTime.diff(nowInTashkent, ['hours', 'minutes', 'seconds']).toObject();
 
-        const hours = Math.floor(timeDiff.hours);
-        const minutes = Math.floor(timeDiff.minutes);
-        const seconds = Math.floor(timeDiff.seconds);
+        const hours = Math.max(0, Math.floor(timeDiff.hours));
+        const minutes = Math.max(0, Math.floor(timeDiff.minutes));
+        const seconds = Math.max(0, Math.floor(timeDiff.seconds));
+
+        // Вызывайте вашу функцию при достижении нуля
+        if (hours === 0 && minutes === 0 && seconds === 0) {
+            fetchDataAndUpdateLocalStorage();
+        }
 
         return { hours, minutes, seconds };
     }
 
     function setTargetTime(hours, minutes, seconds, milliseconds) {
         const targetTime = DateTime.local().set({ hours, minutes, seconds, milliseconds });
-
-        // Устанавливаем целевое время на конец текущего дня
         const endOfDay = DateTime.fromObject({
             year: targetTime.year,
             month: targetTime.month,
@@ -362,7 +365,7 @@ const CountdownTimer = () => {
     );
 };
 
-const MainMining = ({setValue, setActiveMenuSection}) => {
+const MainMining = ({setValue, setActiveMenuSection, fetchDataAndUpdateLocalStorage}) => {
     const {t} = useTranslation();
 
     const [timeRemaining, setTimeRemaining] = useState(0);
@@ -474,6 +477,26 @@ const MainMining = ({setValue, setActiveMenuSection}) => {
 
     const navigate = useNavigate();
 
+    const [level, setLevel]=useState('standard')
+    const [userLevelsVisible, setUserLevelsVisible] = useState(false);
+
+    const controls = useAnimation();
+
+    const handleButtonLevelClick = () => {
+        setUserLevelsVisible(true);
+    };
+
+    useEffect(() => {
+        const animateWithDelay = async () => {
+            await controls.start({
+                y: [0, -8, 0, 0, -8, 0, 0, -8, 0],
+                transition: { repeat: 0, duration: 1.5, delay: 1, ease: 'easeOut' },
+            });
+            setTimeout(animateWithDelay, 5000);
+        };
+
+        animateWithDelay();
+    }, [999999]);
     return (
         <>
             <Box
@@ -498,7 +521,7 @@ const MainMining = ({setValue, setActiveMenuSection}) => {
                         <Typography>
                             {t('mining.pages.mainMining.deactiveTimer')}:
                         </Typography>
-                        <CountdownTimer/>
+                        <CountdownTimer fetchDataAndUpdateLocalStorage={fetchDataAndUpdateLocalStorage}/>
                     </Box>
                 )}
                 <Box
@@ -524,6 +547,47 @@ const MainMining = ({setValue, setActiveMenuSection}) => {
                     >
                         <InfoIcon/>
                     </IconButton>
+                    <Button
+                        variant='contained'
+                        sx={{
+                            position: 'absolute',
+                            top: '54px',
+                            left: '0',
+                            color: 'var(--tg-theme-text-color)',
+                            backgroundColor: level === 'standard' ? '#b87333' : level === 'pro' ? '#B9B9B9' : level === 'ultra' ? '#E1C00E' : 'inherit',
+                            borderRadius: '0 30px 30px 0',
+                            width: '120px',
+                            height: '25px'
+                        }}
+                        onClick={handleButtonLevelClick}
+                    >
+                        {level}
+                    </Button>
+                    {level !== 'ultra' && (
+                        <motion.div
+                            animate={controls}
+                            style={{
+                                position: 'absolute',
+                                top: '85px',
+                                left: '10px',
+                                fontSize: '12px',
+                                color: 'var(--tg-theme-hint-color)',
+                            }}
+                        >
+                            поднять уровень
+                        </motion.div>
+                    )}
+                    {userLevelsVisible && (
+                        <Box
+                        sx={{
+                            position: 'fixed',
+                            top: '0',
+                            left: '0',
+                            zIndex: '3000'
+                        }}>
+                                <UserLevels setUserLevelsVisible={setUserLevelsVisible} />
+                        </Box>
+                    )}
                     <Box
                         sx={{
                             display: 'flex',

@@ -1,5 +1,5 @@
 import React, {useState, useEffect, lazy} from 'react';
-import {Box, Card, CardContent, Container, Typography} from '@mui/material';
+import {Box, Button, Card, CardContent, Container, Typography} from '@mui/material';
 import { useTrail, animated } from 'react-spring';
 import { saveMiningUserTask } from '../Requests/Requests.js';
 import {useTranslation} from "react-i18next";
@@ -11,7 +11,7 @@ import tiktokIcon from '../../assets/TaskList/tikTok.svg'
 const ArrowOutwardIcon = lazy(() => import('@mui/icons-material/ArrowOutward'));
 
 const TaskList = ({ activeTasks, setActiveTasks }) => {
-    const { t, i18n } = useTranslation();
+    const {t, i18n} = useTranslation();
 
     const locale = i18n.language;
     const translateVariables = {
@@ -104,55 +104,80 @@ const TaskList = ({ activeTasks, setActiveTasks }) => {
     };
 
     return (
-        <Container maxWidth="sm" sx={{overflowY: 'auto'}}>
-            {trail.map((props, index) => (
-                <animated.div key={`animated-div-${index}`} style={props}>
-                    {tasks[index] && (
-                        <Card
-                            key={tasks[index].id}
-                            onClick={() => {
-                                window.open(tasks[index].task_link, '_blank');
-                                handleTaskClick(tasks[index].task_id);
-                            }}
-                            style={{
-                                display: 'flex',
-                                justifyContent: 'center',
-                                alignItems: 'center',
-                                cursor: 'pointer',
-                                marginBottom: 10,
-                                border: '1px solid var(--tg-theme-hint-color)',
-                                borderRadius: '30px',
-                                color: 'var(--tg-theme-text-color)',
-                                height: '55px'
-                            }}
-                        >
-                            <CardContent
-                            sx={{
-                                display: 'flex',
-                                alignItems: 'center',
-                                padding: '0',
-                                '&.MuiCardContent-root:last-child':{
-                                    padding: '0'
-                                }
-                            }}>
-                                <Box
-                                    component='img'
-                                    src={getIconForTask(tasks[index].task_text)}
-                                    alt='icon'
+        <>
+            <Container maxWidth="sm" sx={{overflowY: 'auto'}}>
+                {trail.map((props, index) => (
+                    <animated.div key={`animated-div-${index}`} style={props}>
+                        {tasks[index] && (
+                            <Card
+                                key={tasks[index].id}
+                                onClick={() => {
+                                    window.open(tasks[index].task_link, '_blank');
+                                    handleTaskClick(tasks[index].task_id);
+                                }}
+                                style={{
+                                    display: 'flex',
+                                    justifyContent: 'center',
+                                    alignItems: 'center',
+                                    cursor: 'pointer',
+                                    marginBottom: 10,
+                                    border: '1px solid var(--tg-theme-hint-color)',
+                                    borderRadius: '30px',
+                                    color: 'var(--tg-theme-text-color)',
+                                    height: '55px'
+                                }}
+                            >
+                                <CardContent
                                     sx={{
-                                        width: '35px',
-                                        height: '35px',
-                                        marginRight: '15px'
-                                    }}
-                                />
-                                {/*{getIconForTask(tasks[index].task_text)}*/}
-                                <Typography variant="h6">{translateText(tasks[index].task_text)}</Typography>
-                            </CardContent>
-                        </Card>
-                    )}
-                </animated.div>
-            ))}
-        </Container>
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        padding: '0',
+                                        '&.MuiCardContent-root:last-child': {
+                                            padding: '0'
+                                        }
+                                    }}>
+                                    <Box
+                                        component='img'
+                                        src={getIconForTask(tasks[index].task_text)}
+                                        alt='icon'
+                                        sx={{
+                                            width: '35px',
+                                            height: '35px',
+                                            marginRight: '15px'
+                                        }}
+                                    />
+                                    <Typography variant="h6">{translateText(tasks[index].task_text)}</Typography>
+                                </CardContent>
+                            </Card>
+                        )}
+                    </animated.div>
+                ))}
+            </Container>
+            <Box
+            sx={{
+                position: 'fixed',
+                bottom: '0',
+                width: '100%',
+                display: 'flex',
+                justifyContent: 'center'
+            }}>
+                <Button
+                    variant='contained'
+                    onClick={() => {
+                        tasks.forEach((task) => {
+                            if (task.task_text.toLowerCase().includes('telegram')) {
+                                handleTaskClick(task.task_id);
+                            }
+                        });
+                    }}
+                    sx={{
+                        color: 'var(--tg-theme-text-color)',
+                        margin: '40px'
+                    }}>
+                    {t('mining.components.taskList.check_btn')}
+                </Button>
+            </Box>
+        </>
     );
 }
 

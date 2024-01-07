@@ -55,47 +55,47 @@ const Mining = () => {
         checkUserExists(); // Выполняется только один раз
     }, []);
 
+    const fetchDataAndUpdateLocalStorage = async () => {
+        try {
+            const storedQueryId = localStorage.getItem('miningQueryId');
+            if (storedQueryId !== currentQueryId) {
+                const response = await getMiningUserData();
+                const userDataResponse = response.data;
+
+                localStorage.setItem('miningQueryId', currentQueryId);
+                localStorage.setItem('miningData', JSON.stringify(userDataResponse.data));
+                localStorage.setItem('miningUserData', JSON.stringify(userDataResponse));
+                localStorage.setItem('isDailyMiningActivated', JSON.stringify(userDataResponse.is_daily_mining_activated));
+                setIsDataLoaded(true);
+                // Вызываем fetchLocalStorageTasks после успешного получения данных из API
+                await fetchLocalStorageTasks();
+            }
+        } catch (error) {
+            console.error('Error fetching user data:', error);
+        }
+    };
+    const fetchTickersPricesAndUpdateLocalStorage = async () => {
+        try {
+            const prices = await getMiningTickersPrice();
+            const tickersPrices = prices.data;
+
+            localStorage.setItem('prices', JSON.stringify(tickersPrices));
+        } catch (error) {
+            console.error('Error fetching tickers prices:', error);
+        }
+    };
+
+    const fetchLocalStorageTasks = async () => {
+        try {
+            const storedData = JSON.parse(localStorage.getItem('miningUserData')) || {};
+            setActiveTasks(storedData.active_tasks || []);
+        } catch (error) {
+            console.error('Error fetching tasks:', error);
+        }
+    };
+
     useEffect(() => {
-        const fetchDataAndUpdateLocalStorage = async () => {
-            try {
-                const storedQueryId = localStorage.getItem('miningQueryId');
-                if (storedQueryId !== currentQueryId) {
-                    const response = await getMiningUserData();
-                    const userDataResponse = response.data;
-
-                    localStorage.setItem('miningQueryId', currentQueryId);
-                    localStorage.setItem('miningData', JSON.stringify(userDataResponse.data));
-                    localStorage.setItem('miningUserData', JSON.stringify(userDataResponse));
-                    localStorage.setItem('isDailyMiningActivated', JSON.stringify(userDataResponse.is_daily_mining_activated));
-                    setIsDataLoaded(true);
-                    // Вызываем fetchLocalStorageTasks после успешного получения данных из API
-                    await fetchLocalStorageTasks();
-                }
-            } catch (error) {
-                console.error('Error fetching user data:', error);
-            }
-        };
         fetchDataAndUpdateLocalStorage();
-
-        const fetchTickersPricesAndUpdateLocalStorage = async () => {
-            try {
-                const prices = await getMiningTickersPrice();
-                const tickersPrices = prices.data;
-
-                localStorage.setItem('prices', JSON.stringify(tickersPrices));
-            } catch (error) {
-                console.error('Error fetching tickers prices:', error);
-            }
-        };
-
-        const fetchLocalStorageTasks = async () => {
-            try {
-                const storedData = JSON.parse(localStorage.getItem('miningUserData')) || {};
-                setActiveTasks(storedData.active_tasks || []);
-            } catch (error) {
-                console.error('Error fetching tasks:', error);
-            }
-        };
 
         fetchTickersPricesAndUpdateLocalStorage();
 
@@ -197,6 +197,14 @@ const Mining = () => {
 
     const currentMenuItem = menuItems.find(item => item.to === location.pathname);
 
+    window.Telegram.WebApp.BackButton.isVisible = true;
+    window.Telegram.WebApp.ready();
+    window.Telegram.WebApp.BackButton.onClick(async () => {
+        window.Telegram.WebApp.HapticFeedback.notificationOccurred('error');
+
+        window.location.href = '/tools';
+    });
+
     return (
         <>
             <Backdrop sx={{ zIndex: 999, color: '#fff', bgcolor: 'var(--tg-theme-bg-color)' }} open={showBackdrop}>
@@ -228,7 +236,7 @@ const Mining = () => {
                         }}>
                         <Routes>
                             {menuItems.map((item, index) => (
-                                <Route key={index} path={item.to} element={<item.component setValue={setValue} setActiveMenuSection={setActiveMenuSection} activeMenuSection={activeMenuSection}/>} />
+                                <Route key={index} path={item.to} element={<item.component setValue={setValue} setActiveMenuSection={setActiveMenuSection} activeMenuSection={activeMenuSection} fetchDataAndUpdateLocalStorage={fetchDataAndUpdateLocalStorage}/>} />
                             ))}
                         </Routes>
                     </Box>
@@ -303,7 +311,7 @@ const Mining = () => {
                             color: 'var(--tg-theme-text-color)'
                         }}
                     >
-                        {t('mining.components.taskList')}:</Typography>
+                        {t('mining.components.taskList.title')}:</Typography>
                     <TaskList activeTasks={activeTasks} setActiveTasks={setActiveTasks} />
                 </Box>
             )}
