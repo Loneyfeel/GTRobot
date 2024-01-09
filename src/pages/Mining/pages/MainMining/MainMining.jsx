@@ -12,6 +12,13 @@ import { DateTime } from 'luxon';
 import { motion, useAnimation } from 'framer-motion';
 import UserLevels from "./UserLevels/index.js";
 
+import phone_1  from '../../assets/UserLevels/svg1.svg'
+import text_1 from '../../assets/UserLevels/svg2.svg'
+import userVideo from '../../assets/UserLevels/kkkk.mp4'
+import boxIcon from '../../assets/UserLevels/box.svg'
+import diamondIcon from '../../assets/UserLevels/diamond.svg'
+import upIcon from '../../assets/UserLevels/up.svg'
+
 const Timer = ({ timeRemaining }) => {
 
     const formatTime = (time) => {
@@ -487,16 +494,32 @@ const MainMining = ({setValue, setActiveMenuSection, fetchDataAndUpdateLocalStor
     };
 
     useEffect(() => {
+        let isMounted = true;
+
         const animateWithDelay = async () => {
-            await controls.start({
-                y: [0, -8, 0, 0, -8, 0, 0, -8, 0],
-                transition: { repeat: 0, duration: 1.5, delay: 1, ease: 'easeOut' },
-            });
-            setTimeout(animateWithDelay, 5000);
+            if (isMounted) {
+                await controls.start({
+                    y: [0, -8, 0, 0, -8, 0, 0, -8, 0],
+                    transition: {
+                        repeat: 0,
+                        duration: 1.5,
+                        delay: 1,
+                        ease: "easeOut"
+                    }
+                });
+                setTimeout(animateWithDelay, 5000);
+            }
         };
 
         animateWithDelay();
-    }, [999999]);
+
+        // Устанавливаем флаг isMounted в false при размонтировании компонента
+        return () => {
+            isMounted = false;
+
+        };
+    }, [99999999]);
+
     return (
         <>
             <Box
@@ -585,7 +608,15 @@ const MainMining = ({setValue, setActiveMenuSection, fetchDataAndUpdateLocalStor
                             left: '0',
                             zIndex: '3000'
                         }}>
-                                <UserLevels setUserLevelsVisible={setUserLevelsVisible} />
+                            <UserLevels
+                            setUserLevelsVisible={setUserLevelsVisible}
+                            phone_1={phone_1}
+                            text_1={text_1}
+                            userVideo={userVideo}
+                            boxIcon={boxIcon}
+                            diamondIcon={diamondIcon}
+                            upIcon={upIcon}
+                            />;
                         </Box>
                     )}
                     <Box

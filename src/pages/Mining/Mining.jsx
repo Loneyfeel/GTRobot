@@ -229,7 +229,8 @@ const Mining = () => {
                         {currentMenuItem ? currentMenuItem.title : `${t('mining.pages.menu.title')}`}
                     </Typography>
                 </Box>
-                {!isHelpsVisible && (
+                {/*{!isHelpsVisible && (*/}
+                    {true && (
                     <Box
                         sx={{
                             marginBottom: '56px'
@@ -277,44 +278,44 @@ const Mining = () => {
                     ))}
                 </BottomNavigation>
             </Box>
-            {isHelpsVisible && (
-                <Box
-                    sx={{
-                        position: 'fixed',
-                        top: '0',
-                        height: '100%',
-                        width: '100%',
-                        bgcolor: 'var(--tg-theme-bg-color)',
-                        zIndex: '3000',
-                        display: 'block',
-                    }}
-                >
-                    <Helps hideHelps={() => setIsHelpsVisible(false)} />
-                </Box>
-            )}
-            {!isHelpsVisible && activeTasks.length > 0 && (
-                <Box
-                    sx={{
-                        position: 'fixed',
-                        top: '0',
-                        height: '100%',
-                        width: '100%',
-                        bgcolor: 'var(--tg-theme-bg-color)',
-                        zIndex: '3000',
-                        display: 'block',
-                    }}
-                >
-                    <Typography
-                        sx={{
-                            margin: '15px',
-                            fontSize: '18px',
-                            color: 'var(--tg-theme-text-color)'
-                        }}
-                    >
-                        {t('mining.components.taskList.title')}:</Typography>
-                    <TaskList activeTasks={activeTasks} setActiveTasks={setActiveTasks} />
-                </Box>
-            )}
+            {/*{isHelpsVisible && (*/}
+            {/*    <Box*/}
+            {/*        sx={{*/}
+            {/*            position: 'fixed',*/}
+            {/*            top: '0',*/}
+            {/*            height: '100%',*/}
+            {/*            width: '100%',*/}
+            {/*            bgcolor: 'var(--tg-theme-bg-color)',*/}
+            {/*            zIndex: '3000',*/}
+            {/*            display: 'block',*/}
+            {/*        }}*/}
+            {/*    >*/}
+            {/*        <Helps hideHelps={() => setIsHelpsVisible(false)} />*/}
+            {/*    </Box>*/}
+            {/*)}*/}
+            {/*{!isHelpsVisible && activeTasks.length > 0 && (*/}
+            {/*    <Box*/}
+            {/*        sx={{*/}
+            {/*            position: 'fixed',*/}
+            {/*            top: '0',*/}
+            {/*            height: '100%',*/}
+            {/*            width: '100%',*/}
+            {/*            bgcolor: 'var(--tg-theme-bg-color)',*/}
+            {/*            zIndex: '3000',*/}
+            {/*            display: 'block',*/}
+            {/*        }}*/}
+            {/*    >*/}
+            {/*        <Typography*/}
+            {/*            sx={{*/}
+            {/*                margin: '15px',*/}
+            {/*                fontSize: '18px',*/}
+            {/*                color: 'var(--tg-theme-text-color)'*/}
+            {/*            }}*/}
+            {/*        >*/}
+            {/*            {t('mining.components.taskList.title')}:</Typography>*/}
+            {/*        <TaskList activeTasks={activeTasks} setActiveTasks={setActiveTasks} />*/}
+            {/*    </Box>*/}
+            {/*)}*/}
         </>
     );
 }
