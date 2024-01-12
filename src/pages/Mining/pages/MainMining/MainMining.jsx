@@ -1,287 +1,23 @@
-import React, {lazy, startTransition, useEffect, useRef, useState} from 'react';
+import React, {startTransition, useEffect, useMemo, useState} from 'react';
 import {Box, Button, CircularProgress, IconButton, Snackbar, Typography} from "@mui/material";
-import Lottie from 'lottie-react';
-import animationCloud from '../../assets/cloud-mining.json';
-import animationBtc from '../../assets/bitcoin-mining.json';
-import TouchAppIcon from '@mui/icons-material/TouchApp';
 import InfoIcon from '@mui/icons-material/Info';
 import {getMiningUserData, startMining} from '../../components/Requests/Requests.js';
 import {useTranslation} from "react-i18next";
 import {useNavigate} from "react-router-dom";
 import { DateTime } from 'luxon';
 import { motion, useAnimation } from 'framer-motion';
-import UserLevels from "./UserLevels/index.js";
+import Timer from './components/Timer'
+import StartButton from './components/StartButton'
+import Balance from './components/Balance'
+import UserLevels from "./components/UserLevels/index.js";
+import { WithSeeMore } from 'react-insta-stories';
 
-const Timer = ({ timeRemaining }) => {
-
-    const formatTime = (time) => {
-        const hours = Math.floor(time / 3600);
-        const minutes = Math.floor((time % 3600) / 60);
-        const seconds = time % 60;
-        const pad = (value) => (value < 10 ? `0${value}` : value);
-        return `${pad(hours)}:${pad(minutes)}:${pad(seconds)}`;
-    };
-
-    const getAnimationData = () => {
-        const currentTime = new Date().getHours();
-        // Ваша логика для определения анимации в зависимости от времени
-        if (currentTime >= 0 && currentTime < 8) {
-            return animationCloud;
-        } else if (currentTime >= 8 && currentTime < 16) {
-            return animationBtc;
-        } else {
-            // Добавьте обработку других временных диапазонов, если необходимо
-            return animationCloud;
-        }
-    };
-
-    const animationData = getAnimationData();
-
-    return (
-        <Box
-            sx={{
-                display: 'flex',
-                position: 'relative',
-                flexDirection: 'column',
-                alignItems: 'center',
-            }}
-        >
-            <Typography
-                sx={{
-                    fontSize: '18px',
-                    fontWeight: '600',
-                    marginBottom: '8px',
-                }}
-            >
-                {formatTime(timeRemaining)}
-            </Typography>
-            <Box
-                sx={{
-                    display: 'flex',
-                    justifyContent: 'center',
-                    position: 'relative',
-                    overflow: 'hidden',
-                }}
-            >
-                <Lottie
-                    animationData={animationData}
-                    style={{
-                        width: '180px',
-                    }}
-                />
-            </Box>
-        </Box>
-    );
-};
-
-const StartButton = ({ onClick, isDisabled, text }) => (
-    <Button
-        variant="contained"
-        onClick={onClick}
-        disabled={isDisabled}
-        sx={{
-            flexDirection: 'column',
-            paddingTop: '12px',
-            width: '125px',
-            height: '125px',
-            borderRadius: '100px',
-            color: 'var(--tg-theme-text-color)',
-        }}
-    >
-        <TouchAppIcon
-            sx={{
-                position: 'absolute',
-                top: '30px',
-                width: '40px',
-                height: '40px',
-            }}
-        />
-        <Typography
-            sx={{
-                fontSize: '12px',
-                fontWeight: '600',
-                marginTop: '40px'
-            }}
-        >
-            {text}
-        </Typography>
-    </Button>
-);
-
-const Balance = ({ showBalanceChange, randomIncrement, setRandomIncrement, endUserMiningTimestamp, t }) => {
-    const [cryptoPrices, setCryptoPrices] = useState({});
-    const [balance, setBalance] = useState(0);
-    const [cryptoCurrency, setCryptoCurrency] = useState('');
-    const [isCryptoDataLoaded, setIsCryptoDataLoaded] = useState(false);
-    const [referralBonus, setReferralBonus] = useState(0);
-
-    const maxTotalLength = 12;
-    const startTimerRef = useRef(new Date().getTime())
-    const endTimerRef = endUserMiningTimestamp*1000
-    const [value, setValue] = useState(0);
-
-    useEffect(() => {
-        if (endTimerRef !== 0 && endTimerRef !== null) {
-            setValue(Math.abs(0.1 - (endTimerRef - startTimerRef.current) / 1000 * 0.000002));
-        }
-    }, [endTimerRef]); // Зависимость добавлена для пересчета значения при изменении endTimerRef
-
-    // Функция для обновления счетчика
-    const updateCounter = () => {
-        // Увеличиваем значение
-        setValue((prevValue) => prevValue + 0.000002);
-
-        // Увеличиваем start_timer
-        startTimerRef.current += 1;
-    };
-    // Вызываем функцию updateCounter каждую секунду
-    useEffect(() => {
-        const intervalId = setInterval(updateCounter, 1000);
-
-        // Очищаем интервал при размонтировании компонента
-        return () => clearInterval(intervalId);
-    }, []); // Пустой массив зависимостей, чтобы useEffect выполнился только при монтировании
-
-    useEffect(() => {
-        // Загружаем данные из local.storage при монтировании компонента
-        const storedData = JSON.parse(localStorage.getItem('miningUserData')) || {};
-        setBalance(storedData.balance || 0);
-        setReferralBonus(storedData.referral_bonus || 0);
-        setCryptoCurrency(storedData.crypto_currency || 'btc');
-
-        // Запрашиваем цены криптовалют при монтировании компонента
-        const fetchCryptoPrices = async () => {
-            try {
-                const prices = JSON.parse(localStorage.getItem('prices')) || {};
-                setCryptoPrices(prices);
-
-                setIsCryptoDataLoaded(true);
-            } catch (error) {
-                console.error('Ошибка при получении цен криптовалют:', error);
-            }
-        };
-
-        fetchCryptoPrices();
-    }, []);
-
-    function roundToDecimal(number, decimalPlaces) {
-        if(Math.floor(number) == 0 ){
-            return (number % 1).toFixed(decimalPlaces)
-        }
-        else {
-            return (number % 1).toFixed(decimalPlaces).replace(/^0/, '');
-        }
-    }
-
-    // Отображение баланса после получения цен криптовалют
-    const getDisplayedBalance = () => {
-        if (cryptoPrices[cryptoCurrency]) {
-            const price = cryptoPrices[cryptoCurrency];
-            console.log(balance)
-            const displayedBalance = balance / price;
-            let newDisplayedBalance = Math.floor(displayedBalance).toString();
-            if (newDisplayedBalance.length < maxTotalLength - 1) {
-                newDisplayedBalance += roundToDecimal(displayedBalance, maxTotalLength - newDisplayedBalance.length-1);
-                newDisplayedBalance = newDisplayedBalance.toString().replace(/^0/, '');
-                return newDisplayedBalance;
-            }
-        }
-    };
-
-    const getTimerDisplayedBalance = () => {
-        if (cryptoPrices[cryptoCurrency]) {
-            const price = cryptoPrices[cryptoCurrency];
-            console.log(balance)
-            console.log('wadawd', value)
-            console.log(balance+value)
-            const displayedBalance = (balance + value);
-            let newDisplayedBalance = Math.floor(displayedBalance).toString();
-            if (newDisplayedBalance.length < maxTotalLength - 1) {
-                newDisplayedBalance += roundToDecimal(displayedBalance, maxTotalLength - newDisplayedBalance.length-1);
-                newDisplayedBalance = newDisplayedBalance.toString().replace(/^0/, '');
-                return newDisplayedBalance;
-            }
-        }
-    }
-
-    useEffect(() => {
-        const intervalId = setInterval(() => {
-            setRandomIncrement(0.00001 + Math.random() * (0.000001 - 0.000008));
-        }, 1000);
-
-        return () => {
-            clearInterval(intervalId);
-        };
-    }, []);
-
-    if (!isCryptoDataLoaded) {
-        // Пока данные о ценах криптовалют загружаются, можно показывать начальный баланс
-        return (
-            <Typography>
-                - - - - - - - - - -
-            </Typography>
-        );
-    }
-
-    return (
-        <Box
-            sx={{
-                position: 'relative',
-                display: 'flex',
-                flexDirection: 'column',
-                justifyContent: 'center',
-                alignItems: 'center',
-                width: '100%',
-                height: '70px'
-            }}
-        >
-            <Typography
-                sx={{
-                    cursor: 'default'
-                }}
-            >
-                {
-                    endUserMiningTimestamp !== null ? getTimerDisplayedBalance() : getDisplayedBalance()
-                } {cryptoCurrency.toUpperCase()}
-            </Typography>
-            {showBalanceChange && (
-                <Box
-                    sx={{
-                        display: 'flex',
-                    }}
-                >
-                    <Typography
-                        sx={{
-                            fontSize: '12px',
-                            color: 'rgba(45, 176, 25, 0.8)',
-                        }}
-                    >
-                        {`+${randomIncrement.toFixed(7)}$`}
-                    </Typography>
-                    <Typography
-                    sx={{
-                        fontSize: '12px',
-                        color: 'rgba(45, 176, 25, 0.8)',
-                        marginLeft: '10px'
-                    }}>
-                        Boost +{referralBonus}%
-                    </Typography>
-                </Box>
-            )}
-            <Typography
-                sx={{
-                    fontSize: '11px',
-                    marginTop: '10px'
-                }}>
-                {t("mining.pages.mainMining.future_balance_1")}: {
-                endUserMiningTimestamp !== null ?
-                    (100 * cryptoPrices[cryptoCurrency] * parseFloat(getTimerDisplayedBalance())).toFixed(5)
-                    : (100 * cryptoPrices[cryptoCurrency] *  parseFloat(getDisplayedBalance())).toFixed(5)}$
-                {t("mining.pages.mainMining.future_balance_2")}
-            </Typography>
-        </Box>
-    );
-}
+import frame1 from '../../assets/UserLevels/laptop.mp4'
+import frame2 from '../../assets/UserLevels/phone.mp4'
+import frame3 from '../../assets/UserLevels/stas.png'
+import frame4 from '../../assets/UserLevels/dsar.png'
+import frame5_1 from '../../assets/UserLevels/Frame 1.png'
+import frame5_2 from '../../assets/UserLevels/Frame 2.png'
 
 const getRandomHashrate = () => {
     const characters = 'abcdefghijklmnopqrstuvwxyz01234567890123456789';
@@ -368,6 +104,7 @@ const CountdownTimer = ({fetchDataAndUpdateLocalStorage}) => {
         </Typography>
     );
 };
+
 
 const MainMining = ({setValue, setActiveMenuSection, fetchDataAndUpdateLocalStorage}) => {
     const {t} = useTranslation();
@@ -515,6 +252,87 @@ const MainMining = ({setValue, setActiveMenuSection, fetchDataAndUpdateLocalStor
         };
     }, [99999999]);
 
+    const customCollapsedComponent = ({ toggleMore, action }) =>
+        <h2 onClick={() => {
+            action('pause');
+            window.open('https://mywebsite.url', '_blank');
+        }}>
+            Купить
+        </h2>
+
+    const CustomStoryContent = ({ story, action }) => {
+        return <WithSeeMore
+            story={story}
+            action={action}
+            customCollapsed={customCollapsedComponent}
+        >
+        </WithSeeMore>
+    }
+
+    const storyData = useMemo(() => [
+        {
+            duration: 15000,
+            preloadResource: true,
+            content: (props) => (
+                <video
+                    controls={false}
+                    autoPlay
+                    muted
+                    playsInline
+                    preload="auto"
+                    poster="https://cdn.indiawealth.in/public/images/transparent-background-mini.png"
+                    style={{
+                        width: '100vw'
+                    }}
+                >
+                    <source
+                        src={frame1}
+                        type="video/mp4"
+                    />
+                </video>
+            ),
+        },
+        {
+            duration: 15000,
+            preloadResource: true,
+            content: (props) => (
+                <video
+                    controls={false}
+                    autoPlay
+                    muted
+                    playsInline
+                    preload="auto"
+                    poster="https://cdn.indiawealth.in/public/images/transparent-background-mini.png"
+                    style={{
+                        width: '100vw'
+                    }}
+                >
+                    <source
+                        src={frame2}
+                        type="video/mp4"
+                    />
+                </video>
+            ),
+        },
+        {
+            url: frame1,
+            type: 'video',
+            duration: 5000,
+            preloadResource: true,
+            seeMore: CustomStoryContent, // when expanded
+            seeMoreCollapsed: customCollapsedComponent, // when collapsed
+        },
+        { url: frame3, duration: 2000000, preloadResource: true },
+        { url: frame4, duration: 2000000, preloadResource: true },
+        {
+            content: (props) => (
+               <>
+
+               </>
+            ),
+        },
+    ], []);
+
     return (
         <>
             <Box
@@ -595,20 +413,20 @@ const MainMining = ({setValue, setActiveMenuSection, fetchDataAndUpdateLocalStor
                             поднять уровень
                         </motion.div>
                     )}
-                    {/*{userLevelsVisible && (*/}
+                    {userLevelsVisible && (
                         <Box
                         sx={{
                             position: 'fixed',
                             top: '0',
                             left: '0',
                             zIndex: '3000',
-                            display: userLevelsVisible ? 'block' : 'none'
                         }}>
                             <UserLevels
                             setUserLevelsVisible={setUserLevelsVisible}
+                            storyData={storyData}
                             />;
                         </Box>
-                    {/*)}*/}
+                    )}
                     <Box
                         sx={{
                             display: 'flex',

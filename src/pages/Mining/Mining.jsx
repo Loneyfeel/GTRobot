@@ -241,8 +241,8 @@ const Mining = () => {
                         {currentMenuItem ? currentMenuItem.title : `${t('mining.pages.menu.title')}`}
                     </Typography>
                 </Box>
-                {!isHelpsVisible && (
-                // {isHelpsVisible && (
+                {/*{!isHelpsVisible && (*/}
+                 {isHelpsVisible && (
                     <Box
                         sx={{
                             marginBottom: '56px'
