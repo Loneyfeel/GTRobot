@@ -12,4 +12,11 @@ export default defineConfig({
     include: ['**/*.css', '**/*.js'],
     exclude: ['node_modules/**'],
   }),],
+  build: {
+    rollupOptions: {
+      input: {
+        main: './index.html',
+      },
+    },
+  },
 })

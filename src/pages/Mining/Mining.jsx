@@ -205,6 +205,18 @@ const Mining = () => {
         window.location.href = '/tools';
     });
 
+
+    const loadAssets = async () => {
+        const assets = await import.meta.glob('./src/pages/Mining/assets/*');
+        const assetPromises = Object.values(assets).map((importer) => importer());
+
+        await Promise.all(assetPromises);
+
+        console.log('Все ресурсы из папки assets загружены.');
+    };
+
+    loadAssets();
+
     return (
         <>
             <Backdrop sx={{ zIndex: 999, color: '#fff', bgcolor: 'var(--tg-theme-bg-color)' }} open={showBackdrop}>
@@ -229,8 +241,8 @@ const Mining = () => {
                         {currentMenuItem ? currentMenuItem.title : `${t('mining.pages.menu.title')}`}
                     </Typography>
                 </Box>
-                {/*{!isHelpsVisible && (*/}
-                    {true && (
+                {!isHelpsVisible && (
+                // {isHelpsVisible && (
                     <Box
                         sx={{
                             marginBottom: '56px'

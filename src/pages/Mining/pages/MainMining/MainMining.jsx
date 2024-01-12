@@ -1,4 +1,4 @@
-import React, {startTransition, useEffect, useRef, useState} from 'react';
+import React, {lazy, startTransition, useEffect, useRef, useState} from 'react';
 import {Box, Button, CircularProgress, IconButton, Snackbar, Typography} from "@mui/material";
 import Lottie from 'lottie-react';
 import animationCloud from '../../assets/cloud-mining.json';
@@ -11,13 +11,6 @@ import {useNavigate} from "react-router-dom";
 import { DateTime } from 'luxon';
 import { motion, useAnimation } from 'framer-motion';
 import UserLevels from "./UserLevels/index.js";
-
-import phone_1  from '../../assets/UserLevels/svg1.svg'
-import text_1 from '../../assets/UserLevels/svg2.svg'
-import userVideo from '../../assets/UserLevels/kkkk.mp4'
-import boxIcon from '../../assets/UserLevels/box.svg'
-import diamondIcon from '../../assets/UserLevels/diamond.svg'
-import upIcon from '../../assets/UserLevels/up.svg'
 
 const Timer = ({ timeRemaining }) => {
 
@@ -184,6 +177,7 @@ const Balance = ({ showBalanceChange, randomIncrement, setRandomIncrement, endUs
     const getDisplayedBalance = () => {
         if (cryptoPrices[cryptoCurrency]) {
             const price = cryptoPrices[cryptoCurrency];
+            console.log(balance)
             const displayedBalance = balance / price;
             let newDisplayedBalance = Math.floor(displayedBalance).toString();
             if (newDisplayedBalance.length < maxTotalLength - 1) {
@@ -197,7 +191,10 @@ const Balance = ({ showBalanceChange, randomIncrement, setRandomIncrement, endUs
     const getTimerDisplayedBalance = () => {
         if (cryptoPrices[cryptoCurrency]) {
             const price = cryptoPrices[cryptoCurrency];
-            const displayedBalance = (balance + value) / price;
+            console.log(balance)
+            console.log('wadawd', value)
+            console.log(balance+value)
+            const displayedBalance = (balance + value);
             let newDisplayedBalance = Math.floor(displayedBalance).toString();
             if (newDisplayedBalance.length < maxTotalLength - 1) {
                 newDisplayedBalance += roundToDecimal(displayedBalance, maxTotalLength - newDisplayedBalance.length-1);
@@ -288,7 +285,7 @@ const Balance = ({ showBalanceChange, randomIncrement, setRandomIncrement, endUs
 
 const getRandomHashrate = () => {
     const characters = 'abcdefghijklmnopqrstuvwxyz01234567890123456789';
-    const randomText = Array.from({ length: 40 }, () => characters[Math.floor(Math.random() * characters.length)]);
+    const randomText = Array.from({ length: 15 }, () => characters[Math.floor(Math.random() * characters.length)]);
     return `${randomText.join('')}`;
 };
 
@@ -484,11 +481,9 @@ const MainMining = ({setValue, setActiveMenuSection, fetchDataAndUpdateLocalStor
 
     const navigate = useNavigate();
 
-    const [level, setLevel]=useState('standard')
+    const [level, setLevel]=useState('ultra')
     const [userLevelsVisible, setUserLevelsVisible] = useState(false);
-
     const controls = useAnimation();
-
     const handleButtonLevelClick = () => {
         setUserLevelsVisible(true);
     };
@@ -600,25 +595,20 @@ const MainMining = ({setValue, setActiveMenuSection, fetchDataAndUpdateLocalStor
                             поднять уровень
                         </motion.div>
                     )}
-                    {userLevelsVisible && (
+                    {/*{userLevelsVisible && (*/}
                         <Box
                         sx={{
                             position: 'fixed',
                             top: '0',
                             left: '0',
-                            zIndex: '3000'
+                            zIndex: '3000',
+                            display: userLevelsVisible ? 'block' : 'none'
                         }}>
                             <UserLevels
                             setUserLevelsVisible={setUserLevelsVisible}
-                            phone_1={phone_1}
-                            text_1={text_1}
-                            userVideo={userVideo}
-                            boxIcon={boxIcon}
-                            diamondIcon={diamondIcon}
-                            upIcon={upIcon}
                             />;
                         </Box>
-                    )}
+                    {/*)}*/}
                     <Box
                         sx={{
                             display: 'flex',
