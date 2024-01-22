@@ -134,9 +134,9 @@ const Balance = ({ showBalanceChange, randomIncrement, setRandomIncrement, endUs
     useEffect(() => {
         // Загружаем данные из local.storage при монтировании компонента
         const storedData = JSON.parse(localStorage.getItem('miningUserData')) || {};
-        setBalance(storedData.daily_mining_balance || 0);
-        setReferralBonus(storedData.referral_bonus || 0);
-        setCryptoCurrency(storedData.crypto_currency || 'btc');
+        setBalance(storedData.dailyMiningBalance || 0);
+        setReferralBonus(storedData.referralBonus || 0);
+        setCryptoCurrency(storedData.cryptoCurrency || 'btc');
 
         // Запрашиваем цены криптовалют при монтировании компонента
         const fetchCryptoPrices = async () => {
@@ -306,13 +306,13 @@ const MainMining = ({setValue, setActiveMenuSection}) => {
 
     const updateMiningData = (data) => {
         const storedData = data ? data.data : JSON.parse(localStorage.getItem('miningUserData')) || {};
-        setIsMiningActive(storedData.is_daily_mining_active || false);
-        setEndUserMiningTimestamp(storedData.end_user_daily_mining_timestamp || null);
-        setShowBalanceChange(storedData.end_user_daily_mining_timestamp !== null);
-        setCryptoCurrency(storedData.crypto_currency || 'btc');
-        if (storedData.end_user_daily_mining_timestamp !== null) {
+        setIsMiningActive(storedData.isDailyMiningActive || false);
+        setEndUserMiningTimestamp(storedData.endUserDailyMiningTimestamp || null);
+        setShowBalanceChange(storedData.endUserDailyMiningTimestamp !== null);
+        setCryptoCurrency(storedData.cryptoCurrency || 'btc');
+        if (storedData.endUserDailyMiningTimestamp !== null) {
             const currentTime = Math.floor(Date.now() / 1000);
-            const remainingTime = storedData.end_user_daily_mining_timestamp - currentTime;
+            const remainingTime = storedData.endsUerDailyMiningTimestamp - currentTime;
             setTimeRemaining(remainingTime > 0 ? remainingTime : 0);
         }
     };
@@ -375,7 +375,7 @@ const MainMining = ({setValue, setActiveMenuSection}) => {
 
     useEffect(() => {
         const storedData = JSON.parse(localStorage.getItem('miningUserData')) || {};
-        const registrationDate = storedData.registration_date || 0;
+        const registrationDate = storedData.registrationDate || 0;
 
         // Рассчитываем разницу в днях
         const currentDate = new Date();

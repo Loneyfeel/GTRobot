@@ -1,22 +1,22 @@
-import React, {useState, useEffect, lazy} from 'react';
-import {Box, Button, Card, CardContent, Container, Typography} from '@mui/material';
+import React, { useState, useEffect, lazy } from 'react';
+import { Alert, Box, Button, Card, CardContent, Container, Snackbar, Typography } from '@mui/material';
 import { useTrail, animated } from 'react-spring';
 import { saveMiningUserTask } from '../Requests/Requests.js';
-import {useTranslation} from "react-i18next";
+import { useTranslation } from "react-i18next";
 
-import telegramIcon from '../../assets/TaskList/telegram.svg'
-import instagramIcon from '../../assets/TaskList/instagram.svg'
-import youtubeIcon from '../../assets/TaskList/youTube.svg'
-import tiktokIcon from '../../assets/TaskList/tikTok.svg'
+import telegramIcon from '../../assets/TaskList/telegram.svg';
+import instagramIcon from '../../assets/TaskList/instagram.svg';
+import youtubeIcon from '../../assets/TaskList/youTube.svg';
+import tiktokIcon from '../../assets/TaskList/tikTok.svg';
 const ArrowOutwardIcon = lazy(() => import('@mui/icons-material/ArrowOutward'));
 
 const TaskList = ({ activeTasks, setActiveTasks }) => {
-    const {t, i18n} = useTranslation();
+    const { t, i18n } = useTranslation();
 
     const locale = i18n.language;
     const translateVariables = {
-        "subscribe_to": {"ru": "Подписаться на ", "uz": "ga obuna bo’ling"},
-        "like_to": {"ru": "Поставить лайк в ", "uz": "ga layk qo'ying"}
+        "subscribe_to": { "ru": "Подписаться на ", "uz": "ga obuna bo’ling" },
+        "like_to": { "ru": "Поставить лайк в ", "uz": "ga layk qo'ying" }
     };
 
     const getIconForTask = (taskText) => {
@@ -31,8 +31,7 @@ const TaskList = ({ activeTasks, setActiveTasks }) => {
         } else if (lowerCaseTaskText.indexOf('tiktok') !== -1) {
             return tiktokIcon;
         } else {
-            // Можно добавить общую иконку по умолчанию, если не совпадает ни с одним из условий
-            return <ArrowOutwardIcon/>;
+            return <ArrowOutwardIcon />;
         }
     };
 
@@ -50,23 +49,37 @@ const TaskList = ({ activeTasks, setActiveTasks }) => {
     };
 
     const [tasks, setTasks] = useState([]);
+    const [isButtonDisabled, setIsButtonDisabled] = useState(true);
 
     useEffect(() => {
         if (activeTasks && activeTasks.length > 0) {
-            setTasks(activeTasks);
+            setTasks(activeTasks.filter(task => task.is_required === true));
         }
     }, [activeTasks]);
+
+    useEffect(() => {
+        const timer = setTimeout(() => {
+            setIsButtonDisabled(false);
+        }, 10000);
+
+        return () => clearTimeout(timer);
+    }, []);
 
     const trail = useTrail(tasks.length, {
         opacity: 1,
         transform: 'translateY(0)',
-        from: {opacity: 0, transform: 'translateY(50px)'},
-        config: {duration: 250, easing: (t) => t * (2 - t)},
+        from: { opacity: 0, transform: 'translateY(50px)' },
+        config: { duration: 250, easing: (t) => t * (2 - t) },
     });
+
+    const [openSnackbar, setOpenSnackbar] = useState(false);
+
+    const handleCloseSnackbar = () => {
+        setOpenSnackbar(false);
+    };
 
     const handleTaskClick = async (taskId) => {
         try {
-            // Отправка запроса на сервер
             const response = await saveMiningUserTask(taskId);
 
             if (response.status === 200) {
@@ -75,12 +88,13 @@ const TaskList = ({ activeTasks, setActiveTasks }) => {
                     setTasks(updatedTasks);
                     setActiveTasks(updatedTasks)
 
-                    // Обновление локального хранилища
                     const miningUserData = JSON.parse(localStorage.getItem('miningUserData')) || {};
                     localStorage.setItem('miningUserData', JSON.stringify({
                         ...miningUserData,
-                        active_tasks: updatedTasks,
+                        activeTasks: updatedTasks,
                     }));
+
+                    localStorage.setItem('taskClickCount', 0);
                 }, 5000);
             } else {
                 if (response.status.response.data.errorCode === 2001)
@@ -91,11 +105,12 @@ const TaskList = ({ activeTasks, setActiveTasks }) => {
                     setTasks(updatedTasks);
                     setActiveTasks(updatedTasks)
 
-                    // Обновление локального хранилища
                     localStorage.setItem('miningUserData', JSON.stringify({
                         ...JSON.parse(localStorage.getItem('miningUserData')),
-                        active_tasks: updatedTasks,
+                        activeTasks: updatedTasks,
                     }));
+
+                    localStorage.setItem('taskClickCount', 0);
                 }
             }
         } catch (error) {
@@ -105,7 +120,17 @@ const TaskList = ({ activeTasks, setActiveTasks }) => {
 
     return (
         <>
-            <Container maxWidth="sm" sx={{overflowY: 'auto'}}>
+            <Container
+                maxWidth="sm"
+                sx={{
+                    position: 'absolute',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    justifyContent: 'center',
+                    height: '100%',
+                    overflowY: 'auto'
+                }}
+            >
                 {trail.map((props, index) => (
                     <animated.div key={`animated-div-${index}`} style={props}>
                         {tasks[index] && (
@@ -124,7 +149,8 @@ const TaskList = ({ activeTasks, setActiveTasks }) => {
                                     border: '1px solid var(--tg-theme-hint-color)',
                                     borderRadius: '30px',
                                     color: 'var(--tg-theme-text-color)',
-                                    height: '55px'
+                                    height: '75px',
+                                    background: 'rgba(255, 255, 255, 0.1)', // Добавляем полупрозрачный белый цвет для размытого фона
                                 }}
                             >
                                 <CardContent
@@ -154,13 +180,14 @@ const TaskList = ({ activeTasks, setActiveTasks }) => {
                 ))}
             </Container>
             <Box
-            sx={{
-                position: 'fixed',
-                bottom: '0',
-                width: '100%',
-                display: 'flex',
-                justifyContent: 'center'
-            }}>
+                sx={{
+                    position: 'fixed',
+                    bottom: '0',
+                    width: '100%',
+                    display: 'flex',
+                    justifyContent: 'center'
+                }}
+            >
                 <Button
                     variant='contained'
                     onClick={() => {
@@ -169,14 +196,38 @@ const TaskList = ({ activeTasks, setActiveTasks }) => {
                                 handleTaskClick(task.task_id);
                             }
                         });
+                        if (tasks.length > 0) {
+                            setOpenSnackbar(true);
+                        }
                     }}
                     sx={{
                         color: 'var(--tg-theme-text-color)',
-                        margin: '40px'
-                    }}>
+                        margin: '40px',
+                        '&.Mui-disabled':{
+                            color: '#000',
+                            bgcolor: isButtonDisabled && 'var(--tg-theme-hint-color)'
+                        }
+                    }}
+                    disabled={isButtonDisabled} // Используем disabled, чтобы сделать кнопку неактивной
+                >
                     {t('mining.components.taskList.check_btn')}
                 </Button>
             </Box>
+            <Snackbar
+                open={openSnackbar}
+                autoHideDuration={5000}
+                onClose={handleCloseSnackbar}
+                anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+            >
+                <Alert
+                    elevation={6}
+                    variant="filled"
+                    onClose={handleCloseSnackbar}
+                    severity="error"
+                >
+                    {t('mining.components.taskList.incomplete_tasks_warning')}
+                </Alert>
+            </Snackbar>
         </>
     );
 }

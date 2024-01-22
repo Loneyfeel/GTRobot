@@ -1,6 +1,6 @@
-import React, {startTransition, useEffect, useMemo, useState} from 'react';
-import {Box, Button, CircularProgress, IconButton, Snackbar, Typography} from "@mui/material";
-import InfoIcon from '@mui/icons-material/Info';
+import React, {startTransition, useEffect, useMemo, useRef, useState} from 'react';
+import {Backdrop, Box, Button, CircularProgress, IconButton, Skeleton, Snackbar, Typography} from "@mui/material";
+import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import {getMiningUserData, startMining} from '../../components/Requests/Requests.js';
 import {useTranslation} from "react-i18next";
 import {useNavigate} from "react-router-dom";
@@ -10,14 +10,29 @@ import Timer from './components/Timer'
 import StartButton from './components/StartButton'
 import Balance from './components/Balance'
 import UserLevels from "./components/UserLevels/index.js";
-import { WithSeeMore } from 'react-insta-stories';
+import CloseIcon from '@mui/icons-material/Close';
+
+import '../../assets/fonts/benzin-bold.ttf'
 
 import frame1 from '../../assets/UserLevels/laptop.mp4'
 import frame2 from '../../assets/UserLevels/phone.mp4'
-import frame3 from '../../assets/UserLevels/stas.png'
-import frame4 from '../../assets/UserLevels/dsar.png'
-import frame5_1 from '../../assets/UserLevels/Frame 1.png'
-import frame5_2 from '../../assets/UserLevels/Frame 2.png'
+import background from '../../assets/UserLevels/background.png'
+
+import two_phone_title from '../../assets/UserLevels/two_phone_title.png'
+import two_phone from '../../assets/UserLevels/two_phone.png'
+import two_phone_uz from '../../assets/UserLevels/two_phone_uz.png'
+
+import pro_background from '../../assets/UserLevels/pro/pro_background.png'
+import pro_button from '../../assets/UserLevels/pro/pro_button.png'
+import pro_title from '../../assets/UserLevels/pro/pro_title.png'
+
+import ult_background from '../../assets/UserLevels/ult/ultra_background.png'
+import ult_button from '../../assets/UserLevels/ult/ultra_button.png'
+import ult_title from '../../assets/UserLevels/ult/ultra_title.png'
+
+import Free_img from '../../assets/UserLevels/Free_img.png'
+import standard from '../../assets/UserLevels/standard.png'
+import i18n from "i18next";
 
 const getRandomHashrate = () => {
     const characters = 'abcdefghijklmnopqrstuvwxyz01234567890123456789';
@@ -106,7 +121,7 @@ const CountdownTimer = ({fetchDataAndUpdateLocalStorage}) => {
 };
 
 
-const MainMining = ({setValue, setActiveMenuSection, fetchDataAndUpdateLocalStorage}) => {
+const MainMining = ({setValue, setActiveMenuSection}) => {
     const {t} = useTranslation();
 
     const [timeRemaining, setTimeRemaining] = useState(0);
@@ -120,16 +135,28 @@ const MainMining = ({setValue, setActiveMenuSection, fetchDataAndUpdateLocalStor
     const [snackbarOpen, setSnackbarOpen] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
     const [progress, setProgress] = useState(0);
+    const [level, setLevel] = useState('standart')
+
+    const fetchDataAndUpdateLocalStorage = async () => {
+        try {
+            const response = await getMiningUserData();
+            const userDataResponse = response.data;
+            localStorage.setItem('miningUserData', JSON.stringify(userDataResponse));
+        } catch (error) {
+            console.error('Error fetching user data:', error);
+        }
+    };
 
     const updateMiningData = (data) => {
         const storedData = data ? data.data : JSON.parse(localStorage.getItem('miningUserData')) || {};
-        setIsMiningActive(storedData.is_mining_active || false);
-        setEndUserMiningTimestamp(storedData.end_user_mining_timestamp || null);
-        setShowBalanceChange(storedData.end_user_mining_timestamp !== null);
-        setCryptoCurrency(storedData.crypto_currency || 'btc');
-        if (storedData.end_user_mining_timestamp !== null) {
+        setIsMiningActive(storedData.isMiningActive || false);
+        setEndUserMiningTimestamp(storedData.endUserMiningTimestamp || null);
+        setShowBalanceChange(storedData.endUserMiningTimestamp !== null);
+        setCryptoCurrency(storedData.cryptoCurrency || 'btc');
+        setLevel(storedData.userSubscribtion || 'standart')
+        if (storedData.endUserMiningTimestamp !== null) {
             const currentTime = Math.floor(Date.now() / 1000);
-            const remainingTime = storedData.end_user_mining_timestamp - currentTime;
+            const remainingTime = storedData.endUserMiningTimestamp - currentTime;
             setTimeRemaining(remainingTime > 0 ? remainingTime : 0);
         }
     };
@@ -190,7 +217,7 @@ const MainMining = ({setValue, setActiveMenuSection, fetchDataAndUpdateLocalStor
 
     useEffect(() => {
         const storedData = JSON.parse(localStorage.getItem('miningUserData')) || {};
-        const registrationDate = storedData.registration_date || 0;
+        const registrationDate = storedData.registrationDate || 0;
 
         // Рассчитываем разницу в днях
         const currentDate = new Date();
@@ -218,8 +245,9 @@ const MainMining = ({setValue, setActiveMenuSection, fetchDataAndUpdateLocalStor
 
     const navigate = useNavigate();
 
-    const [level, setLevel]=useState('ultra')
     const [userLevelsVisible, setUserLevelsVisible] = useState(false);
+    const [userLevelsInfoVisible, setUserLevelsInfoVisible] = useState(false);
+
     const controls = useAnimation();
     const handleButtonLevelClick = () => {
         setUserLevelsVisible(true);
@@ -248,90 +276,912 @@ const MainMining = ({setValue, setActiveMenuSection, fetchDataAndUpdateLocalStor
         // Устанавливаем флаг isMounted в false при размонтировании компонента
         return () => {
             isMounted = false;
-
         };
     }, [99999999]);
 
-    const customCollapsedComponent = ({ toggleMore, action }) =>
-        <h2 onClick={() => {
-            action('pause');
-            window.open('https://mywebsite.url', '_blank');
-        }}>
-            Купить
-        </h2>
+    const VideoStory = ({ src, preloadResource }) => {
+        const [isLoading, setIsLoading] = useState(true);
 
-    const CustomStoryContent = ({ story, action }) => {
-        return <WithSeeMore
-            story={story}
-            action={action}
-            customCollapsed={customCollapsedComponent}
-        >
-        </WithSeeMore>
-    }
-
-    const storyData = useMemo(() => [
-        {
-            duration: 15000,
-            preloadResource: true,
-            content: (props) => (
-                <video
-                    controls={false}
-                    autoPlay
-                    muted
-                    playsInline
-                    preload="auto"
-                    poster="https://cdn.indiawealth.in/public/images/transparent-background-mini.png"
-                    style={{
-                        width: '100vw'
+        return (
+            <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 1.5 }}
+            >
+                <Box
+                    sx={{
+                        width: '100vw',
+                        height: '100vh',
+                        bgcolor: '#000',
+                        position: 'relative',
                     }}
                 >
-                    <source
-                        src={frame1}
-                        type="video/mp4"
-                    />
-                </video>
-            ),
-        },
-        {
-            duration: 15000,
-            preloadResource: true,
-            content: (props) => (
-                <video
-                    controls={false}
-                    autoPlay
-                    muted
-                    playsInline
-                    preload="auto"
-                    poster="https://cdn.indiawealth.in/public/images/transparent-background-mini.png"
-                    style={{
-                        width: '100vw'
-                    }}
-                >
-                    <source
-                        src={frame2}
-                        type="video/mp4"
-                    />
-                </video>
-            ),
-        },
-        {
-            url: frame1,
-            type: 'video',
-            duration: 5000,
-            preloadResource: true,
-            seeMore: CustomStoryContent, // when expanded
-            seeMoreCollapsed: customCollapsedComponent, // when collapsed
-        },
-        { url: frame3, duration: 2000000, preloadResource: true },
-        { url: frame4, duration: 2000000, preloadResource: true },
-        {
-            content: (props) => (
-               <>
+                        {isLoading && (
+                            <Backdrop
+                                sx={{
+                                    color: '#fff',
+                                    bgcolor: '#000',
+                                    zIndex: (theme) => theme.zIndex.drawer + 1
+                            }}
+                                open={true}
+                            >
+                                <CircularProgress color="inherit" />
+                            </Backdrop>
+                        )}
+                    <video
+                        controls={false}
+                        autoPlay
+                        muted
+                        playsInline
+                        preload={preloadResource ? 'auto' : 'metadata'}
+                        poster="https://cdn.indiawealth.in/public/images/transparent-background-mini.png"
+                        style={{
+                            height: '100vh',
+                            width: '100vw',
+                            visibility: isLoading ? 'hidden' : 'visible', // Hide video until loaded
+                        }}
+                        onLoadedData={() => setIsLoading(false)}
+                    >
+                        <source src={src} type="video/mp4" />
+                    </video>
+                </Box>
+            </motion.div>
+        );
+    };
 
-               </>
-            ),
+
+    const storyDataLevel = useMemo(() => [
+        {
+            preloadResource: true,
+            duration: 2000000,
+            content: (props) => {
+                const [isLoading, setIsLoading] = React.useState(true);
+                if (level == 'standart') {
+                    return (
+                        <>
+                            <motion.div
+                                initial={{opacity: 0}}
+                                animate={{opacity: 1}}
+                                exit={{opacity: 0}}
+                                transition={{duration: 1.5}}
+                            >
+                                <Box
+                                    sx={{
+                                        width: '100vw',
+                                        height: '100vh',
+                                        bgcolor: '#000',
+                                    }}
+                                >
+                                    {isLoading && (
+                                        <Backdrop
+                                            sx={{
+                                                color: '#fff',
+                                                bgcolor: '#000',
+                                                zIndex: (theme) => theme.zIndex.drawer + 1
+                                            }}
+                                            open={true}
+                                        >
+                                            <CircularProgress color="inherit"/>
+                                        </Backdrop>
+                                    )}
+                                    <Box
+                                        sx={{
+                                            position: 'relative',
+                                            backgroundImage: `url(${ult_background})`,
+                                            backgroundSize: '100% 100%',
+                                            height: '100vh',
+                                            padding: '20px',
+                                            opacity: isLoading ? 0 : 1, // Скрыть скелет после загрузки
+                                        }}
+                                        onLoad={() => setIsLoading(false)}
+                                    >
+                                        <Box
+                                            sx={{
+                                                display: 'flex',
+                                                flexDirection: 'column',
+                                                alignItems: 'center',
+                                                marginTop: '40px'
+                                            }}
+                                        >
+                                            <Box
+                                                component='img'
+                                                src={Free_img}
+                                                alt={'button'}
+                                                sx={{
+                                                    width: '200px',
+                                                    cursor: 'pointer',
+                                                    position: 'absolute',
+                                                    bottom: '50px'
+                                                }}
+                                            />
+                                            <Box
+                                                component={'img'}
+                                                src={standard}
+                                                sx={{
+                                                    width: '350px',
+                                                    zIndex: '1'
+                                                }}
+                                            />
+                                            <Box
+                                                sx={{
+                                                    position: 'absolute',
+                                                    top: '120px',
+                                                    height: '2px',
+                                                    width: '94vw',
+                                                    bgcolor: '#fff',
+                                                    borderRadius: '50px',
+                                                    zIndex: '1'
+                                                }}
+                                            />
+                                            <Box
+                                                sx={{
+                                                    display: 'flex',
+                                                    flexDirection: 'column',
+                                                    justifyContent: 'space-between',
+                                                    height: window.innerHeight < 600 ? '250px' : '300px',
+                                                }}>
+                                                <Typography
+                                                    sx={{
+                                                        fontWeight: '700',
+                                                        fontSize: '18px',
+                                                        fontFamily: 'Montserrat, san-serif',
+                                                        marginTop: '60px'
+                                                    }}
+                                                >
+                                                    · {t('mining.pages.mainMining.userLevels.standart.dailyUse')}
+                                                </Typography>
+                                                <Typography sx={{
+                                                    fontWeight: '700',
+                                                    fontSize: '18px',
+                                                    fontFamily: 'Montserrat, san-serif',
+                                                }}>
+                                                    · {t('mining.pages.mainMining.userLevels.standart.tasks')}
+                                                </Typography>
+                                                <Typography sx={{
+                                                    fontWeight: '700',
+                                                    fontSize: '18px',
+                                                    fontFamily: 'Montserrat, san-serif',
+                                                }}>
+                                                    · {t('mining.pages.mainMining.userLevels.standart.speed')}
+                                                </Typography>
+                                                <Typography sx={{
+                                                    fontWeight: '700',
+                                                    fontSize: '18px',
+                                                    fontFamily: 'Montserrat, san-serif',
+                                                }}>
+                                                    · {t('mining.pages.mainMining.userLevels.standart.time')}
+                                                </Typography>
+                                            </Box>
+                                        </Box>
+                                    </Box>
+                                </Box>
+                            </motion.div>
+                        </>
+                    );
+                }
+                if (level == 'pro') {
+                    return (
+                        <>
+                            <motion.div
+                                initial={{opacity: 0}}
+                                animate={{opacity: 1}}
+                                exit={{opacity: 0}}
+                                transition={{duration: 1.5}}
+                            >
+                                <Box
+                                    sx={{
+                                        width: '100vw',
+                                        height: '100vh',
+                                        bgcolor: '#000',
+                                    }}
+                                >
+                                    {isLoading && (
+                                        <Backdrop
+                                            sx={{
+                                                color: '#fff',
+                                                bgcolor: '#000',
+                                                zIndex: (theme) => theme.zIndex.drawer + 1
+                                            }}
+                                            open={true}
+                                        >
+                                            <CircularProgress color="inherit"/>
+                                        </Backdrop>
+                                    )}
+                                    <Box
+                                        sx={{
+                                            position: 'relative',
+                                            backgroundImage: `url(${ult_background})`,
+                                            backgroundSize: '100% 100%',
+                                            height: '100vh',
+                                            padding: '20px',
+                                            opacity: isLoading ? 0 : 1, // Скрыть скелет после загрузки
+                                        }}
+                                        onLoad={() => setIsLoading(false)}
+                                    >
+                                        <Box
+                                            sx={{
+                                                display: 'flex',
+                                                flexDirection: 'column',
+                                                alignItems: 'center',
+                                                marginTop: '40px'
+                                            }}
+                                        >
+                                            <Box
+                                                component='img'
+                                                src={Free_img}
+                                                alt={'button'}
+                                                sx={{
+                                                    width: '200px',
+                                                    cursor: 'pointer',
+                                                    position: 'absolute',
+                                                    bottom: '50px'
+                                                }}
+                                            />
+                                            <Box
+                                                component={'img'}
+                                                src={standard}
+                                                sx={{
+                                                    width: '350px',
+                                                    zIndex: '1'
+                                                }}
+                                            />
+                                            <Box
+                                                sx={{
+                                                    position: 'absolute',
+                                                    top: '120px',
+                                                    height: '2px',
+                                                    width: '94vw',
+                                                    bgcolor: '#fff',
+                                                    borderRadius: '50px',
+                                                    zIndex: '1'
+                                                }}
+                                            />
+                                            <Box
+                                                sx={{
+                                                    display: 'flex',
+                                                    flexDirection: 'column',
+                                                    justifyContent: 'space-between',
+                                                    height: window.innerHeight < 600 ? '250px' : '300px',
+                                                }}>
+                                                <Typography
+                                                    sx={{
+                                                        fontWeight: '700',
+                                                        fontSize: '18px',
+                                                        fontFamily: 'Montserrat, san-serif',
+                                                        marginTop: '60px'
+                                                    }}
+                                                >
+                                                    · {t('mining.pages.mainMining.userLevels.standart.dailyUse')}
+                                                </Typography>
+                                                <Typography sx={{
+                                                    fontWeight: '700',
+                                                    fontSize: '18px',
+                                                    fontFamily: 'Montserrat, san-serif',
+                                                }}>
+                                                    · {t('mining.pages.mainMining.userLevels.standart.tasks')}
+                                                </Typography>
+                                                <Typography sx={{
+                                                    fontWeight: '700',
+                                                    fontSize: '18px',
+                                                    fontFamily: 'Montserrat, san-serif',
+                                                }}>
+                                                    · {t('mining.pages.mainMining.userLevels.standart.speed')}
+                                                </Typography>
+                                                <Typography sx={{
+                                                    fontWeight: '700',
+                                                    fontSize: '18px',
+                                                    fontFamily: 'Montserrat, san-serif',
+                                                }}>
+                                                    · {t('mining.pages.mainMining.userLevels.standart.time')}
+                                                </Typography>
+                                            </Box>
+                                        </Box>
+                                    </Box>
+                                </Box>
+                            </motion.div>
+                        </>
+                    );
+                }
+                if (level == 'ultra') {
+                    return (
+                        <>
+                            <motion.div
+                                initial={{opacity: 0}}
+                                animate={{opacity: 1}}
+                                exit={{opacity: 0}}
+                                transition={{duration: 1.5}}
+                            >
+                                <Box
+                                    sx={{
+                                        width: '100vw',
+                                        height: '100vh',
+                                        bgcolor: '#000',
+                                    }}
+                                >
+                                    {isLoading && (
+                                        <Backdrop
+                                            sx={{
+                                                color: '#fff',
+                                                bgcolor: '#000',
+                                                zIndex: (theme) => theme.zIndex.drawer + 1
+                                            }}
+                                            open={true}
+                                        >
+                                            <CircularProgress color="inherit"/>
+                                        </Backdrop>
+                                    )}
+                                    <Box
+                                        sx={{
+                                            position: 'relative',
+                                            backgroundImage: `url(${ult_background})`,
+                                            backgroundSize: '100% 100%',
+                                            height: '100vh',
+                                            padding: '20px',
+                                            opacity: isLoading ? 0 : 1, // Скрыть скелет после загрузки
+                                        }}
+                                        onLoad={() => setIsLoading(false)}
+                                    >
+                                        <Box
+                                            sx={{
+                                                display: 'flex',
+                                                flexDirection: 'column',
+                                                alignItems: 'center',
+                                                marginTop: '40px'
+                                            }}
+                                        >
+                                            <Box
+                                                component='img'
+                                                src={Free_img}
+                                                alt={'button'}
+                                                sx={{
+                                                    width: '200px',
+                                                    cursor: 'pointer',
+                                                    position: 'absolute',
+                                                    bottom: '50px'
+                                                }}
+                                            />
+                                            <Box
+                                                component={'img'}
+                                                src={standard}
+                                                sx={{
+                                                    width: '350px',
+                                                    zIndex: '1'
+                                                }}
+                                            />
+                                            <Box
+                                                sx={{
+                                                    position: 'absolute',
+                                                    top: '120px',
+                                                    height: '2px',
+                                                    width: '94vw',
+                                                    bgcolor: '#fff',
+                                                    borderRadius: '50px',
+                                                    zIndex: '1'
+                                                }}
+                                            />
+                                            <Box
+                                                sx={{
+                                                    display: 'flex',
+                                                    flexDirection: 'column',
+                                                    justifyContent: 'space-between',
+                                                    height: window.innerHeight < 600 ? '250px' : '300px',
+                                                }}>
+                                                <Typography
+                                                    sx={{
+                                                        fontWeight: '700',
+                                                        fontSize: '18px',
+                                                        fontFamily: 'Montserrat, san-serif',
+                                                        marginTop: '60px'
+                                                    }}
+                                                >
+                                                    · {t('mining.pages.mainMining.userLevels.standart.dailyUse')}
+                                                </Typography>
+                                                <Typography sx={{
+                                                    fontWeight: '700',
+                                                    fontSize: '18px',
+                                                    fontFamily: 'Montserrat, san-serif',
+                                                }}>
+                                                    · {t('mining.pages.mainMining.userLevels.standart.tasks')}
+                                                </Typography>
+                                                <Typography sx={{
+                                                    fontWeight: '700',
+                                                    fontSize: '18px',
+                                                    fontFamily: 'Montserrat, san-serif',
+                                                }}>
+                                                    · {t('mining.pages.mainMining.userLevels.standart.speed')}
+                                                </Typography>
+                                                <Typography sx={{
+                                                    fontWeight: '700',
+                                                    fontSize: '18px',
+                                                    fontFamily: 'Montserrat, san-serif',
+                                                }}>
+                                                    · {t('mining.pages.mainMining.userLevels.standart.time')}
+                                                </Typography>
+                                            </Box>
+                                        </Box>
+                                    </Box>
+                                </Box>
+                            </motion.div>
+                        </>
+                    );
+                }
+            },
+        },
+        {
+            preloadResource: true,
+            duration: 200000,
+            content: (props) => {
+                const [selectedBox, setSelectedBox] = useState('left');
+
+                const handleBoxClick = (box) => {
+                    setSelectedBox(box);
+                };
+
+                const [isLoading, setIsLoading] = useState(true);
+
+                return (
+                    <>
+                        <motion.div
+                            initial={{opacity: 0}}
+                            animate={{opacity: 1}}
+                            exit={{opacity: 0}}
+                            transition={{duration: 1.5}}
+                        >
+                            <Box
+                                sx={{
+                                    width: '100vw',
+                                    height: '100vh',
+                                    bgcolor: '#000',
+                                }}
+                            >
+                                <IconButton
+                                    color="inherit"
+                                    onClick={() => setUserLevelsVisible(false)}
+                                sx={{
+                                    position: 'absolute',
+                                    top: '15px',
+                                    right: '10px',
+                                    zIndex: '1'
+                                }}>
+                                    <CloseIcon />
+                                </IconButton>
+                                {isLoading && (
+                                    <Backdrop
+                                        sx={{
+                                            color: '#fff',
+                                            bgcolor: '#000',
+                                            zIndex: (theme) => theme.zIndex.drawer + 1
+                                        }}
+                                        open={true}
+                                    >
+                                        <CircularProgress color="inherit" />
+                                    </Backdrop>
+                                )}
+                                <Box
+                                    sx={{
+                                        display: 'flex',
+                                        marginTop: '50px',
+                                        padding: '10px'
+                                    }}
+                                >
+                                    <Box
+                                        sx={{
+                                            position: 'absolute',
+                                            top: '120px',
+                                            height: '2px',
+                                            width: '94vw',
+                                            bgcolor: '#fff',
+                                            borderRadius: '50px',
+                                            zIndex: '1'
+                                        }}
+                                    />
+                                    <Box
+                                        onClick={() => handleBoxClick("left")}
+                                        sx={{
+                                            width: selectedBox === "left" ? '100%' : 100,
+                                            height: 80,
+                                            cursor: 'pointer',
+                                            transition: 'width 500ms',
+                                            display: 'flex',
+                                            justifyContent: 'center',
+                                            alignItems: 'center',
+                                        }}
+                                    >
+                                        <Box
+                                            onClick={() => handleBoxClick("left")}
+                                            component={'img'}
+                                            src={pro_title}
+                                            sx={{
+                                                width: selectedBox === "left" ? '200px' : '80px',
+                                                transition: 'all 500ms',
+                                                zIndex: '1'
+                                            }}
+                                            onLoad={() => setIsLoading(false)}
+                                        />
+                                    </Box>
+                                    {(
+                                        <motion.div
+                                            initial={{ opacity: 0, y: '50%' }}
+                                            animate={{ opacity: 1, y: '0%', left: selectedBox === "left" ? 0 : '-100%' }}
+                                            exit={{ opacity: 1, y: '50%' }}
+                                            transition={{ duration: 0.4 }}
+                                            style={{
+                                                position: 'absolute',
+                                                top: 130,
+                                                transform: selectedBox === "right" ? 'translateX(50%)' : 'none',
+                                            }}
+                                        >
+                                            <Box
+                                                sx={{
+                                                    width: '200vw',
+                                                    height: '30px',
+                                                    display: 'flex',
+                                                    justifyContent: 'space-between'
+                                                }}>
+                                                <Box
+                                                    sx={{
+                                                        display: 'flex',
+                                                        flexDirection: 'column',
+                                                        alignItems: 'center',
+                                                        width: '100vw',
+                                                    }}>
+                                                    <Box
+                                                        sx={{
+                                                            paddingInline: '20px',
+                                                            width: '380px',
+                                                        }}>
+                                                        <Box
+                                                            component={'img'}
+                                                            src={pro_background}
+                                                            alt={'background'}
+                                                            sx={{
+                                                                position: 'absolute',
+                                                                top: '-130px',
+                                                                left: '0',
+                                                                width: '100vw',
+                                                                height: '100vh',
+                                                                zIndex: '-1'
+                                                            }}
+                                                        />
+                                                        <Box
+                                                        sx={{
+                                                            display: 'flex',
+                                                            flexDirection: 'column',
+                                                            justifyContent: 'space-between',
+                                                            height: window.innerHeight < 600 ? '250px' : '300px',
+                                                        }}>
+                                                            <Typography
+                                                                sx={{
+                                                                    fontWeight: '700',
+                                                                    fontSize: '18px',
+                                                                    fontFamily: 'Montserrat, san-serif',
+                                                                    marginTop: '30px'
+                                                                }}
+                                                            >
+                                                                · {t('mining.pages.mainMining.userLevels.pro.dailyUse')}
+                                                            </Typography>
+                                                            <Typography sx={{
+                                                                fontWeight: '700',
+                                                                fontSize: '18px',
+                                                                fontFamily: 'Montserrat, san-serif',
+                                                            }}>
+                                                                · {t('mining.pages.mainMining.userLevels.pro.tasks')}
+                                                            </Typography>
+                                                            <Typography sx={{
+                                                                    fontWeight: '700',
+                                                                    fontSize: '18px',
+                                                                    fontFamily: 'Montserrat, san-serif',
+                                                                }}>
+                                                                · {t('mining.pages.mainMining.userLevels.pro.speed')}
+                                                            </Typography>
+                                                            <Typography sx={{
+                                                                    fontWeight: '700',
+                                                                    fontSize: '18px',
+                                                                    fontFamily: 'Montserrat, san-serif',
+                                                                }}>
+                                                                · {t('mining.pages.mainMining.userLevels.pro.limit')}
+                                                            </Typography>
+                                                            <Typography sx={{
+                                                                    fontWeight: '700',
+                                                                    fontSize: '18px',
+                                                                    fontFamily: 'Montserrat, san-serif',
+                                                                }}>
+                                                                · {t('mining.pages.mainMining.userLevels.pro.time')}
+                                                            </Typography>
+                                                        </Box>
+                                                    </Box>
+                                                    <Box
+                                                        sx={{
+                                                            display: 'flex',
+                                                            flexDirection: 'column',
+                                                            alignItems: 'center',
+                                                            position: 'absolute',
+                                                            bottom: '-420px'
+                                                        }}
+                                                    >
+                                                    <Box
+                                                        component='img'
+                                                        src={pro_button}
+                                                        alt={'button'}
+                                                        sx={{
+                                                            width: '200px',
+                                                            cursor: 'pointer'
+                                                        }}
+                                                    />
+                                                        <Typography  sx={{
+                                                            fontWeight: '500',
+                                                            fontSize: '18px',
+                                                            fontFamily: 'Montserrat, san-serif',
+                                                        }}>
+                                                            {t('mining.pages.mainMining.userLevels.btnText')}
+                                                        </Typography>
+                                                    </Box>
+                                                </Box>
+                                                <Box>
+                                                    <Box
+                                                        sx={{
+                                                            display: 'flex',
+                                                            flexDirection: 'column',
+                                                            alignItems: 'center',
+                                                            width: '100vw',
+                                                            marginTop: '30px'
+                                                        }}>
+                                                        <Box
+                                                            sx={{
+                                                                paddingInline: '20px',
+                                                                width: '380px',
+                                                            }}>
+                                                            <Box
+                                                                component={'img'}
+                                                                src={ult_background}
+                                                                alt={'background'}
+                                                                sx={{
+                                                                    position: 'absolute',
+                                                                    top: '-130px',
+                                                                    left: '100vw',
+                                                                    width: '100vw',
+                                                                    height: '100vh',
+                                                                    zIndex: '-1'
+                                                                }}
+                                                            />
+                                                            <Box
+                                                                sx={{
+                                                                    paddingInline: '10px',
+                                                                    width: '380px',
+                                                                }}>
+                                                                <Box
+                                                                    sx={{
+                                                                        display: 'flex',
+                                                                        flexDirection: 'column',
+                                                                        justifyContent: 'space-between',
+                                                                        height: window.innerHeight < 590 ? '270px' : '300px',
+                                                                    }}>
+                                                                    <Typography
+                                                                        sx={{
+                                                                            fontWeight: '700',
+                                                                            fontSize: '18px',
+                                                                            fontFamily: 'Montserrat, san-serif',
+                                                                        }}
+                                                                    >
+                                                                        · {t('mining.pages.mainMining.userLevels.ultra.dailyUse')}
+                                                                    </Typography>
+                                                                    <Typography sx={{
+                                                                        fontWeight: '700',
+                                                                        fontSize: '18px',
+                                                                        fontFamily: 'Montserrat, san-serif',
+                                                                    }}>
+                                                                        · {t('mining.pages.mainMining.userLevels.ultra.tasks')}
+                                                                    </Typography>
+                                                                    <Typography sx={{
+                                                                        fontWeight: '700',
+                                                                        fontSize: '18px',
+                                                                        fontFamily: 'Montserrat, san-serif',
+                                                                    }}>
+                                                                        · {t('mining.pages.mainMining.userLevels.ultra.speed')}
+                                                                    </Typography>
+                                                                    <Typography sx={{
+                                                                        fontWeight: '700',
+                                                                        fontSize: '18px',
+                                                                        fontFamily: 'Montserrat, san-serif',
+                                                                    }}>
+                                                                        · {t('mining.pages.mainMining.userLevels.ultra.limit')}
+                                                                    </Typography>
+                                                                    <Typography sx={{
+                                                                        fontWeight: '700',
+                                                                        fontSize: '18px',
+                                                                        fontFamily: 'Montserrat, san-serif',
+                                                                    }}>
+                                                                        · {t('mining.pages.mainMining.userLevels.ultra.time')}
+                                                                    </Typography>
+                                                                    <Typography sx={{
+                                                                        fontWeight: '700',
+                                                                        fontSize: '18px',
+                                                                        fontFamily: 'Montserrat, san-serif',
+                                                                    }}>
+                                                                        · {t('mining.pages.mainMining.userLevels.ultra.withdraw')}
+                                                                    </Typography>
+                                                                    <Typography sx={{
+                                                                        fontWeight: '700',
+                                                                        fontSize: '18px',
+                                                                        fontFamily: 'Montserrat, san-serif',
+                                                                    }}>
+                                                                        · {t('mining.pages.mainMining.userLevels.ultra.notification')}
+                                                                    </Typography>
+                                                                </Box>
+                                                            </Box>
+                                                        </Box>
+                                                        <Box
+                                                            sx={{
+                                                                display: 'flex',
+                                                                flexDirection: 'column',
+                                                                alignItems: 'center',
+                                                                position: 'absolute',
+                                                                bottom: '-420px'
+                                                            }}
+                                                        >
+                                                            <Box
+                                                                component='img'
+                                                                src={ult_button}
+                                                                alt={'button'}
+                                                                sx={{
+                                                                    width: '200px',
+                                                                    cursor: 'pointer'
+                                                                }}
+                                                            />
+                                                            <Typography  sx={{
+                                                                fontWeight: '500',
+                                                                fontSize: '18px',
+                                                                fontFamily: 'Montserrat, san-serif',
+                                                            }}>
+                                                                {t('mining.pages.mainMining.userLevels.btnText')}
+                                                            </Typography>
+                                                        </Box>
+                                                    </Box>
+                                                </Box>
+                                            </Box>
+                                        </motion.div>
+                                    )}
+                                    <Box
+                                        onClick={() => handleBoxClick("right")}
+                                        sx={{
+                                            width: selectedBox === "right" ? '100%' : 100,
+                                            height: 80,
+                                            marginLeft: '3px',
+                                            marginRight: '10px',
+                                            cursor: 'pointer',
+                                            transition: 'width 0.4s',
+                                            display: 'flex',
+                                            justifyContent: 'center',
+                                            alignItems: 'center',
+                                            borderRadius: '15px'
+                                        }}
+                                    >
+                                        <Box
+                                            onClick={() => handleBoxClick("right")}
+                                            component={'img'}
+                                            src={ult_title}
+                                            sx={{
+                                                width: selectedBox === "right" ? '230px' : '80px',
+                                                transition: 'all 500ms',
+                                                zIndex: '1'
+                                            }}
+                                            onLoad={() => setIsLoading(false)}
+                                        />
+                                    </Box>
+                                </Box>
+                            </Box>
+                        </motion.div>
+                    </>
+                );
+            },
         },
     ], []);
+    const storyDataInfo = useMemo(() => [
+        {
+            duration: 15000,
+            preloadResource: true,
+            content: (props) => (
+                <VideoStory src={frame1} duration={15000} preloadResource={true} />
+            ),
+        },
+        {
+            duration: 15000,
+            preloadResource: true,
+            content: (props) => (
+                <>
+                <VideoStory src={frame2} duration={15000} preloadResource={true} />
+                </>
+            ),
+        },
+        {
+            preloadResource: true,
+            duration: 2000000,
+            content: (props) => {
+                const [isLoading, setIsLoading] = React.useState(true);
+
+                return (
+                    <>
+                        <motion.div
+                            initial={{opacity: 0}}
+                            animate={{opacity: 1}}
+                            exit={{opacity: 0}}
+                            transition={{duration: 1.5}}
+                        >
+                            <Box
+                                sx={{
+                                    width: '100vw',
+                                    height: '100vh',
+                                    bgcolor: '#000',
+                                }}
+                            >
+                                {isLoading && (
+                                    <Backdrop
+                                        sx={{
+                                            color: '#fff',
+                                            bgcolor: '#000',
+                                            zIndex: (theme) => theme.zIndex.drawer + 1
+                                        }}
+                                        open={true}
+                                    >
+                                        <CircularProgress color="inherit" />
+                                    </Backdrop>
+                                )}
+                                <Box
+                                    sx={{
+                                        position: 'relative',
+                                        backgroundImage: `url(${ult_background})`,
+                                        backgroundSize: '100% 100%',
+                                        height: '100vh',
+                                        paddingTop: '25px',
+                                        opacity: isLoading ? 0 : 1, // Скрыть скелет после загрузки
+                                        display: 'flex',
+                                        flexDirection: 'column',
+                                        alignItems: 'center'
+                                    }}
+                                >
+                                    <Box
+                                        component={'img'}
+                                        src={two_phone_title}
+                                        sx={{
+                                            height: '18svh',
+                                            marginX: 'auto',
+                                            display: 'block',
+                                        }}
+                                    />
+                                    <Box
+                                        component={'img'}
+                                        src={i18n.language === 'ru' ? two_phone : two_phone_uz}
+                                        sx={{
+                                            position: 'fixed',
+                                            bottom: '0',
+                                            height: '82svh',
+                                            maxWidth: '400px',
+                                            marginX: 'auto',
+                                            display: 'block',
+                                        }}
+                                        onLoad={() => setIsLoading(false)}
+                                    />
+                                </Box>
+                            </Box>
+                            <IconButton
+                                color="inherit"
+                                onClick={() => setUserLevelsInfoVisible(false)}
+                                sx={{
+                                    position: 'absolute',
+                                    top: '15px',
+                                    right: '10px',
+                                    color: '#fff',
+                                    zIndex: '1'
+                                }}>
+                                <CloseIcon />
+                            </IconButton>
+                        </motion.div>
+                    </>
+                );
+            },
+        },
+        ],[]);
 
     return (
         <>
@@ -366,54 +1216,55 @@ const MainMining = ({setValue, setActiveMenuSection, fetchDataAndUpdateLocalStor
                         flexDirection: 'column',
                     }}
                 >
-                    <IconButton
-                        onClick={() => {
-                            startTransition(() => {
-                                setActiveMenuSection('mining')
-                                navigate('/menu');
-                                setValue(3);
-                            });
-                        }}
-                        sx={{
-                            position: 'absolute',
-                            top: '44px',
-                            right: '0',
-                            color: 'var(--tg-theme-text-color)'
-                        }}
-                    >
-                        <InfoIcon/>
-                    </IconButton>
-                    <Button
-                        variant='contained'
-                        sx={{
-                            position: 'absolute',
-                            top: '54px',
-                            left: '0',
-                            color: 'var(--tg-theme-text-color)',
-                            backgroundColor: level === 'standard' ? '#b87333' : level === 'pro' ? '#B9B9B9' : level === 'ultra' ? '#E1C00E' : 'inherit',
-                            borderRadius: '0 30px 30px 0',
-                            width: '120px',
-                            height: '25px'
-                        }}
-                        onClick={handleButtonLevelClick}
-                    >
-                        {level}
-                    </Button>
-                    {level !== 'ultra' && (
-                        <motion.div
-                            animate={controls}
-                            style={{
-                                position: 'absolute',
-                                top: '85px',
-                                left: '10px',
-                                fontSize: '12px',
-                                color: 'var(--tg-theme-hint-color)',
-                            }}
-                        >
-                            поднять уровень
-                        </motion.div>
-                    )}
-                    {userLevelsVisible && (
+                    {/*<IconButton*/}
+                    {/*    onClick={() => {*/}
+                    {/*        setUserLevelsInfoVisible(true)*/}
+                    {/*    }}*/}
+                    {/*    sx={{*/}
+                    {/*        position: 'absolute',*/}
+                    {/*        top: '45px',*/}
+                    {/*        left: '115px',*/}
+                    {/*        color: 'var(--tg-theme-text-color)'*/}
+                    {/*    }}*/}
+                    {/*>*/}
+                    {/*    <InfoOutlinedIcon*/}
+                    {/*        sx={{*/}
+                    {/*            width: '27px',*/}
+                    {/*            height: '27px',*/}
+                    {/*        }}*/}
+                    {/*    />*/}
+                    {/*</IconButton>*/}
+                    {/*<Button*/}
+                    {/*    variant='contained'*/}
+                    {/*    sx={{*/}
+                    {/*        position: 'absolute',*/}
+                    {/*        top: '54px',*/}
+                    {/*        left: '0',*/}
+                    {/*        color: 'var(--tg-theme-text-color)',*/}
+                    {/*        backgroundColor: level === 'standart' ? '#b87333' : level === 'pro' ? '#B9B9B9' : level === 'ultra' ? '#E1C00E' : 'inherit',*/}
+                    {/*        borderRadius: '0 30px 30px 0',*/}
+                    {/*        width: '120px',*/}
+                    {/*        height: '25px'*/}
+                    {/*    }}*/}
+                    {/*    onClick={handleButtonLevelClick}*/}
+                    {/*>*/}
+                    {/*    {level}*/}
+                    {/*</Button>*/}
+                    {/*{level == 'standart' && (*/}
+                    {/*    <motion.div*/}
+                    {/*        animate={controls}*/}
+                    {/*        style={{*/}
+                    {/*            position: 'absolute',*/}
+                    {/*            top: '85px',*/}
+                    {/*            left: '10px',*/}
+                    {/*            fontSize: '12px',*/}
+                    {/*            color: 'var(--tg-theme-hint-color)',*/}
+                    {/*        }}*/}
+                    {/*    >*/}
+                    {/*        {t('mining.pages.mainMining.userLevels.upLevel')}*/}
+                    {/*    </motion.div>*/}
+                    {/*)}*/}
+                    {(userLevelsVisible || userLevelsInfoVisible) && (
                         <Box
                         sx={{
                             position: 'fixed',
@@ -422,8 +1273,7 @@ const MainMining = ({setValue, setActiveMenuSection, fetchDataAndUpdateLocalStor
                             zIndex: '3000',
                         }}>
                             <UserLevels
-                            setUserLevelsVisible={setUserLevelsVisible}
-                            storyData={storyData}
+                            storyData={userLevelsVisible ? storyDataLevel : storyDataInfo}
                             />;
                         </Box>
                     )}

@@ -46,7 +46,7 @@ const ChangeCrypto = ({handleNextComponent}) => {
             });
             setTimeout(() => {
                 handleNextComponent();
-            }, 700);
+            }, 2000);
         }
     };
     const handleBoxClick = () => {
@@ -64,6 +64,18 @@ const ChangeCrypto = ({handleNextComponent}) => {
 
     return (
         <>
+            <Box
+                sx={{
+                    position: 'absolute',
+                    display: buttonState.selected ? 'none' : 'block',
+                    top: '0',
+                    right: '0',
+                    width: '50px',
+                    height: '40px',
+                    zIndex: 100
+                }}
+                onClick={handleBoxClick}
+            />
             <motion.div
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
@@ -201,17 +213,6 @@ const ChangeCrypto = ({handleNextComponent}) => {
                         </Button>
                     </Box>
                 </Box>
-                <Box
-                    sx={{
-                        position: 'absolute',
-                        display: buttonState.selected ? 'none' : 'block',
-                        top: '-40px',
-                        right: '0',
-                        width: '50px',
-                        height: '40px',
-                    }}
-                    onClick={handleBoxClick}
-                />
                 <Snackbar
                     open={isSnackbarOpen}
                     autoHideDuration={2000}

@@ -24,8 +24,8 @@ const Referrals = () => {
             try {
                 // Получаем данные из local.storage
                 const storedData = JSON.parse(localStorage.getItem('miningUserData')) || {};
-                setReferralBonus(storedData.referral_bonus || 0);
-                setReferralCode(storedData.referral_code || '');
+                setReferralBonus(storedData.referralBonus || 0);
+                setReferralCode(storedData.referralCode || '');
                 setReferrals(storedData.referrals || []);
             } catch (error) {
                 console.error('Error fetching user data:', error);

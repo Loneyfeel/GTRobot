@@ -19,7 +19,7 @@ import Referrals from './Referrals/index.js';
 import Coins from './Coins/index.js';
 import GTRobotInfo from "./GTRobotInfo/index.js";
 
-const Menu = ({activeMenuSection}) => {
+const Menu = ({activeMenuSection, fetchDataAndUpdateLocalStorage}) => {
 
     const { t } = useTranslation();
     const [expanded, setExpanded] = useState(false);

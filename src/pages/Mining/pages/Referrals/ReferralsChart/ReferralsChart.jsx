@@ -66,7 +66,8 @@ function generateDateList() {
     const currentDate = new Date();
     const dateList = [];
 
-    for (let i = -3; i < 18; i++) {
+    // for (let i = -3; i < 18; i++) {
+    for (let i = -30; i < 30; i++) {
         const newDate = new Date(currentDate);
         newDate.setDate(currentDate.getDate() - i);
 

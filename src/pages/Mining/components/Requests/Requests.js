@@ -43,18 +43,8 @@ export const miningUserExists = async () => {
 export const startMining = async (miningType) => {
     try {
         await axiosInstance.post('/start-mining', { initData, userId, miningType });
-        console.log(miningType)
     } catch (error) {
         handleError(error);
-    }
-};
-
-export const getMiningTickersPrice = async () => {
-    try {
-        const response = await axiosInstance.post('/mining-tickers-price', { initData });
-        return response.data;
-    } catch (error) {
-        return { data: {} };
     }
 };
 
@@ -65,6 +55,15 @@ export const saveMiningUserTask = async (taskId) => {
         handleError(error);
         // Если возникла ошибка, можно вернуть объект с информацией об ошибке
         return { status: error};
+    }
+};
+
+export const getMiningTickersPrice = async () => {
+    try {
+        const response = await axiosInstance.post('/mining-tickers-price', { initData });
+        return response.data;
+    } catch (error) {
+        return { data: {} };
     }
 };
 

@@ -11,6 +11,8 @@ import Helps from "./components/Helps/index.js";
 import { currentQueryId } from '../../shared/telegram/telegram.js';
 import { useTranslation } from "react-i18next";
 import TaskList from "./components/TaskList/index.js";
+import tasksBackground from "./assets/UserLevels/tasksBackground.png";
+import TaskListStandart from "./components/TaskListStandart";
 
 // Lazy-loaded icons
 const PeopleIcon = lazy(() => import('@mui/icons-material/People'));
@@ -25,13 +27,13 @@ const Mining = () => {
     const [showBackdrop, setShowBackdrop] = useState(true);
 
     // Local state
-    const [value, setValue] = React.useState(() => {
+    const [value, setValue] = useState(() => {
         const storedValue = localStorage.getItem('bottomNavigationValue');
         return storedValue ? parseInt(storedValue, 10) : 0;
     });
-    const [isHelpsVisible, setIsHelpsVisible] = React.useState(false);
-    const [isDataLoaded, setIsDataLoaded] = React.useState(false);
-    const [isComponentsLoaded, setIsComponentsLoaded] = React.useState(false);
+    const [isHelpsVisible, setIsHelpsVisible] = useState(false);
+    const [isDataLoaded, setIsDataLoaded] = useState(false);
+    const [isComponentsLoaded, setIsComponentsLoaded] = useState(false);
     const [activeTasks, setActiveTasks] = useState([]);
 
     const [activeMenuSection, setActiveMenuSection] = useState(100);
@@ -61,11 +63,9 @@ const Mining = () => {
             if (storedQueryId !== currentQueryId) {
                 const response = await getMiningUserData();
                 const userDataResponse = response.data;
-
                 localStorage.setItem('miningQueryId', currentQueryId);
-                localStorage.setItem('miningData', JSON.stringify(userDataResponse.data));
                 localStorage.setItem('miningUserData', JSON.stringify(userDataResponse));
-                localStorage.setItem('isDailyMiningActivated', JSON.stringify(userDataResponse.is_daily_mining_activated));
+                localStorage.setItem('isDailyMiningActivated', JSON.stringify(userDataResponse.isDailyMiningActivated));
                 setIsDataLoaded(true);
                 // Вызываем fetchLocalStorageTasks после успешного получения данных из API
                 await fetchLocalStorageTasks();
@@ -74,6 +74,16 @@ const Mining = () => {
             console.error('Error fetching user data:', error);
         }
     };
+
+    const fetchLocalStorageTasks = async () => {
+        try {
+            const storedData = JSON.parse(localStorage.getItem('miningUserData')) || {};
+            setActiveTasks(storedData.activeTasks || []);
+        } catch (error) {
+            console.error('Error fetching tasks:', error);
+        }
+    };
+
     const fetchTickersPricesAndUpdateLocalStorage = async () => {
         try {
             const prices = await getMiningTickersPrice();
@@ -85,29 +95,11 @@ const Mining = () => {
         }
     };
 
-    const fetchLocalStorageTasks = async () => {
-        try {
-            const storedData = JSON.parse(localStorage.getItem('miningUserData')) || {};
-            setActiveTasks(storedData.active_tasks || []);
-        } catch (error) {
-            console.error('Error fetching tasks:', error);
-        }
-    };
-
     useEffect(() => {
-        fetchDataAndUpdateLocalStorage();
-
-        fetchTickersPricesAndUpdateLocalStorage();
-
-        const intervalId = setInterval(() => {
-            fetchTickersPricesAndUpdateLocalStorage();
-        }, 3 * 60 * 1000);
-
-        // Очистка интервала при размонтировании компонента
-        return () => clearInterval(intervalId);
-
-        // Добавление зависимостей, если это необходимо
-    }, []);
+        fetchTickersPricesAndUpdateLocalStorage()
+        fetchDataAndUpdateLocalStorage()
+        loadAssets();
+    }, [])
 
 
     useEffect(() => {
@@ -211,11 +203,7 @@ const Mining = () => {
         const assetPromises = Object.values(assets).map((importer) => importer());
 
         await Promise.all(assetPromises);
-
-        console.log('Все ресурсы из папки assets загружены.');
     };
-
-    loadAssets();
 
     return (
         <>
@@ -241,15 +229,15 @@ const Mining = () => {
                         {currentMenuItem ? currentMenuItem.title : `${t('mining.pages.menu.title')}`}
                     </Typography>
                 </Box>
-                {/*{!isHelpsVisible && (*/}
-                 {isHelpsVisible && (
+                {!isHelpsVisible && (
+                 // {isHelpsVisible && (
                     <Box
                         sx={{
                             marginBottom: '56px'
                         }}>
                         <Routes>
                             {menuItems.map((item, index) => (
-                                <Route key={index} path={item.to} element={<item.component setValue={setValue} setActiveMenuSection={setActiveMenuSection} activeMenuSection={activeMenuSection} fetchDataAndUpdateLocalStorage={fetchDataAndUpdateLocalStorage}/>} />
+                                <Route key={index} path={item.to} element={<item.component setValue={setValue} setActiveMenuSection={setActiveMenuSection} activeMenuSection={activeMenuSection}/>} />
                             ))}
                         </Routes>
                     </Box>
@@ -290,44 +278,79 @@ const Mining = () => {
                     ))}
                 </BottomNavigation>
             </Box>
-            {/*{isHelpsVisible && (*/}
-            {/*    <Box*/}
-            {/*        sx={{*/}
-            {/*            position: 'fixed',*/}
-            {/*            top: '0',*/}
-            {/*            height: '100%',*/}
-            {/*            width: '100%',*/}
-            {/*            bgcolor: 'var(--tg-theme-bg-color)',*/}
-            {/*            zIndex: '3000',*/}
-            {/*            display: 'block',*/}
-            {/*        }}*/}
-            {/*    >*/}
-            {/*        <Helps hideHelps={() => setIsHelpsVisible(false)} />*/}
-            {/*    </Box>*/}
-            {/*)}*/}
-            {/*{!isHelpsVisible && activeTasks.length > 0 && (*/}
-            {/*    <Box*/}
-            {/*        sx={{*/}
-            {/*            position: 'fixed',*/}
-            {/*            top: '0',*/}
-            {/*            height: '100%',*/}
-            {/*            width: '100%',*/}
-            {/*            bgcolor: 'var(--tg-theme-bg-color)',*/}
-            {/*            zIndex: '3000',*/}
-            {/*            display: 'block',*/}
-            {/*        }}*/}
-            {/*    >*/}
-            {/*        <Typography*/}
-            {/*            sx={{*/}
-            {/*                margin: '15px',*/}
-            {/*                fontSize: '18px',*/}
-            {/*                color: 'var(--tg-theme-text-color)'*/}
-            {/*            }}*/}
-            {/*        >*/}
-            {/*            {t('mining.components.taskList.title')}:</Typography>*/}
-            {/*        <TaskList activeTasks={activeTasks} setActiveTasks={setActiveTasks} />*/}
-            {/*    </Box>*/}
-            {/*)}*/}
+            {isHelpsVisible && (
+                <Box
+                    sx={{
+                        position: 'fixed',
+                        top: '0',
+                        height: '100%',
+                        width: '100%',
+                        bgcolor: 'var(--tg-theme-bg-color)',
+                        zIndex: '3000',
+                        display: 'block',
+                    }}
+                >
+                    <Helps hideHelps={() => setIsHelpsVisible(false)} />
+                </Box>
+            )}
+            {!isHelpsVisible && activeTasks.length > 0 && (
+                <Box
+                    sx={{
+                        position: 'fixed',
+                        top: '0',
+                        height: '100%',
+                        width: '100%',
+                        bgcolor: 'var(--tg-theme-bg-color)',
+                        zIndex: '3000',
+                        display: 'flex',
+                        flexDirection: 'column',
+                        alignItems: 'center',
+                        backgroundImage: `url(${tasksBackground})`,
+                        backgroundSize: '100% 100%',
+                    }}
+                >
+                    <Typography
+                        sx={{
+                            margin: '15px',
+                            fontSize: '20px',
+                            color: 'var(--tg-theme-text-color)',
+                            marginBlock: '100px'
+                        }}
+                    >
+                        {t('mining.components.taskList.title')}:
+                    </Typography>
+                    <TaskList activeTasks={activeTasks} setActiveTasks={setActiveTasks} />
+                </Box>
+            )}
+            {!isHelpsVisible && activeTasks.length > 0 && !activeTasks.some(task => task.is_required === true) && (
+                <Box
+                    sx={{
+                        position: 'fixed',
+                        top: '0',
+                        height: '100%',
+                        width: '100%',
+                        bgcolor: 'var(--tg-theme-bg-color)',
+                        zIndex: '3000',
+                        display: 'flex',
+                        flexDirection: 'column',
+                        alignItems: 'center',
+                        backgroundImage: `url(${tasksBackground})`,
+                        backgroundSize: '100% 100%',
+                    }}
+                >
+                    <Typography
+                        sx={{
+                            margin: '15px',
+                            fontSize: '20px',
+                            color: 'var(--tg-theme-text-color)',
+                            marginBlock: '100px'
+                        }}
+                    >
+                        {t('mining.components.taskList.title')}:
+                    </Typography>
+                    <TaskListStandart activeTasks={activeTasks} setActiveTasks={setActiveTasks} />
+                </Box>
+            )}
         </>
     );
 }

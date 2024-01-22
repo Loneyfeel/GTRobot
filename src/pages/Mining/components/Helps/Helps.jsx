@@ -16,9 +16,9 @@ const componentsList = [
     <Start key='Start'/>,
     <ChangeCrypto key='ChangeCrypto'/>,
     <MoreMoney key='MoreMoney'/>,
-    <Referrals key='Referrals'/>,
-    <Collect key="Collect" />,
-    <GettingStart key="GettingStart" />,
+    // <Referrals key='Referrals'/>,
+    // <Collect key="Collect" />,
+    // <GettingStart key="GettingStart" />,
     <Survey key='survey'/>,
     <FunctionalChangeCrypto key="FunctionalChangeCrypto" />,
 ];
@@ -30,7 +30,7 @@ const Helps = ({ hideHelps }) => {
     const handleNextComponent = () => {
         const nextIndex = (currentIndex + 1) % componentsList.length;
         setCurrentIndex(nextIndex);
-        if(nextIndex === 7){
+        if(nextIndex === 4){
             setAllComponentsViewed(true);
         }
         if(allComponentsViewed){
@@ -60,6 +60,9 @@ const Helps = ({ hideHelps }) => {
                 sx={{
                     display: componentsList[currentIndex].type === Survey ? 'none' : 'block',
                     cursor: 'pointer',
+                    position: 'absolute',
+                    top: '0',
+                    zIndex: 2
                 }}
             >
                 <IconButton
@@ -79,7 +82,6 @@ const Helps = ({ hideHelps }) => {
                     onClick={handleOverlayClick}
                     sx={{
                         position: 'absolute',
-                        top: '45px',
                         width: '50%',
                         height: '100%',
                         zIndex: 100,
@@ -94,7 +96,6 @@ const Helps = ({ hideHelps }) => {
                     alignItems: 'center',
                     cursor: 'default',
                     position: 'relative',
-                    zIndex: 1,
                 }}
             >
                 {componentsList[currentIndex].type === FunctionalChangeCrypto ? (

@@ -1,4 +1,4 @@
-import React, {useMemo} from 'react';
+import React, {useMemo, useState} from 'react';
 
 import '../../../../assets/fonts/benzin-bold.ttf'
 import '../../../../assets/fonts/benzin-semibold.ttf'
@@ -8,15 +8,20 @@ import Stories from 'react-insta-stories';
 import {Box} from "@mui/material";
 
 const StoryComponent = ({storyData}) => {
+    const [isLastStory, setIsLastStory] = useState(false);
+
+    const handleStoryEnd = () => {
+        setIsLastStory(true);
+    };
+
+    const handleStoryChange = (currentIndex) => {
+        setIsLastStory(currentIndex === storyData.length - 1);
+    };
+
     return (
         <>
             <Box
             sx={{
-                // position: 'fixed',
-                // top: '0',
-                // left: '0',
-                // width: '100vw',
-                // height: '100vh',
                 bgcolor: 'var(--tg-theme-bg-color)'
             }}>
                 <Stories
@@ -24,8 +29,10 @@ const StoryComponent = ({storyData}) => {
                     defaultInterval={1500}
                     width={'100vw'}
                     height={'100vh'}
-                    storyStyles={{
-                    }}
+                    onStoryEnd={handleStoryEnd}
+                    onAllStoriesEnd={() => setIsLastStory(true)}
+                    onStoryChange={handleStoryChange}
+                    preventDefault={isLastStory}
                 />
             </Box>
         </>

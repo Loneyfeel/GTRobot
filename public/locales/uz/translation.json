@@ -82,7 +82,33 @@
         "days_snackbar_2": "kun qo’ldi",
         "alert_1":"Cloud Miningdan foydalanishingiz mumkin bo'lgan vaqt oralig'i: 00:00 - 16:00",
         "alert_2":"Soat 16:00 dan keyin Cloud Mining uchun protsessorlar o'chiriladi va mutaxassislar nosozliklarni oldini olish uchun tekshirishiruv boshlaydilar.",
-        "deactiveTimer": "Mayningacha vaqt qo’ldi"
+        "deactiveTimer": "Mayningacha vaqt qo’ldi",
+        "userLevels": {
+          "btnText": "Muddat: 30 kun",
+          "upLevel": "mayningni tezlashtiring",
+          "standart": {
+            "dailyUse": "4-ta faollashtiruv kuniga",
+            "tasks": "Vazifalar mavjud",
+            "speed": "Mayning tezligigi oddiy",
+            "time": "Mayning vaqti: 00:00 - 16:00"
+          },
+          "pro": {
+            "dailyUse": "2-ta faollashtiruv kuniga (8 soatdan)",
+            "tasks": "Vazifalarsiz",
+            "speed": "+100% mayning tezligiga",
+            "limit": "GTRobot Mining uchun limit: 100$",
+            "time": "Mayning vaqti: 00:00 - 16:00"
+          },
+          "ultra": {
+            "dailyUse": "1-ta faollashtiruv kuniga (16 soatlik)",
+            "tasks": "Vazifalarsiz",
+            "speed": "+200% mayning tezligiga",
+            "limit": "GTRobot Mining uchun limit: 300$ (Faqat VIP tarif uchun)",
+            "time": "Mayning 24/7",
+            "withdraw": "Har 10 kunda pul chiqarich imkoniyati",
+            "notification": "Mayning tugashi to'g'risidagi ogohlantirish noma"
+          }
+        }
       },
       "secMining": {
         "title": "GTRobot Mining",
@@ -190,7 +216,8 @@
       },
       "taskList": {
         "title": "Barcha vazifalarni bajaring",
-        "check_btn": "Tekshirish"
+        "check_btn": "Tekshirish",
+        "incomplete_tasks_warning":  "Barcha vazifalarni bajaring"
       }
     }
   }

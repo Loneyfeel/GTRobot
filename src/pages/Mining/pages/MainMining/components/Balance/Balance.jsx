@@ -2,10 +2,8 @@ import React, {useEffect, useRef, useState} from 'react';
 import {Box, Typography} from "@mui/material";
 
 const Balance = ({ showBalanceChange, randomIncrement, setRandomIncrement, endUserMiningTimestamp, t }) => {
-    const [cryptoPrices, setCryptoPrices] = useState({});
     const [balance, setBalance] = useState(0);
     const [cryptoCurrency, setCryptoCurrency] = useState('');
-    const [isCryptoDataLoaded, setIsCryptoDataLoaded] = useState(false);
     const [referralBonus, setReferralBonus] = useState(0);
 
     const maxTotalLength = 12;
@@ -15,12 +13,29 @@ const Balance = ({ showBalanceChange, randomIncrement, setRandomIncrement, endUs
 
     useEffect(() => {
         if (endTimerRef !== 0 && endTimerRef !== null) {
-            setValue(Math.abs(0.1 - (endTimerRef - startTimerRef.current) / 1000 * 0.000002));
+            if (cryptoCurrency == 'btc') {
+            setValue(Math.abs((endTimerRef - startTimerRef.current) / 1000 * 0.000000000006388888889));}
+            if (cryptoCurrency == 'doge') {
+                setValue(Math.abs((endTimerRef - startTimerRef.current) / 1000 * 0.0002450079627587897));}
+            if (cryptoCurrency == 'ton') {
+                setValue(Math.abs((endTimerRef - startTimerRef.current) / 1000 * 0.0000001152604887));}
+            if (cryptoCurrency == 'shib') {
+                setValue(Math.abs((endTimerRef - startTimerRef.current) / 1000 * 20.76843198338526));}
         }
+        console.log(localStorage)
     }, [endTimerRef]); // Зависимость добавлена для пересчета значения при изменении endTimerRef
 
     // Функция для обновления счетчика
     const updateCounter = () => {
+        if (cryptoCurrency == 'btc') {
+            setValue((prevValue) => prevValue + 0.000000000006388888889);}
+        if (cryptoCurrency == 'doge') {
+            setValue((prevValue) => prevValue + 0.0002450079627587897);}
+        if (cryptoCurrency == 'ton') {
+            setValue((prevValue) => prevValue + 0.0000001152604887);}
+        if (cryptoCurrency == 'shib') {
+            setValue((prevValue) => prevValue + 20.76843198338526);}
+
         // Увеличиваем значение
         setValue((prevValue) => prevValue + 0.000002);
 
@@ -39,22 +54,8 @@ const Balance = ({ showBalanceChange, randomIncrement, setRandomIncrement, endUs
         // Загружаем данные из local.storage при монтировании компонента
         const storedData = JSON.parse(localStorage.getItem('miningUserData')) || {};
         setBalance(storedData.balance || 0);
-        setReferralBonus(storedData.referral_bonus || 0);
-        setCryptoCurrency(storedData.crypto_currency || 'btc');
-
-        // Запрашиваем цены криптовалют при монтировании компонента
-        const fetchCryptoPrices = async () => {
-            try {
-                const prices = JSON.parse(localStorage.getItem('prices')) || {};
-                setCryptoPrices(prices);
-
-                setIsCryptoDataLoaded(true);
-            } catch (error) {
-                console.error('Ошибка при получении цен криптовалют:', error);
-            }
-        };
-
-        fetchCryptoPrices();
+        setReferralBonus(storedData.referralBonus || 0);
+        setCryptoCurrency(storedData.cryptoCurrency || 'btc');
     }, []);
 
     function roundToDecimal(number, decimalPlaces) {
@@ -68,25 +69,16 @@ const Balance = ({ showBalanceChange, randomIncrement, setRandomIncrement, endUs
 
     // Отображение баланса после получения цен криптовалют
     const getDisplayedBalance = () => {
-        if (cryptoPrices[cryptoCurrency]) {
-            const price = cryptoPrices[cryptoCurrency];
-            console.log(balance)
-            const displayedBalance = balance / price;
+            const displayedBalance = balance;
             let newDisplayedBalance = Math.floor(displayedBalance).toString();
             if (newDisplayedBalance.length < maxTotalLength - 1) {
                 newDisplayedBalance += roundToDecimal(displayedBalance, maxTotalLength - newDisplayedBalance.length-1);
                 newDisplayedBalance = newDisplayedBalance.toString().replace(/^0/, '');
                 return newDisplayedBalance;
             }
-        }
     };
 
     const getTimerDisplayedBalance = () => {
-        if (cryptoPrices[cryptoCurrency]) {
-            const price = cryptoPrices[cryptoCurrency];
-            console.log(balance)
-            console.log('wadawd', value)
-            console.log(balance+value)
             const displayedBalance = (balance + value);
             let newDisplayedBalance = Math.floor(displayedBalance).toString();
             if (newDisplayedBalance.length < maxTotalLength - 1) {
@@ -94,7 +86,6 @@ const Balance = ({ showBalanceChange, randomIncrement, setRandomIncrement, endUs
                 newDisplayedBalance = newDisplayedBalance.toString().replace(/^0/, '');
                 return newDisplayedBalance;
             }
-        }
     }
 
     useEffect(() => {
@@ -107,14 +98,8 @@ const Balance = ({ showBalanceChange, randomIncrement, setRandomIncrement, endUs
         };
     }, []);
 
-    if (!isCryptoDataLoaded) {
-        // Пока данные о ценах криптовалют загружаются, можно показывать начальный баланс
-        return (
-            <Typography>
-                - - - - - - - - - -
-            </Typography>
-        );
-    }
+    const prices = JSON.parse(localStorage.getItem('prices')) || {};
+    const pricePerCoin = prices[cryptoCurrency];
 
     return (
         <Box
@@ -168,8 +153,8 @@ const Balance = ({ showBalanceChange, randomIncrement, setRandomIncrement, endUs
                 }}>
                 {t("mining.pages.mainMining.future_balance_1")}: {
                 endUserMiningTimestamp !== null ?
-                    (100 * cryptoPrices[cryptoCurrency] * parseFloat(getTimerDisplayedBalance())).toFixed(5)
-                    : (100 * cryptoPrices[cryptoCurrency] *  parseFloat(getDisplayedBalance())).toFixed(5)}$
+                    (100 * pricePerCoin * arseFloat(getTimerDisplayedBalance())).toFixed(2)
+                    : (100 * pricePerCoin * parseFloat(getDisplayedBalance())).toFixed(2)}$
                 {t("mining.pages.mainMining.future_balance_2")}
             </Typography>
         </Box>

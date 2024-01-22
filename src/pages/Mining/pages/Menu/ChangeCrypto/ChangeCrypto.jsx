@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { Box, Typography } from "@mui/material";
 import CoinCard from './CoinCard';
-import { saveMiningUserCryptoCurrency } from '../../../components/Requests/Requests.js';
+import {getMiningUserData, saveMiningUserCryptoCurrency} from '../../../components/Requests/Requests.js';
 import bitcoinIcon from '../../../assets/bitcoin-btc-logo.svg';
 import dogeIcon from '../../../assets/dogecoin-doge-logo.svg';
 import shibaIcon from '../../../assets/shiba-inu-shib-logo.svg';
 import tonIcon from '../../../assets/ton_symbol.svg';
 import {useTranslation} from "react-i18next";
+import {currentQueryId} from "../../../../../shared/telegram/telegram.js";
 
 const ChangeCrypto = ({ setIsSectionOpen }) => {
     const [selectedCrypto, setSelectedCrypto] = useState('');
@@ -15,30 +16,52 @@ const ChangeCrypto = ({ setIsSectionOpen }) => {
         setIsSectionOpen(true);
         // Загрузка данных пользователя из local.storage при монтировании компонента
         const storedData = JSON.parse(localStorage.getItem('miningUserData')) || {};
-        setSelectedCrypto(storedData.crypto_currency || 'btc');
-
+        setSelectedCrypto(storedData.cryptoCurrency || 'btc');
         return () => setIsSectionOpen(false);
     }, [setIsSectionOpen]);
 
-    const handleCardClick = (crypto) => {
+    const fetchDataAndUpdateLocalStorage = async () => {
+        try {
+            const response = await getMiningUserData();
+            const userDataResponse = response.data;
+                localStorage.setItem('miningUserData', JSON.stringify(userDataResponse));
+        } catch (error) {
+            console.error('Error fetching user data:', error);
+        }
+    };
+
+    const handleCardClick = async (crypto) => {
         window.Telegram.WebApp.showConfirm(
             `${t('mining.pages.menu.changeCrypto.change_alert_1')}\n\n${t('mining.pages.menu.changeCrypto.change_alert_2')}`,
-            (confirm) => {
+            async (confirm) => {
                 if (confirm) {
                     // Обновление локального состояния выбранной криптовалюты
                     setSelectedCrypto(crypto);
 
                     // Сохранение данных в local.storage
                     const storedData = JSON.parse(localStorage.getItem('miningUserData')) || {};
-                    storedData.crypto_currency = crypto;
+                    storedData.cryptoCurrency = crypto;
                     localStorage.setItem('miningUserData', JSON.stringify(storedData));
 
                     // Отправка запроса на изменение криптовалюты
-                    saveMiningUserCryptoCurrency(crypto);
+                    await saveMiningUserCryptoCurrency(crypto);
+
+                    console.log('wasddwdw')
+                    // Вызов функции для обновления данных
+                    await fetchDataAndUpdateLocalStorage();
+                    console.log(localStorage);
+                    try {
+                        // await saveMiningUserCryptoCurrency(crypto);
+                        await fetchDataAndUpdateLocalStorage()
+                        console.log('asjhhsgfshdgfhds')
+                        // Остальной код...
+                    } catch (error) {
+                        console.error('An error occurred:', error);
+                    }
                 }
             }
-        )
-    }
+        );
+    };
 
     const {t} = useTranslation();
 
