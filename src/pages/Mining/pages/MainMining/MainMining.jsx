@@ -14,8 +14,10 @@ import CloseIcon from '@mui/icons-material/Close';
 
 import '../../assets/fonts/benzin-bold.ttf'
 
-import frame1 from '../../assets/UserLevels/laptop.mp4'
-import frame2 from '../../assets/UserLevels/phone.mp4'
+import laptop from '../../assets/UserLevels/laptop.mp4'
+import laptop_uz from '../../assets/UserLevels/laptop_uz.mp4'
+import phone from '../../assets/UserLevels/phone.mp4'
+import phone_uz from '../../assets/UserLevels/phone_uz.mp4'
 import background from '../../assets/UserLevels/background.png'
 
 import two_phone_title from '../../assets/UserLevels/two_phone_title.png'
@@ -509,7 +511,7 @@ const MainMining = ({setValue, setActiveMenuSection}) => {
                                         >
                                             <Box
                                                 component='img'
-                                                src={Free_img}
+                                                src={pro_button}
                                                 alt={'button'}
                                                 sx={{
                                                     width: '200px',
@@ -520,9 +522,9 @@ const MainMining = ({setValue, setActiveMenuSection}) => {
                                             />
                                             <Box
                                                 component={'img'}
-                                                src={standard}
+                                                src={pro_title}
                                                 sx={{
-                                                    width: '350px',
+                                                    width: '150px',
                                                     zIndex: '1'
                                                 }}
                                             />
@@ -552,28 +554,35 @@ const MainMining = ({setValue, setActiveMenuSection}) => {
                                                         marginTop: '60px'
                                                     }}
                                                 >
-                                                    · {t('mining.pages.mainMining.userLevels.standart.dailyUse')}
+                                                    · {t('mining.pages.mainMining.userLevels.pro.dailyUse')}
                                                 </Typography>
                                                 <Typography sx={{
                                                     fontWeight: '700',
                                                     fontSize: '18px',
                                                     fontFamily: 'Montserrat, san-serif',
                                                 }}>
-                                                    · {t('mining.pages.mainMining.userLevels.standart.tasks')}
+                                                    · {t('mining.pages.mainMining.userLevels.pro.tasks')}
                                                 </Typography>
                                                 <Typography sx={{
                                                     fontWeight: '700',
                                                     fontSize: '18px',
                                                     fontFamily: 'Montserrat, san-serif',
                                                 }}>
-                                                    · {t('mining.pages.mainMining.userLevels.standart.speed')}
+                                                    · {t('mining.pages.mainMining.userLevels.pro.speed')}
                                                 </Typography>
                                                 <Typography sx={{
                                                     fontWeight: '700',
                                                     fontSize: '18px',
                                                     fontFamily: 'Montserrat, san-serif',
                                                 }}>
-                                                    · {t('mining.pages.mainMining.userLevels.standart.time')}
+                                                    · {t('mining.pages.mainMining.userLevels.pro.limit')}
+                                                </Typography>
+                                                <Typography sx={{
+                                                    fontWeight: '700',
+                                                    fontSize: '18px',
+                                                    fontFamily: 'Montserrat, san-serif',
+                                                }}>
+                                                    · {t('mining.pages.mainMining.userLevels.pro.time')}
                                                 </Typography>
                                             </Box>
                                         </Box>
@@ -632,7 +641,7 @@ const MainMining = ({setValue, setActiveMenuSection}) => {
                                         >
                                             <Box
                                                 component='img'
-                                                src={Free_img}
+                                                src={ult_button}
                                                 alt={'button'}
                                                 sx={{
                                                     width: '200px',
@@ -643,9 +652,9 @@ const MainMining = ({setValue, setActiveMenuSection}) => {
                                             />
                                             <Box
                                                 component={'img'}
-                                                src={standard}
+                                                src={ult_title}
                                                 sx={{
-                                                    width: '350px',
+                                                    width: '250px',
                                                     zIndex: '1'
                                                 }}
                                             />
@@ -665,7 +674,7 @@ const MainMining = ({setValue, setActiveMenuSection}) => {
                                                     display: 'flex',
                                                     flexDirection: 'column',
                                                     justifyContent: 'space-between',
-                                                    height: window.innerHeight < 600 ? '250px' : '300px',
+                                                    height: window.innerHeight < 600 ? '300px' : '350px',
                                                 }}>
                                                 <Typography
                                                     sx={{
@@ -675,28 +684,49 @@ const MainMining = ({setValue, setActiveMenuSection}) => {
                                                         marginTop: '60px'
                                                     }}
                                                 >
-                                                    · {t('mining.pages.mainMining.userLevels.standart.dailyUse')}
+                                                    · {t('mining.pages.mainMining.userLevels.ultra.dailyUse')}
                                                 </Typography>
                                                 <Typography sx={{
                                                     fontWeight: '700',
                                                     fontSize: '18px',
                                                     fontFamily: 'Montserrat, san-serif',
                                                 }}>
-                                                    · {t('mining.pages.mainMining.userLevels.standart.tasks')}
+                                                    · {t('mining.pages.mainMining.userLevels.ultra.tasks')}
                                                 </Typography>
                                                 <Typography sx={{
                                                     fontWeight: '700',
                                                     fontSize: '18px',
                                                     fontFamily: 'Montserrat, san-serif',
                                                 }}>
-                                                    · {t('mining.pages.mainMining.userLevels.standart.speed')}
+                                                    · {t('mining.pages.mainMining.userLevels.ultra.speed')}
                                                 </Typography>
                                                 <Typography sx={{
                                                     fontWeight: '700',
                                                     fontSize: '18px',
                                                     fontFamily: 'Montserrat, san-serif',
                                                 }}>
-                                                    · {t('mining.pages.mainMining.userLevels.standart.time')}
+                                                    · {t('mining.pages.mainMining.userLevels.ultra.limit')}
+                                                </Typography>
+                                                <Typography sx={{
+                                                    fontWeight: '700',
+                                                    fontSize: '18px',
+                                                    fontFamily: 'Montserrat, san-serif',
+                                                }}>
+                                                    · {t('mining.pages.mainMining.userLevels.ultra.time')}
+                                                </Typography>
+                                                <Typography sx={{
+                                                    fontWeight: '700',
+                                                    fontSize: '18px',
+                                                    fontFamily: 'Montserrat, san-serif',
+                                                }}>
+                                                    · {t('mining.pages.mainMining.userLevels.ultra.withdraw')}
+                                                </Typography>
+                                                <Typography sx={{
+                                                    fontWeight: '700',
+                                                    fontSize: '18px',
+                                                    fontFamily: 'Montserrat, san-serif',
+                                                }}>
+                                                    · {t('mining.pages.mainMining.userLevels.ultra.notification')}
                                                 </Typography>
                                             </Box>
                                         </Box>
@@ -1082,7 +1112,7 @@ const MainMining = ({setValue, setActiveMenuSection}) => {
             duration: 15000,
             preloadResource: true,
             content: (props) => (
-                <VideoStory src={frame1} duration={15000} preloadResource={true} />
+                <VideoStory src={i18n.language == 'ru' ? laptop : laptop_uz} duration={15000} preloadResource={true} />
             ),
         },
         {
@@ -1090,7 +1120,7 @@ const MainMining = ({setValue, setActiveMenuSection}) => {
             preloadResource: true,
             content: (props) => (
                 <>
-                <VideoStory src={frame2} duration={15000} preloadResource={true} />
+                <VideoStory src={i18n.language == 'ru' ? phone : phone_uz} duration={15000} preloadResource={true} />
                 </>
             ),
         },
@@ -1216,54 +1246,54 @@ const MainMining = ({setValue, setActiveMenuSection}) => {
                         flexDirection: 'column',
                     }}
                 >
-                    {/*<IconButton*/}
-                    {/*    onClick={() => {*/}
-                    {/*        setUserLevelsInfoVisible(true)*/}
-                    {/*    }}*/}
-                    {/*    sx={{*/}
-                    {/*        position: 'absolute',*/}
-                    {/*        top: '45px',*/}
-                    {/*        left: '115px',*/}
-                    {/*        color: 'var(--tg-theme-text-color)'*/}
-                    {/*    }}*/}
-                    {/*>*/}
-                    {/*    <InfoOutlinedIcon*/}
-                    {/*        sx={{*/}
-                    {/*            width: '27px',*/}
-                    {/*            height: '27px',*/}
-                    {/*        }}*/}
-                    {/*    />*/}
-                    {/*</IconButton>*/}
-                    {/*<Button*/}
-                    {/*    variant='contained'*/}
-                    {/*    sx={{*/}
-                    {/*        position: 'absolute',*/}
-                    {/*        top: '54px',*/}
-                    {/*        left: '0',*/}
-                    {/*        color: 'var(--tg-theme-text-color)',*/}
-                    {/*        backgroundColor: level === 'standart' ? '#b87333' : level === 'pro' ? '#B9B9B9' : level === 'ultra' ? '#E1C00E' : 'inherit',*/}
-                    {/*        borderRadius: '0 30px 30px 0',*/}
-                    {/*        width: '120px',*/}
-                    {/*        height: '25px'*/}
-                    {/*    }}*/}
-                    {/*    onClick={handleButtonLevelClick}*/}
-                    {/*>*/}
-                    {/*    {level}*/}
-                    {/*</Button>*/}
-                    {/*{level == 'standart' && (*/}
-                    {/*    <motion.div*/}
-                    {/*        animate={controls}*/}
-                    {/*        style={{*/}
-                    {/*            position: 'absolute',*/}
-                    {/*            top: '85px',*/}
-                    {/*            left: '10px',*/}
-                    {/*            fontSize: '12px',*/}
-                    {/*            color: 'var(--tg-theme-hint-color)',*/}
-                    {/*        }}*/}
-                    {/*    >*/}
-                    {/*        {t('mining.pages.mainMining.userLevels.upLevel')}*/}
-                    {/*    </motion.div>*/}
-                    {/*)}*/}
+                    <IconButton
+                        onClick={() => {
+                            setUserLevelsInfoVisible(true)
+                        }}
+                        sx={{
+                            position: 'absolute',
+                            top: '45px',
+                            left: '115px',
+                            color: 'var(--tg-theme-text-color)'
+                        }}
+                    >
+                        <InfoOutlinedIcon
+                            sx={{
+                                width: '27px',
+                                height: '27px',
+                            }}
+                        />
+                    </IconButton>
+                    <Button
+                        variant='contained'
+                        sx={{
+                            position: 'absolute',
+                            top: '54px',
+                            left: '0',
+                            color: 'var(--tg-theme-text-color)',
+                            backgroundColor: level === 'standart' ? '#b87333' : level === 'pro' ? '#B9B9B9' : level === 'ultra' ? '#E1C00E' : 'inherit',
+                            borderRadius: '0 30px 30px 0',
+                            width: '120px',
+                            height: '25px'
+                        }}
+                        onClick={handleButtonLevelClick}
+                    >
+                        {level}
+                    </Button>
+                    {level == 'standart' && (
+                        <motion.div
+                            animate={controls}
+                            style={{
+                                position: 'absolute',
+                                top: '85px',
+                                left: '10px',
+                                fontSize: '12px',
+                                color: 'var(--tg-theme-hint-color)',
+                            }}
+                        >
+                            {t('mining.pages.mainMining.userLevels.upLevel')}
+                        </motion.div>
+                    )}
                     {(userLevelsVisible || userLevelsInfoVisible) && (
                         <Box
                         sx={{

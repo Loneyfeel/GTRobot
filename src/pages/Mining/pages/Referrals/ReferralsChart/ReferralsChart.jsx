@@ -35,7 +35,7 @@ const ReferralsChart = () => {
     userList.forEach(user => {
         const timestamp = user.timestamp;
         const userDate = new Date(timestamp * 1000);
-        const formattedDate = `${userDate.getDate()}.${userDate.getMonth() + 1}.${String(userDate.getFullYear()).slice(2)}`;
+        const formattedDate = `${String(userDate.getDate()+1).padStart(2, '0')}.${String(userDate.getMonth() + 1).padStart(2, '0')}.${String(userDate.getFullYear()).slice(2)}`;
 
         if (userCountByDate[formattedDate] !== undefined) {
             userCountByDate[formattedDate]++;
@@ -66,8 +66,8 @@ function generateDateList() {
     const currentDate = new Date();
     const dateList = [];
 
-    // for (let i = -3; i < 18; i++) {
-    for (let i = -30; i < 30; i++) {
+    for (let i = -1; i < 20; i++) {
+    // for (let i = -30; i < 30; i++) {
         const newDate = new Date(currentDate);
         newDate.setDate(currentDate.getDate() - i);
 

@@ -53,14 +53,14 @@ const TaskList = ({ activeTasks, setActiveTasks }) => {
 
     useEffect(() => {
         if (activeTasks && activeTasks.length > 0) {
-            setTasks(activeTasks.filter(task => task.is_required === true));
+            setTasks(activeTasks.filter(task => task.is_required === 1));
         }
     }, [activeTasks]);
 
     useEffect(() => {
         const timer = setTimeout(() => {
             setIsButtonDisabled(false);
-        }, 10000);
+        }, 5000);
 
         return () => clearTimeout(timer);
     }, []);

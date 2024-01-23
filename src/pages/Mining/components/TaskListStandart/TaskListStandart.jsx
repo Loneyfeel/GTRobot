@@ -49,34 +49,22 @@ const TaskList = ({ activeTasks, setActiveTasks }) => {
     };
 
     const [tasks, setTasks] = useState([]);
+    const [taskClicked, setTaskClicked] = useState(false);
     const [isButtonDisabled, setIsButtonDisabled] = useState(true);
 
     useEffect(() => {
         if (activeTasks && activeTasks.length > 0) {
-            setTasks(activeTasks.filter(task => task.is_required === false));
+            setTasks(activeTasks.filter(task => task.is_required === 0));
         }
     }, [activeTasks]);
 
     useEffect(() => {
         const timer = setTimeout(() => {
             setIsButtonDisabled(false);
-        }, 10000);
+        }, 5000);
 
         return () => clearTimeout(timer);
     }, []);
-
-    useEffect(() => {
-        const taskClickCount = localStorage.getItem('taskClickCount') || 0;
-
-        if (taskClickCount === 0) {
-            localStorage.setItem('taskClickCount', 1);
-            const firstNonRequiredTask = tasks.find(task => task.task_group_id == null);
-
-            if (firstNonRequiredTask) {
-                handleTaskClick(firstNonRequiredTask.task_id);
-            }
-        }
-    }, [tasks]);
 
     const trail = useTrail(tasks.length, {
         opacity: 1,
@@ -93,42 +81,58 @@ const TaskList = ({ activeTasks, setActiveTasks }) => {
 
     const handleTaskClick = async (taskId) => {
         try {
-            const response = await saveMiningUserTask(taskId);
+            if (localStorage.getItem('taskClickCount') === '1') {
+                const response = await saveMiningUserTask(taskId);
 
-            if (response.status === 200) {
-                setTimeout(() => {
-                    const updatedTasks = tasks.filter((task) => task.task_id !== taskId);
-                    setTasks(updatedTasks);
-                    setActiveTasks(updatedTasks)
+                if (response.status === 200) {
+                    setTimeout(() => {
+                        const updatedTasks = tasks.filter((task) => task.task_id !== taskId);
+                        setTasks(updatedTasks);
+                        setActiveTasks(updatedTasks);
 
-                    const miningUserData = JSON.parse(localStorage.getItem('miningUserData')) || {};
-                    localStorage.setItem('miningUserData', JSON.stringify({
-                        ...miningUserData,
-                        activeTasks: updatedTasks,
-                    }));
+                        const miningUserData = JSON.parse(localStorage.getItem('miningUserData')) || {};
+                        localStorage.setItem('miningUserData', JSON.stringify({
+                            ...miningUserData,
+                            activeTasks: updatedTasks,
+                        }));
 
-                    localStorage.setItem('taskClickCount', 0);
-                }, 5000);
-            } else {
-                if (response.status.response.data.errorCode === 2001)
-                    console.error('Вы не подписались на канал');
-                if (response.status.response.data.errorCode === 2000) {
-                    console.error('Задание не найдено');
-                    const updatedTasks = tasks.filter((task) => task.task_id !== taskId);
-                    setTasks(updatedTasks);
-                    setActiveTasks(updatedTasks)
+                        setTaskClicked(false);
+                    }, 5000);
+                } else {
+                    if (response.status.response.data.errorCode === 2001)
+                        console.error('Вы не подписались на канал');
+                    if (response.status.response.data.errorCode === 2000) {
+                        console.error('Задание не найдено');
+                        const updatedTasks = tasks.filter((task) => task.task_id !== taskId);
+                        setTasks(updatedTasks);
+                        setActiveTasks(updatedTasks);
 
-                    localStorage.setItem('miningUserData', JSON.stringify({
-                        ...JSON.parse(localStorage.getItem('miningUserData')),
-                        activeTasks: updatedTasks,
-                    }));
+                        localStorage.setItem('miningUserData', JSON.stringify({
+                            ...JSON.parse(localStorage.getItem('miningUserData')),
+                            activeTasks: updatedTasks,
+                        }));
 
-                    localStorage.setItem('taskClickCount', 0);
+                        setTaskClicked(false);
+                    }
                 }
             }
         } catch (error) {
             console.error('Ошибка при сохранении задания:', error);
         }
+    };
+
+    const handleButtonClick = () => {
+        tasks.forEach((task) => {
+            if (task.task_text.toLowerCase().includes('telegram')) {
+                handleTaskClick(task.task_id);
+            }
+            if (tasks.length > 0) {
+                setOpenSnackbar(true);
+            }
+        });
+
+        localStorage.setItem('taskClickCount', 1);
+        setTaskClicked(true);
     };
 
     return (
@@ -203,25 +207,16 @@ const TaskList = ({ activeTasks, setActiveTasks }) => {
             >
                 <Button
                     variant='contained'
-                    onClick={() => {
-                        tasks.forEach((task) => {
-                            if (task.task_text.toLowerCase().includes('telegram')) {
-                                handleTaskClick(task.task_id);
-                            }
-                            if (tasks.length > 0) {
-                                setOpenSnackbar(true);
-                            }
-                        });
-                    }}
+                    onClick={handleButtonClick}
                     sx={{
                         color: 'var(--tg-theme-text-color)',
                         margin: '40px',
-                        '&.Mui-disabled':{
+                        '&.Mui-disabled': {
                             color: '#000',
                             bgcolor: isButtonDisabled && 'var(--tg-theme-hint-color)'
                         }
                     }}
-                    disabled={isButtonDisabled} // Используем disabled, чтобы сделать кнопку неактивной
+                    disabled={isButtonDisabled}
                 >
                     {t('mining.components.taskList.check_btn')}
                 </Button>

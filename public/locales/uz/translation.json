@@ -155,9 +155,12 @@
         "withdraw": {
           "menu_btn": "Kriptovalyutani chiqarish",
           "title": "Kriptovalyutani chiqarish",
-          "textField_1": "Chiqarish miqdori:",
-          "textField_2": "Hamyon manzili:",
+          "textField_1": "Chiqarish miqdori",
+          "textField_2": "Hamyon manzili USDT-TRC20",
+          "send": "Siz yuborasiz",
+          "receive": "Sizga tushadi",
           "main_btn": "Chiqarish",
+          "max": "Umumiy",
           "btn_helps": {
             "balance": "Balans",
             "address": "Hamyon",
@@ -165,7 +168,7 @@
           },
           "snackbars": {
             "error_full": "Iltimos, barcha maydonlarni to'ldiring",
-            "error_balance": "Belgilangan summa minimal chiqarish miqdoridan past",
+            "error_balance": "Hato balans kiritildi",
             "success": "Kriptovalyuta muvaffaqiyatli chiqarildi"
           }
         },
@@ -216,8 +219,9 @@
       },
       "taskList": {
         "title": "Barcha vazifalarni bajaring",
-        "check_btn": "Tekshirish",
-        "incomplete_tasks_warning":  "Barcha vazifalarni bajaring"
+        "new_title": "Yangi vazifa",
+        "check_btn": "Bajardim",
+        "incomplete_tasks_warning":  "Siz vazifani bajarmadingiz, qayta orinib ko’ring"
       }
     }
   }

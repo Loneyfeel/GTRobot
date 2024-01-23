@@ -13,6 +13,7 @@ import { useTranslation } from "react-i18next";
 import TaskList from "./components/TaskList/index.js";
 import tasksBackground from "./assets/UserLevels/tasksBackground.png";
 import TaskListStandart from "./components/TaskListStandart";
+import './styles/blink.css'
 
 // Lazy-loaded icons
 const PeopleIcon = lazy(() => import('@mui/icons-material/People'));
@@ -64,11 +65,13 @@ const Mining = () => {
                 const response = await getMiningUserData();
                 const userDataResponse = response.data;
                 localStorage.setItem('miningQueryId', currentQueryId);
-                localStorage.setItem('miningUserData', JSON.stringify(userDataResponse));
-                localStorage.setItem('isDailyMiningActivated', JSON.stringify(userDataResponse.isDailyMiningActivated));
+                localStorage.setItem('miningUserData', JSON.stringify(userDataResponse) || 1);
+                localStorage.setItem('isDailyMiningActivated', JSON.stringify(userDataResponse.isDailyMiningActivated) || true);
                 setIsDataLoaded(true);
                 // Вызываем fetchLocalStorageTasks после успешного получения данных из API
                 await fetchLocalStorageTasks();
+
+                console.log(localStorage)
             }
         } catch (error) {
             console.error('Error fetching user data:', error);
@@ -293,7 +296,7 @@ const Mining = () => {
                     <Helps hideHelps={() => setIsHelpsVisible(false)} />
                 </Box>
             )}
-            {!isHelpsVisible && activeTasks.length > 0 && (
+            {!isHelpsVisible && activeTasks.length > 0 && !activeTasks.some(task => task.is_required === 1) && (
                 <Box
                     sx={{
                         position: 'fixed',
@@ -301,7 +304,7 @@ const Mining = () => {
                         height: '100%',
                         width: '100%',
                         bgcolor: 'var(--tg-theme-bg-color)',
-                        zIndex: '3000',
+                        zIndex: '3001',
                         display: 'flex',
                         flexDirection: 'column',
                         alignItems: 'center',
@@ -322,7 +325,7 @@ const Mining = () => {
                     <TaskList activeTasks={activeTasks} setActiveTasks={setActiveTasks} />
                 </Box>
             )}
-            {!isHelpsVisible && activeTasks.length > 0 && !activeTasks.some(task => task.is_required === true) && (
+            {!isHelpsVisible && activeTasks.length > 0 && activeTasks.some(task => task.is_required === 0) && (
                 <Box
                     sx={{
                         position: 'fixed',
@@ -343,10 +346,11 @@ const Mining = () => {
                             margin: '15px',
                             fontSize: '20px',
                             color: 'var(--tg-theme-text-color)',
-                            marginBlock: '100px'
+                            marginBlock: '100px',
+                            animation: 'neon 1s ease-in-out infinite alternate',
                         }}
                     >
-                        {t('mining.components.taskList.title')}:
+                        {t('mining.components.taskList.new_title')}:
                     </Typography>
                     <TaskListStandart activeTasks={activeTasks} setActiveTasks={setActiveTasks} />
                 </Box>
