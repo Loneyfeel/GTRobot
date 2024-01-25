@@ -153,7 +153,7 @@ const Balance = ({ showBalanceChange, randomIncrement, setRandomIncrement, endUs
                 }}>
                 {t("mining.pages.mainMining.future_balance_1")}: {
                 endUserMiningTimestamp !== null ?
-                    (100 * pricePerCoin * arseFloat(getTimerDisplayedBalance())).toFixed(2)
+                    (100 * pricePerCoin * parseFloat(getTimerDisplayedBalance())).toFixed(2)
                     : (100 * pricePerCoin * parseFloat(getDisplayedBalance())).toFixed(2)}$
                 {t("mining.pages.mainMining.future_balance_2")}
             </Typography>

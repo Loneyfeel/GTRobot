@@ -61,7 +61,6 @@ const TaskList = ({ activeTasks, setActiveTasks }) => {
         const timer = setTimeout(() => {
             setIsButtonDisabled(false);
         }, 5000);
-
         return () => clearTimeout(timer);
     }, []);
 
@@ -78,44 +77,86 @@ const TaskList = ({ activeTasks, setActiveTasks }) => {
         setOpenSnackbar(false);
     };
 
-    const handleTaskClick = async (taskId) => {
+    const handleTaskClick = async (taskId, task_group_id) => {
+        const taskClickCountKey = `taskClickCounts`;
+        const taskClickCounts = JSON.parse(localStorage.getItem(taskClickCountKey)) || {};
+
+        // Проверяем, есть ли такое задание в localStorage
+        if (!taskClickCounts.hasOwnProperty(taskId)) {
+            taskClickCounts[taskId] = 0; // Если нет, устанавливаем количество нажатий на 0
+        }
+
+        const currentClickCount = taskClickCounts[taskId];
+
+        // Увеличиваем количество нажатий
+        if (task_group_id) {
+            taskClickCounts[taskId] = currentClickCount + 2;
+        }
+        else {
+
+            taskClickCounts[taskId] = currentClickCount + 1;
+        }
+        localStorage.setItem(taskClickCountKey, JSON.stringify(taskClickCounts));
+
+        // Открываем ссылку в новой вкладке
+        window.open(tasks.find(task => task.task_id === taskId).task_link, '_blank');
+
+        console.log(localStorage)
+
+    };
+
+    const handleButtonClick = async () => {
+
+        const taskClickCountKey = `taskClickCounts`;
+        const taskClickCounts = JSON.parse(localStorage.getItem(taskClickCountKey)) || {};
+
         try {
-            const response = await saveMiningUserTask(taskId);
+            let updatedTasks = [...tasks];
 
-            if (response.status === 200) {
-                setTimeout(() => {
-                    const updatedTasks = tasks.filter((task) => task.task_id !== taskId);
-                    setTasks(updatedTasks);
-                    setActiveTasks(updatedTasks)
+            for (const task of updatedTasks) {
+                if (taskClickCounts[task.task_id] >= 2 && task.is_required === 1) {
+                    const response = await saveMiningUserTask(task.task_id);
 
-                    const miningUserData = JSON.parse(localStorage.getItem('miningUserData')) || {};
-                    localStorage.setItem('miningUserData', JSON.stringify({
-                        ...miningUserData,
-                        activeTasks: updatedTasks,
-                    }));
-
-                    localStorage.setItem('taskClickCount', 0);
-                }, 5000);
-            } else {
-                if (response.status.response.data.errorCode === 2001)
-                    console.error('Вы не подписались на канал');
-                if (response.status.response.data.errorCode === 2000) {
-                    console.error('Задание не найдено');
-                    const updatedTasks = tasks.filter((task) => task.task_id !== taskId);
-                    setTasks(updatedTasks);
-                    setActiveTasks(updatedTasks)
-
-                    localStorage.setItem('miningUserData', JSON.stringify({
-                        ...JSON.parse(localStorage.getItem('miningUserData')),
-                        activeTasks: updatedTasks,
-                    }));
-
-                    localStorage.setItem('taskClickCount', 0);
+                    delete taskClickCounts[task.task_id];
+                    if (response.status === 200) {
+                        // Удалить выполненное задание из массива заданий
+                        updatedTasks = updatedTasks.filter(t => t.task_id !== task.task_id);
+                        localStorage.setItem(taskClickCountKey, JSON.stringify(taskClickCounts));
+                    } else {
+                        console.error(`Ошибка при сохранении задания ${task.task_id}: ${response.status}`);
+                        if (response.status.response?.data?.errorCode === 2001) {
+                            console.error('Вы не подписались на канал');
+                        }
+                        if (response.status.response?.data?.errorCode === 2000) {
+                            console.error('Задание не найдено');
+                        }
+                    }
                 }
             }
+
+            const miningUserData = JSON.parse(localStorage.getItem('miningUserData')) || {};
+            // Обновить состояние activeTasks в соответствии с выполненными заданиями
+            const updatedActiveTasks = miningUserData.activeTasks.filter(t => {
+                const clickCount = taskClickCounts[t.task_id] || 0;
+                const isClickCountValid = clickCount < 2;
+                return isClickCountValid && t.is_required === 1;
+            });
+
+            localStorage.setItem('miningUserData', JSON.stringify({
+                ...miningUserData,
+                activeTasks: updatedActiveTasks,
+            }));
+
+            setTasks(updatedTasks);
+            setActiveTasks(updatedTasks);
+
+            if (updatedTasks.length > 0) {
+                setOpenSnackbar(true);
+            }
         } catch (error) {
-            console.error('Ошибка при сохранении задания:', error);
+            console.error('Ошибка при обработке нажатия на кнопку проверки заданий:', error);
         }
+        console.log(localStorage);
     };
 
     return (
@@ -136,10 +177,7 @@ const TaskList = ({ activeTasks, setActiveTasks }) => {
                         {tasks[index] && (
                             <Card
                                 key={tasks[index].id}
-                                onClick={() => {
-                                    window.open(tasks[index].task_link, '_blank');
-                                    handleTaskClick(tasks[index].task_id);
-                                }}
+                                onClick={() => handleTaskClick(tasks[index].task_id, tasks[index].task_group_id)}
                                 style={{
                                     display: 'flex',
                                     justifyContent: 'center',
@@ -150,7 +188,7 @@ const TaskList = ({ activeTasks, setActiveTasks }) => {
                                     borderRadius: '30px',
                                     color: 'var(--tg-theme-text-color)',
                                     height: '75px',
-                                    background: 'rgba(255, 255, 255, 0.1)', // Добавляем полупрозрачный белый цвет для размытого фона
+                                    background: 'rgba(255, 255, 255, 0.1)',
                                 }}
                             >
                                 <CardContent
@@ -190,25 +228,16 @@ const TaskList = ({ activeTasks, setActiveTasks }) => {
             >
                 <Button
                     variant='contained'
-                    onClick={() => {
-                        tasks.forEach((task) => {
-                            if (task.task_text.toLowerCase().includes('telegram')) {
-                                handleTaskClick(task.task_id);
-                            }
-                        });
-                        if (tasks.length > 0) {
-                            setOpenSnackbar(true);
-                        }
-                    }}
+                    onClick={handleButtonClick}
                     sx={{
                         color: 'var(--tg-theme-text-color)',
                         margin: '40px',
-                        '&.Mui-disabled':{
+                        '&.Mui-disabled': {
                             color: '#000',
                             bgcolor: isButtonDisabled && 'var(--tg-theme-hint-color)'
                         }
                     }}
-                    disabled={isButtonDisabled} // Используем disabled, чтобы сделать кнопку неактивной
+                    disabled={isButtonDisabled}
                 >
                     {t('mining.components.taskList.check_btn')}
                 </Button>

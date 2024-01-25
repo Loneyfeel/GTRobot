@@ -167,15 +167,20 @@
             "question": "Barchasi tog'ri"
           },
           "snackbars": {
-            "error_full": "Iltimos, barcha maydonlarni to'ldiring",
-            "error_balance": "Hato balans kiritildi",
-            "success": "Kriptovalyuta muvaffaqiyatli chiqarildi"
+            "error_full": "Iltimos barcha qatorlarni to'ldiring",
+            "error_balance": "Kiritilgan miqdor noto'g'ri",
+            "success": "Pul chiqarildi, kuting!",
+            "error404": "Hozirda pul chiqarib bo’lmaydi",
+            "error2010": "Noto'g'ri manzil",
+            "error2011": "Hozirda pul chiqarib bo'lmaydi",
+            "error2012": "Kiritilgan miqdor minimal chiqarishdan kam",
+            "error2013": "Chiqarish miqdori etarli emas"
           }
         },
         "changeCrypto": {
           "menu_btn": "Kriptovalyutani almashtirish",
           "title": "Kriptovalyutani tanlang",
-          "change_alert_1": "Mayning uchun kriptovalyutani o’zgartirsangiz, siz barcha qazib olingan aktivlaringizni ushbu kriptovalyutaga o'tkazasiz.",
+          "change_alert_1": "Mayning uchun kriptovalyutani o'zgartirsangiz, siz barcha qazib olingan aktivlaringizni ushbu kriptovalyutaga o'tkazasiz. Almashuv paytida siz 20% mablag’ingizni yo’qotishingiz mumkin.",
           "change_alert_2": "Siz bunga rozimisiz?"
         }
       },

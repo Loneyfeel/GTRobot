@@ -74,3 +74,21 @@ export const saveMiningUserCryptoCurrency = async (cryptoCurrency) => {
         handleError(error);
     }
 };
+
+export const miningWithdraw = async (withdrawAmount, withdrawAddress) => {
+    try {
+        // Отправляем запрос на /api/mining-withdraw с указанными данными
+        const response = await axiosInstance.post('/mining-withdraw', {
+            userId,
+            initData,
+            withdrawAmount,
+            withdrawAddress,
+        });
+
+        // Возвращаем результат выполнения запроса
+        return response.data;
+    } catch (error) {
+        // Обрабатываем ошибку и возвращаем объект с информацией об ошибке
+        return handleError(error);
+    }
+};

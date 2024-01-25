@@ -296,7 +296,7 @@ const Mining = () => {
                     <Helps hideHelps={() => setIsHelpsVisible(false)} />
                 </Box>
             )}
-            {!isHelpsVisible && activeTasks.length > 0 && !activeTasks.some(task => task.is_required === 1) && (
+            {!isHelpsVisible && activeTasks.length > 0 && activeTasks.some(task => task.is_required === 1) && (
                 <Box
                     sx={{
                         position: 'fixed',

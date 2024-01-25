@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Box, Typography } from "@mui/material";
+import {Backdrop, Box, CircularProgress, Typography} from "@mui/material";
 import CoinCard from './CoinCard';
 import {getMiningUserData, saveMiningUserCryptoCurrency} from '../../../components/Requests/Requests.js';
 import bitcoinIcon from '../../../assets/bitcoin-btc-logo.svg';
@@ -7,10 +7,10 @@ import dogeIcon from '../../../assets/dogecoin-doge-logo.svg';
 import shibaIcon from '../../../assets/shiba-inu-shib-logo.svg';
 import tonIcon from '../../../assets/ton_symbol.svg';
 import {useTranslation} from "react-i18next";
-import {currentQueryId} from "../../../../../shared/telegram/telegram.js";
 
 const ChangeCrypto = ({ setIsSectionOpen }) => {
     const [selectedCrypto, setSelectedCrypto] = useState('');
+    const [showBackdrop, setShowBackdrop] = useState(false);
 
     useEffect(() => {
         setIsSectionOpen(true);
@@ -33,8 +33,9 @@ const ChangeCrypto = ({ setIsSectionOpen }) => {
     const handleCardClick = async (crypto) => {
         window.Telegram.WebApp.showConfirm(
             `${t('mining.pages.menu.changeCrypto.change_alert_1')}\n\n${t('mining.pages.menu.changeCrypto.change_alert_2')}`,
-            async (confirm) => {
+             (confirm) => {
                 if (confirm) {
+                    setShowBackdrop(true);
                     // Обновление локального состояния выбранной криптовалюты
                     setSelectedCrypto(crypto);
 
@@ -44,20 +45,23 @@ const ChangeCrypto = ({ setIsSectionOpen }) => {
                     localStorage.setItem('miningUserData', JSON.stringify(storedData));
 
                     // Отправка запроса на изменение криптовалюты
-                    await saveMiningUserCryptoCurrency(crypto);
+                    saveMiningUserCryptoCurrency(crypto);
 
-                    console.log('wasddwdw')
-                    // Вызов функции для обновления данных
-                    await fetchDataAndUpdateLocalStorage();
-                    console.log(localStorage);
+                    setTimeout(() => {
+                        fetchDataAndUpdateLocalStorage();
+                    }, 1000);
+
                     try {
-                        // await saveMiningUserCryptoCurrency(crypto);
-                        await fetchDataAndUpdateLocalStorage()
-                        console.log('asjhhsgfshdgfhds')
-                        // Остальной код...
+                        saveMiningUserCryptoCurrency(crypto);
+                        setTimeout(() => {
+                            fetchDataAndUpdateLocalStorage();
+                        }, 1000);
                     } catch (error) {
                         console.error('An error occurred:', error);
                     }
+                    setTimeout(() => {
+                        setShowBackdrop(false);
+                    }, 1500);
                 }
             }
         );
@@ -67,6 +71,12 @@ const ChangeCrypto = ({ setIsSectionOpen }) => {
 
     return (
         <>
+            <Backdrop
+                open={showBackdrop}
+                style={{ zIndex: 9999, color: '#fff' }}
+            >
+                <CircularProgress color="inherit" />
+            </Backdrop>
             <Box
                 sx={{
                     bgcolor: 'var(--tg-theme-bg-color)',

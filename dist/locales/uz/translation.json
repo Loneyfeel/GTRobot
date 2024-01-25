@@ -155,24 +155,32 @@
         "withdraw": {
           "menu_btn": "Kriptovalyutani chiqarish",
           "title": "Kriptovalyutani chiqarish",
-          "textField_1": "Chiqarish miqdori:",
-          "textField_2": "Hamyon manzili:",
+          "textField_1": "Chiqarish miqdori",
+          "textField_2": "Hamyon manzili USDT-TRC20",
+          "send": "Siz yuborasiz",
+          "receive": "Sizga tushadi",
           "main_btn": "Chiqarish",
+          "max": "Umumiy",
           "btn_helps": {
             "balance": "Balans",
             "address": "Hamyon",
             "question": "Barchasi tog'ri"
           },
           "snackbars": {
-            "error_full": "Iltimos, barcha maydonlarni to'ldiring",
-            "error_balance": "Belgilangan summa minimal chiqarish miqdoridan past",
-            "success": "Kriptovalyuta muvaffaqiyatli chiqarildi"
+            "error_full": "Iltimos barcha qatorlarni to'ldiring",
+            "error_balance": "Kiritilgan miqdor noto'g'ri",
+            "success": "Pul chiqarildi, kuting!",
+            "error404": "Hozirda pul chiqarib bo’lmaydi",
+            "error2010": "Noto'g'ri manzil",
+            "error2011": "Hozirda pul chiqarib bo'lmaydi",
+            "error2012": "Kiritilgan miqdor minimal chiqarishdan kam",
+            "error2013": "Chiqarish miqdori etarli emas"
           }
         },
         "changeCrypto": {
           "menu_btn": "Kriptovalyutani almashtirish",
           "title": "Kriptovalyutani tanlang",
-          "change_alert_1": "Mayning uchun kriptovalyutani o’zgartirsangiz, siz barcha qazib olingan aktivlaringizni ushbu kriptovalyutaga o'tkazasiz.",
+          "change_alert_1": "Mayning uchun kriptovalyutani o'zgartirsangiz, siz barcha qazib olingan aktivlaringizni ushbu kriptovalyutaga o'tkazasiz. Almashuv paytida siz 20% mablag’ingizni yo’qotishingiz mumkin.",
           "change_alert_2": "Siz bunga rozimisiz?"
         }
       },
@@ -216,8 +224,9 @@
       },
       "taskList": {
         "title": "Barcha vazifalarni bajaring",
-        "check_btn": "Tekshirish",
-        "incomplete_tasks_warning":  "Barcha vazifalarni bajaring"
+        "new_title": "Yangi vazifa",
+        "check_btn": "Bajardim",
+        "incomplete_tasks_warning":  "Siz vazifani bajarmadingiz, qayta orinib ko’ring"
       }
     }
   }

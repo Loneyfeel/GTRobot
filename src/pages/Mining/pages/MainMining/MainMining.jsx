@@ -1226,7 +1226,7 @@ const MainMining = ({setValue, setActiveMenuSection}) => {
                     color: 'var(--tg-theme-text-color)',
                 }}
             >
-                {!isMiningActive && (
+                {!isMiningActive && !endUserMiningTimestamp &&(
                     <Box
                         sx={{
                             margin: '20px',
@@ -1246,54 +1246,54 @@ const MainMining = ({setValue, setActiveMenuSection}) => {
                         flexDirection: 'column',
                     }}
                 >
-                    <IconButton
-                        onClick={() => {
-                            setUserLevelsInfoVisible(true)
-                        }}
-                        sx={{
-                            position: 'absolute',
-                            top: '45px',
-                            left: '115px',
-                            color: 'var(--tg-theme-text-color)'
-                        }}
-                    >
-                        <InfoOutlinedIcon
-                            sx={{
-                                width: '27px',
-                                height: '27px',
-                            }}
-                        />
-                    </IconButton>
-                    <Button
-                        variant='contained'
-                        sx={{
-                            position: 'absolute',
-                            top: '54px',
-                            left: '0',
-                            color: 'var(--tg-theme-text-color)',
-                            backgroundColor: level === 'standart' ? '#b87333' : level === 'pro' ? '#B9B9B9' : level === 'ultra' ? '#E1C00E' : 'inherit',
-                            borderRadius: '0 30px 30px 0',
-                            width: '120px',
-                            height: '25px'
-                        }}
-                        onClick={handleButtonLevelClick}
-                    >
-                        {level}
-                    </Button>
-                    {level == 'standart' && (
-                        <motion.div
-                            animate={controls}
-                            style={{
-                                position: 'absolute',
-                                top: '85px',
-                                left: '10px',
-                                fontSize: '12px',
-                                color: 'var(--tg-theme-hint-color)',
-                            }}
-                        >
-                            {t('mining.pages.mainMining.userLevels.upLevel')}
-                        </motion.div>
-                    )}
+                    {/*<IconButton*/}
+                    {/*    onClick={() => {*/}
+                    {/*        setUserLevelsInfoVisible(true)*/}
+                    {/*    }}*/}
+                    {/*    sx={{*/}
+                    {/*        position: 'absolute',*/}
+                    {/*        top: '45px',*/}
+                    {/*        left: '115px',*/}
+                    {/*        color: 'var(--tg-theme-text-color)'*/}
+                    {/*    }}*/}
+                    {/*>*/}
+                    {/*    <InfoOutlinedIcon*/}
+                    {/*        sx={{*/}
+                    {/*            width: '27px',*/}
+                    {/*            height: '27px',*/}
+                    {/*        }}*/}
+                    {/*    />*/}
+                    {/*</IconButton>*/}
+                    {/*<Button*/}
+                    {/*    variant='contained'*/}
+                    {/*    sx={{*/}
+                    {/*        position: 'absolute',*/}
+                    {/*        top: '54px',*/}
+                    {/*        left: '0',*/}
+                    {/*        color: 'var(--tg-theme-text-color)',*/}
+                    {/*        backgroundColor: level === 'standart' ? '#b87333' : level === 'pro' ? '#B9B9B9' : level === 'ultra' ? '#E1C00E' : 'inherit',*/}
+                    {/*        borderRadius: '0 30px 30px 0',*/}
+                    {/*        width: '120px',*/}
+                    {/*        height: '25px'*/}
+                    {/*    }}*/}
+                    {/*    onClick={handleButtonLevelClick}*/}
+                    {/*>*/}
+                    {/*    {level}*/}
+                    {/*</Button>*/}
+                    {/*{level == 'standart' && (*/}
+                    {/*    <motion.div*/}
+                    {/*        animate={controls}*/}
+                    {/*        style={{*/}
+                    {/*            position: 'absolute',*/}
+                    {/*            top: '85px',*/}
+                    {/*            left: '10px',*/}
+                    {/*            fontSize: '12px',*/}
+                    {/*            color: 'var(--tg-theme-hint-color)',*/}
+                    {/*        }}*/}
+                    {/*    >*/}
+                    {/*        {t('mining.pages.mainMining.userLevels.upLevel')}*/}
+                    {/*    </motion.div>*/}
+                    {/*)}*/}
                     {(userLevelsVisible || userLevelsInfoVisible) && (
                         <Box
                         sx={{

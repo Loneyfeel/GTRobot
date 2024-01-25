@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import {Alert, Box, Button, Snackbar, TextField, Typography} from "@mui/material";
 import SwapVerticalCircleOutlinedIcon from '@mui/icons-material/SwapVerticalCircleOutlined';
+import {miningWithdraw} from '../../../components/Requests/Requests.js'
 
 import btcIcon from '../../../assets/bitcoin-btc-logo.svg';
 import tonIcon from '../../../assets/ton_symbol.svg';
@@ -12,25 +13,44 @@ import {useTranslation} from "react-i18next";
 const Withdraw = ({ setIsSectionOpen }) => {
     const [withdrawAmount, setWithdrawAmount] = useState('');
     const [walletAddress, setWalletAddress] = useState('');
-    const [isSnackbarOpen, setIsSnackbarOpen] = useState(false);
-    const [isWarningSnackbarOpen, setIsWarningSnackbarOpen] = useState(false);
-    const [isErrorSnackbarOpen, setIsErrorSnackbarOpen] = useState(false);
     const [daysUntilWithdrawal, setDaysUntilWithdrawal] = useState(null);
-    const [snackbarOpen, setSnackbarOpen] = useState(false);
     const [amountInCoin, setAmountInCoin] = useState('');
+    const [trueAmount, setTrueAmount] = useState()
     const minWithdrawAmount = 1;
+
+    const [isDaysErrorSnackbarOpen, setDaysErrorSnackbarOpen] = useState(false);
+    const [isSuccessSnackbarOpen, setSuccessSnackbarOpen] = useState(false);
+    const [isAmountErrorSnackbarOpen, setAmountErrorSnackbarOpen] = useState(false);
+    const [isEmptyFieldsErrorSnackbarOpen, setEmptyFieldsErrorSnackbarOpen] = useState(false);
+    const [isWithdrawError404SnackbarOpen, setIsWithdrawError404SnackbarOpen] = useState(false);
+    const [isWithdrawError2010SnackbarOpen, setIsWithdrawError2010SnackbarOpen] = useState(false);
+    const [isWithdrawError2011SnackbarOpen, setIsWithdrawError2011SnackbarOpen] = useState(false);
+    const [isWithdrawError2012SnackbarOpen, setIsWithdrawError2012SnackbarOpen] = useState(false);
+    const [isWithdrawError2013SnackbarOpen, setIsWithdrawError2013SnackbarOpen] = useState(false);
 
     useEffect(() => {
         const storedData = JSON.parse(localStorage.getItem('miningUserData')) || {};
         const registrationDate = storedData.registrationDate || 0;
+        const withdrawNotAvailableDays = 20;
 
         // Рассчитываем разницу в днях
         const currentDate = new Date();
-        const registrationDateObject = new Date(registrationDate * 1000); // Преобразуем timestamp в объект Date
+        const registrationDateObject = new Date(registrationDate * 1000);
         const timeDifference = currentDate - registrationDateObject;
-        const daysDifference = Math.floor(timeDifference / (1000 * 60 * 60 * 24));
 
-        setDaysUntilWithdrawal(20 - daysDifference);
+        // Рассчитываем, сколько периодов по 20 дней прошло с момента регистрации
+        const periodsPassed = Math.floor(timeDifference / (withdrawNotAvailableDays * 24 * 60 * 60 * 1000));
+
+        // Рассчитываем дату начала следующего периода вывода
+        const nextWithdrawalStartDate = new Date(registrationDateObject.getTime() + ((periodsPassed + 1) * withdrawNotAvailableDays * 24 * 60 * 60 * 1000));
+
+        // Рассчитываем дату окончания периода вывода (2 дня после начала)
+        const nextWithdrawalEndDate = new Date(nextWithdrawalStartDate);
+        nextWithdrawalEndDate.setDate(nextWithdrawalStartDate.getDate() + 2);
+
+        const daysDifference = Math.floor((nextWithdrawalStartDate - currentDate) / (24 * 60 * 60 * 1000));
+
+        setDaysUntilWithdrawal(daysDifference)
     }, []);
 
 
@@ -39,43 +59,71 @@ const Withdraw = ({ setIsSectionOpen }) => {
         return () => setIsSectionOpen(false);
     }, [setIsSectionOpen]);
 
-    const handleWithdrawal = () => {
-        if (daysUntilWithdrawal >= 0) {
-            setSnackbarOpen(true);
+    const handleWithdrawal = async () => {
+        // if (daysUntilWithdrawal >= 0) {
+        if (daysUntilWithdrawal >= 21) {
+            setDaysErrorSnackbarOpen(true);
         } else {
             window.Telegram.WebApp.showConfirm(
                 `${t('mining.pages.menu.withdraw.btn_helps.balance')}: ${withdrawAmount} \n` +
                 `${t('mining.pages.menu.withdraw.btn_helps.address')}: ${walletAddress}\n\n` +
                 `${t('mining.pages.menu.withdraw.btn_helps.question')}?`,
-                (confirm) => {
+                async (confirm) => {
                     if (confirm) {
                         handleWithdraw();
+                        try {
+                            const withdrawalResponse = await miningWithdraw(parseFloat(withdrawAmount), walletAddress);
+                            if (withdrawalResponse && withdrawalResponse.errorCode) {
+                                switch (withdrawalResponse.errorCode) {
+                                    case 404:
+                                        setIsWithdrawError404SnackbarOpen(true);
+                                        break;
+                                    case 2010:
+                                        setIsWithdrawError2010SnackbarOpen(true);
+                                        break;
+                                    case 2011:
+                                        setIsWithdrawError2011SnackbarOpen(true);
+                                        break;
+                                    case 2012:
+                                        setIsWithdrawError2012SnackbarOpen(true);
+                                        break;
+                                    case 2013:
+                                        setIsWithdrawError2013SnackbarOpen(true);
+                                        break;
+                                    default:
+                                        setIsWithdrawError404SnackbarOpen(true);
+                                        console.log(`Unexpected error: ${withdrawalResponse.errorCode}`);
+                                        break;
+                                }
+                            } else {
+                                setSuccessSnackbarOpen(true);
+                            }
+                        } catch (error) {
+                            console.error('Ошибка при выполнении miningWithdraw:', error);
+                        }
                     }
                 }
             );
         }
-    }
+    };
 
     const handleWithdraw = () => {
         if (!withdrawAmount || !walletAddress) {
-            setIsErrorSnackbarOpen(true);
+            setEmptyFieldsErrorSnackbarOpen(true);
             return;
         }
 
-        const withdrawAmountFloat = parseFloat(withdrawAmount);
+        const withdrawAmountFloat = parseFloat(trueAmount);
 
         if (withdrawAmountFloat < minWithdrawAmount || withdrawAmountFloat > balance) {
-            setIsWarningSnackbarOpen(true);
+            setAmountErrorSnackbarOpen(true);
             return;
         }
 
-        // Логика вывода средств
-        setIsSnackbarOpen(true);
-
         setTimeout(() => {
-            setIsSnackbarOpen(false);
-            setIsWarningSnackbarOpen(false);
-            setIsErrorSnackbarOpen(false);
+            setSuccessSnackbarOpen(false);
+            setAmountErrorSnackbarOpen(false);
+            setEmptyFieldsErrorSnackbarOpen(false);
         }, 3000);
     }
 
@@ -95,6 +143,11 @@ const Withdraw = ({ setIsSectionOpen }) => {
             const calculatedAmount = parseFloat(value) / pricePerCoin;
             setWithdrawAmount(calculatedAmount.toFixed(7));
         }
+    }
+
+    const handleTrueAmountChange = (e, inputType) => {
+        const value = e.target.value;
+        setTrueAmount(value)
     }
 
     const handleMaxAmount = () => {
@@ -210,13 +263,32 @@ const Withdraw = ({ setIsSectionOpen }) => {
                         </Box>
                         <Box
                             sx={{
-                                width: '100%'
+                                width: '100%',
+                                display: 'flex',
+                                alignItems: 'center'
                             }}>
                             <Button onClick={handleMaxAmount}>
                                 {t('mining.pages.menu.withdraw.max')}
                             </Button>
+                            <Typography
+                                sx={{
+                                    fontSize: '12px'
+                                }}>
+                                min = {(1/pricePerCoin).toFixed(7)}
+                            </Typography>
                         </Box>
                     </Box>
+                    <Box
+                    sx={{
+                        display: 'flex',
+                        alignItems: 'center'
+                    }}>
+                        <Typography
+                        sx={{
+                            fontSize: '14px'
+                        }}>
+                            1 {cryptoCurrency.toUpperCase()} = {pricePerCoin}$
+                        </Typography>
                     <SwapVerticalCircleOutlinedIcon
                         sx={{
                             color: 'var(--tg-theme-text-color)',
@@ -224,6 +296,7 @@ const Withdraw = ({ setIsSectionOpen }) => {
                             height: '30px',
                             margin: '5px'
                         }} />
+                    </Box>
                     <Box
                         sx={{
                             width: '95%',
@@ -253,7 +326,11 @@ const Withdraw = ({ setIsSectionOpen }) => {
                                 type="number"
                                 placeholder={t('mining.pages.menu.withdraw.textField_1')}
                                 value={amountInCoin}
-                                onChange={(e) => handleAmountChange(e, 'withdraw-amount-coin')}
+                                onChange={(e) => {
+                                    handleAmountChange(e, 'withdraw-amount-coin')
+                                    handleTrueAmountChange(e, 'withdraw-amount-coin')
+                                }
+                            }
                                 style={{
                                     width: '220px',
                                     padding: '5px',
@@ -280,12 +357,14 @@ const Withdraw = ({ setIsSectionOpen }) => {
                                         marginInline: '10px 5px'
                                     }}
                                 />
-                                TRC20
+                                USDT
                             </Box>
                         </Box>
                         <Box
                             sx={{
-                                width: '100%'
+                                width: '100%',
+                                display: 'flex',
+                                alignItems: 'center'
                             }}>
                             <Button onClick={handleMaxAmount}>
                                 {t('mining.pages.menu.withdraw.max')}
@@ -323,42 +402,88 @@ const Withdraw = ({ setIsSectionOpen }) => {
                                 marginTop: '2px',
                                 fontSize: '14px',
                                 color: 'var(--tg-theme-text-color)'
-                            }}>{t('mining.pages.menu.withdraw.menu_btn')}</Typography>
+                            }}>{t('mining.pages.menu.withdraw.menu_btn')}
+                        </Typography>
                     </Button>
                 </Box>
                 <Snackbar
-                    open={isSnackbarOpen}
+                    open={isSuccessSnackbarOpen}
                     autoHideDuration={3000}
-                    onClose={() => setIsSnackbarOpen(false)}
+                    onClose={() => setSuccessSnackbarOpen(false)}
                 >
                     <Alert severity="success" sx={{ width: '100%' }}>
                         {t('mining.pages.menu.withdraw.snackbars.success')}
                     </Alert>
                 </Snackbar>
                 <Snackbar
-                    open={isWarningSnackbarOpen}
+                    open={isAmountErrorSnackbarOpen}
                     autoHideDuration={3000}
-                    onClose={() => setIsWarningSnackbarOpen(false)}
+                    onClose={() => setAmountErrorSnackbarOpen(false)}
                 >
                     <Alert severity="error" sx={{ width: '100%' }}>
                         {t('mining.pages.menu.withdraw.snackbars.error_balance')}
                     </Alert>
                 </Snackbar>
                 <Snackbar
-                    open={isErrorSnackbarOpen}
+                    open={isEmptyFieldsErrorSnackbarOpen}
                     autoHideDuration={3000}
-                    onClose={() => setIsErrorSnackbarOpen(false)}
+                    onClose={() => setEmptyFieldsErrorSnackbarOpen(false)}
                 >
                     <Alert severity="error" sx={{ width: '100%' }}>
                         {t('mining.pages.menu.withdraw.snackbars.error_full')}
                     </Alert>
                 </Snackbar>
                 <Snackbar
-                    open={snackbarOpen}
-                    autoHideDuration={6000}
-                    onClose={() => setSnackbarOpen(false)}
+                    open={isDaysErrorSnackbarOpen}
+                    autoHideDuration={3000}
+                    onClose={() => setDaysErrorSnackbarOpen(false)}
                     message={`${t('mining.pages.mainMining.days_snackbar_1')} ${daysUntilWithdrawal} ${t('mining.pages.mainMining.days_snackbar_2')}`}
                 />
+                <Snackbar
+                    open={isWithdrawError404SnackbarOpen}
+                    autoHideDuration={3000}
+                    onClose={() => setIsWithdrawError404SnackbarOpen(false)}
+                >
+                    <Alert severity="error" sx={{ width: '100%' }}>
+                        {t('mining.pages.menu.withdraw.snackbars.error404')}
+                    </Alert>
+                </Snackbar>
+                <Snackbar
+                    open={isWithdrawError2010SnackbarOpen}
+                    autoHideDuration={3000}
+                    onClose={() => setIsWithdrawError2010SnackbarOpen(false)}
+                >
+                    <Alert severity="error" sx={{ width: '100%' }}>
+                        {t('mining.pages.menu.withdraw.snackbars.error404')}
+                    </Alert>
+                </Snackbar>
+                <Snackbar
+                    open={isWithdrawError2011SnackbarOpen}
+                    autoHideDuration={3000}
+                    onClose={() => setIsWithdrawError2011SnackbarOpen(false)}
+                >
+                    <Alert severity="error" sx={{ width: '100%' }}>
+                        {t('mining.pages.menu.withdraw.snackbars.error404')}
+                    </Alert>
+                </Snackbar>
+                <Snackbar
+                    open={isWithdrawError2012SnackbarOpen}
+                    autoHideDuration={3000}
+                    onClose={() => setIsWithdrawError2012SnackbarOpen(false)}
+                >
+                    <Alert severity="error" sx={{ width: '100%' }}>
+                        {t('mining.pages.menu.withdraw.snackbars.error404')}
+                    </Alert>
+                </Snackbar>
+                <Snackbar
+                    open={isWithdrawError2013SnackbarOpen}
+                    autoHideDuration={3000}
+                    onClose={() => setIsWithdrawError2013SnackbarOpen(false)}
+                >
+                    <Alert severity="error" sx={{ width: '100%' }}>
+                        {t('mining.pages.menu.withdraw.snackbars.error404')}
+                    </Alert>
+                </Snackbar>
             </Box>
         </>
     );
