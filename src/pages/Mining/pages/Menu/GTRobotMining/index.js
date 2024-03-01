@@ -1,1 +1,1 @@
-export {default} from './GTRobotMining.jsx'
+export { default } from "./GTRobotMining.jsx";

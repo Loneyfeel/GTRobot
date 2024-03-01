@@ -1,1 +1,1 @@
-export {default} from './AuthPage.jsx'
+export { default } from "./AuthPage.jsx";

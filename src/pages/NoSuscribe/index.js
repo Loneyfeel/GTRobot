@@ -1,1 +1,1 @@
-export {default} from './NoSubscribe.jsx'
+export { default } from "./NoSubscribe.jsx";

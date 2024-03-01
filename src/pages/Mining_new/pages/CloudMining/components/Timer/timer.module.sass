@@ -1,0 +1,51 @@
+.cloudTimer
+  display: flex
+  flex-direction: column
+  align-items: center
+  margin-block: 20px
+  color: var(--text_color)
+  width: 100%
+  &__speedometers
+    display: flex
+    justify-content: space-between
+    max-width: 100%
+    &_box
+      position: relative
+      margin-top: -20px
+      max-width: 32vw
+      &__img
+        position: absolute
+        top: 45%
+        left: 50%
+        transform: translate(-50%, -50%)
+      &__text
+        text-align: center
+        font-size: 12px
+        margin-top: -25px
+  &__animation
+    display: flex
+    justify-content: center
+    align-items: center
+    width: max-content
+    height: max-content
+    padding: 7px
+    border: 1px solid var(--component_stroke_color)
+    border-radius: 20px
+    background-color: var(--component_bg_color)
+    margin-top: 10px
+    margin-bottom: 10px
+    &_box
+      display: flex
+      justify-content: center
+      align-items: center
+      height: max-content
+      width: 90vw
+      border: 1px solid #fff
+      border-radius: 18px
+      background-color: #232323
+      overflow: hidden
+  &__timer
+    &_text
+      font-size: 24px
+      &_1
+        font-size: 16px

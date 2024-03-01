@@ -1,1 +1,1 @@
-export {default} from './Hint.jsx'
+export { default } from "./Hint.jsx";

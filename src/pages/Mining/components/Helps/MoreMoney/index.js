@@ -1,1 +1,1 @@
-export {default} from './MoreMoney.jsx'
+export { default } from "./MoreMoney.jsx";

@@ -1,1 +1,1 @@
-export {default} from './ToolsMenuTitle.jsx'
+export { default } from "./ToolsMenuTitle.jsx";

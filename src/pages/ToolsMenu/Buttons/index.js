@@ -1,1 +1,1 @@
-export {default} from './ToolsButtons.jsx'
+export { default } from "./ToolsButtons.jsx";

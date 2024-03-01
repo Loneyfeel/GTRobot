@@ -1,0 +1,36 @@
+.cloudCard
+  display: flex
+  align-items: center
+  justify-content: space-between
+  width: 85%
+  padding: 10px 15px
+  background-color: var(--component_bg_color)
+  border: 1px solid var(--component_stroke_color)
+  border-radius: 20px
+  color: var(--text_color)
+  cursor: default
+  &__balance
+    display: flex
+    flex-direction: column
+    justify-content: space-around
+    width: 65%
+    &_text
+      font-size: 16px
+    &_count
+      font-weight: 700
+      line-height: 1.2
+      &_big
+        font-size: 32px
+      &_small
+        font-size: 20px
+  &__future
+    width: 35%
+    &_text
+      line-height: 1.2
+      font-size: 16px
+    &_count
+      height: 32px
+      min-width: 110px
+      font-weight: 700
+      font-size: 32px
+      line-height: 1.2

@@ -17,6 +17,7 @@
     "@mui/lab": "^5.0.0-alpha.153",
     "@mui/material": "^5.14.17",
     "@mui/system": "^5.14.17",
+    "@uidotdev/usehooks": "^2.4.1",
     "@vkruglikov/react-telegram-web-app": "^2.1.5",
     "axios": "^1.6.0",
     "eruda": "^3.0.1",
@@ -27,16 +28,26 @@
     "lightweight-charts": "^4.1.1",
     "lottie-react": "^2.4.0",
     "luxon": "^3.4.4",
+    "prop-types": "^15.8.1",
     "react": "^18.2.0",
     "react-apexcharts": "^1.4.1",
+    "react-circular-progressbar": "^2.1.0",
+    "react-countdown": "^2.3.5",
     "react-dom": "^18.2.0",
+    "react-gauge-chart": "^0.4.1",
+    "react-gauge-component": "^1.2.0",
     "react-i18next": "^13.3.1",
     "react-insta-stories": "^2.6.2",
     "react-material-ui-carousel": "^3.4.2",
+    "react-query": "^3.39.3",
     "react-router-dom": "^6.21.1",
+    "react-slick": "^0.30.2",
     "react-spring": "^9.7.3",
+    "react-swipeable-views-utils": "^0.14.0",
     "react-window": "^1.8.9",
-    "sass": "^1.69.5"
+    "recharts": "^2.12.0",
+    "sass": "^1.69.5",
+    "slick-carousel": "^1.8.1"
   },
   "devDependencies": {
     "@vitejs/plugin-react": "^4.0.3",
@@ -44,7 +55,9 @@
     "eslint-plugin-react": "^7.32.2",
     "eslint-plugin-react-hooks": "^4.6.0",
     "eslint-plugin-react-refresh": "^0.4.3",
-    "vite": "^4.4.5",
-    "vite-plugin-compression2": "^0.11.0"
+    "prettier": "^3.2.5",
+    "vite": "4.2.2",
+    "vite-plugin-compression2": "^0.11.0",
+    "vite-plugin-svgr": "^4.2.0"
   }
 }

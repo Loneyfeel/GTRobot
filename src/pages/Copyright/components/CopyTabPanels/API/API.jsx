@@ -1,11 +1,7 @@
-import React from 'react';
+import React from "react";
 
 const Api = () => {
-    return (
-        <>
-            
-        </>
-    );
+  return <></>;
 };
 
 export default Api;

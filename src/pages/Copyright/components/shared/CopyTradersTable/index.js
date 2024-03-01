@@ -1,1 +1,1 @@
-export {default} from './CopyTradersTable.jsx'
+export { default } from "./CopyTradersTable.jsx";

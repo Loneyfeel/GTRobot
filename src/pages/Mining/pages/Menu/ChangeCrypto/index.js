@@ -1,1 +1,1 @@
-export {default} from './ChangeCrypto.jsx'
+export { default } from "./ChangeCrypto.jsx";

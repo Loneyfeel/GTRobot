@@ -1,1 +1,1 @@
-export {default} from './Selected.jsx'
+export { default } from "./Selected.jsx";

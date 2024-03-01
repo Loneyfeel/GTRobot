@@ -1,1 +1,1 @@
-export {default} from './TopTraders.jsx'
+export { default } from "./TopTraders.jsx";

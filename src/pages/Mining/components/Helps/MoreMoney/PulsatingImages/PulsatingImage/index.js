@@ -1,1 +1,1 @@
-export {default} from './PulsatingImage.jsx'
+export { default } from "./PulsatingImage.jsx";

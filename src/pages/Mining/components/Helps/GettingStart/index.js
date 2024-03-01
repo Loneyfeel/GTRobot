@@ -1,1 +1,1 @@
-export {default} from './GettingStart.jsx'
+export { default } from "./GettingStart.jsx";

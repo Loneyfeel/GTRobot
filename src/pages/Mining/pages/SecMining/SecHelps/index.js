@@ -1,1 +1,1 @@
-export {default} from './SecHelps.jsx'
+export { default } from "./SecHelps.jsx";

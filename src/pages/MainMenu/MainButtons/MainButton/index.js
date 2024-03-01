@@ -1,1 +1,1 @@
-export {default} from './MainButton.jsx'
+export { default } from "./MainButton.jsx";

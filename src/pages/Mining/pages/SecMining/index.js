@@ -1,1 +1,1 @@
-export {default} from './SecMining.jsx'
+export { default } from "./SecMining.jsx";

@@ -1,1 +1,1 @@
-export {default} from './TableComponent.jsx'
+export { default } from "./TableComponent.jsx";

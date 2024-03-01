@@ -1,1 +1,1 @@
-export {default} from './ResetButton.jsx'
+export { default } from "./ResetButton.jsx";

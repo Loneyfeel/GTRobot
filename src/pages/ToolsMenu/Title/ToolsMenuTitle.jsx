@@ -1,15 +1,15 @@
-import {useTranslation} from "react-i18next";
+import { useTranslation } from "react-i18next";
 import MenuTitle from "../../../shared/components/MenuPages/Titles/MenuTitle.jsx";
 import React from "react";
 
 function ToolsMenuTitle() {
-    const {t} = useTranslation()
+  const { t } = useTranslation();
 
-    return (
-        <>
-            <MenuTitle text={t('toolsMenu.title')}/>
-        </>
-    )
+  return (
+    <>
+      <MenuTitle text={t("toolsMenu.title")} />
+    </>
+  );
 }
 
-export default ToolsMenuTitle
+export default ToolsMenuTitle;

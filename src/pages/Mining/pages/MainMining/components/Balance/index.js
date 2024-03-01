@@ -1,1 +1,1 @@
-export {default} from './Balance.jsx'
+export { default } from "./Balance.jsx";

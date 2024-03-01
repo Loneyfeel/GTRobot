@@ -1,1 +1,1 @@
-export {default} from './CopyTableHeaderCell.jsx'
+export { default } from "./CopyTableHeaderCell.jsx";

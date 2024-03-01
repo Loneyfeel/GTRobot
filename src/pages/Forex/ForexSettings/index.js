@@ -1,1 +1,1 @@
-export {default} from './ForexSettings.jsx'
+export { default } from "./ForexSettings.jsx";

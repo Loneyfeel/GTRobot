@@ -1,1 +1,1 @@
-export {default} from './Referrals.jsx'
+export { default } from "./Referrals.jsx";

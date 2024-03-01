@@ -1,1 +1,1 @@
-export {default} from './CustomTab.jsx'
+export { default } from "./CustomTab.jsx";

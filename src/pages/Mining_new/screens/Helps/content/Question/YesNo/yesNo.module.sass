@@ -1,0 +1,29 @@
+.yesNo
+  display: flex
+  justify-content: space-around
+  align-items: center
+  &__button
+    display: flex
+    align-items: center
+    padding: 10px
+    height: 32px
+    cursor: pointer
+    &__circle
+      position: relative
+      display: flex
+      align-items: center
+      justify-content: center
+      margin-right: 10px
+      &_img
+        width: 32px
+      &_selected
+        position: absolute
+        top: 8px
+        left: 8px
+        width: 16px
+        height: 16px
+        border-radius: 50px
+        background-color: #fff
+    &__text
+      color: var(--text_color)
+      font-size: 20px

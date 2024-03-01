@@ -1,1 +1,1 @@
-export {default} from './Filters.jsx'
+export { default } from "./Filters.jsx";

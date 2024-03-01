@@ -1,6 +1,11 @@
 @keyframes neon {
-    50% {
-        text-shadow: 0 0 .5vw #FFFFFF, 0 0 1.5vw #FFFFFF, 0 0 5vw #FFFFFF, 0 0 5vw #FFFFFF, 0 0 .2vw #FFFFFF;
-        color: #FFFFFF;
-    }
+  50% {
+    text-shadow:
+      0 0 0.5vw #ffffff,
+      0 0 1.5vw #ffffff,
+      0 0 5vw #ffffff,
+      0 0 5vw #ffffff,
+      0 0 0.2vw #ffffff;
+    color: #ffffff;
+  }
 }

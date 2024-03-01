@@ -1,1 +1,1 @@
-export {default} from './CustomAlert.jsx'
+export { default } from "./CustomAlert.jsx";

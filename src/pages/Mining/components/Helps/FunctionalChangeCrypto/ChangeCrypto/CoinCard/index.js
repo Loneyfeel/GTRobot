@@ -1,1 +1,1 @@
-export {default} from './CoinCard.jsx'
+export { default } from "./CoinCard.jsx";

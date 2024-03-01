@@ -1,1 +1,1 @@
-export {default} from './DollarAnimItem.jsx'
+export { default } from "./DollarAnimItem.jsx";

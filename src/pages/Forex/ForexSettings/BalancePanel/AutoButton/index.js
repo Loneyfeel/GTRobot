@@ -1,1 +1,1 @@
-export {default} from './AutoButton.jsx'
+export { default } from "./AutoButton.jsx";

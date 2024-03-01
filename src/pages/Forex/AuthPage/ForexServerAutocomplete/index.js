@@ -1,1 +1,1 @@
-export {default} from './ForexServerAutocomplete.jsx'
+export { default } from "./ForexServerAutocomplete.jsx";

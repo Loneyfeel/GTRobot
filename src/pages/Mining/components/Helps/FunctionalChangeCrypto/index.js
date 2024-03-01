@@ -1,1 +1,1 @@
-export {default} from './FunctionalChangeCrypto.jsx'
+export { default } from "./FunctionalChangeCrypto.jsx";

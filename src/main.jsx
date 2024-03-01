@@ -1,13 +1,12 @@
-import React from 'react'
-import ReactDOM from 'react-dom/client'
-import App from './App.jsx'
-import CssBaseline from '@mui/material/CssBaseline';
-import './i18.js'
+import React from "react";
+import ReactDOM from "react-dom/client";
+import { QueryClient, QueryClientProvider } from 'react-query';
+import App from './App';
+const queryClient = new QueryClient();
+import "./i18.js";
 
-ReactDOM.createRoot(document.getElementById('root')).render(
-  <React.StrictMode>
-      <CssBaseline>
-        <App />
-      </CssBaseline>
-  </React.StrictMode>,
-)
+ReactDOM.createRoot(document.getElementById("root")).render(
+        <QueryClientProvider client={queryClient}>
+            <App />
+        </QueryClientProvider>
+);

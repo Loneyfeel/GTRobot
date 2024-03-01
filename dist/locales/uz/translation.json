@@ -115,7 +115,15 @@
         "text_alert_1": "Siz 100$-lik limitga yetdingiz. Mayning qilgan kriptovalyutadan foydalanish uchun ",
         "text_alert_2": "ga murojaat qiling",
         "gtrobot_alert_1": "GTRobot mayningi - bu GTRobot tariflarini imtiyoz bilan sotib olish uchun kriptovalyutaga sarmoya kiritish imkonini beruvchi vositadir !",
-        "gtrobot_alert_2": "Yig'ilgan mablag'ga faqat GTRobot tariflarini sotib olish mumkin !"
+        "gtrobot_alert_2": "Yig'ilgan mablag'ga faqat GTRobot tariflarini sotib olish mumkin !",
+        "promoCode": {
+          "alert_1": "Siz bir necha soniya ichida promokodni olasiz",
+          "alert_2": "Promokodni olish uchun balansingiz yetarli emas",
+          "alert_3": "Promokodingiz nusxalandi va siz menejer sahifasiga yo'naltirilasiz",
+          "text": "Sizning promokodingiz",
+          "useButton": "Promokodni faollashtirish",
+          "getButton": "Promokodni olish"
+        }
       },
       "menu": {
         "title": "Menu",

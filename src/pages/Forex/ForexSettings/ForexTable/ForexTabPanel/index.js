@@ -1,1 +1,1 @@
-export {default} from './ForexTabPanel.jsx'
+export { default } from "./ForexTabPanel.jsx";

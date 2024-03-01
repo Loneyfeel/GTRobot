@@ -1,94 +1,110 @@
-import axios from 'axios';
-import {host} from "../../../../shared/host/host.js";
-import {initData, userId} from '../../../../shared/telegram/telegram.js';
+import axios from "axios";
+import { host } from "../../../../shared/host/host.js";
+import { initData, userId } from "../../../../shared/telegram/telegram.js";
 
 const baseURL = `${host}/api`;
 
 const axiosInstance = axios.create({
-    baseURL,
+  baseURL,
 });
 
 const handleError = (error) => {
-    let errorMessage = '';
+  let errorMessage = "";
 
-    if (error.response) {
-        errorMessage = error.response.data;
-    } else if (error.request) {
-        errorMessage = 'No response from the server';
-    } else {
-        errorMessage = error.message;
-    }
+  if (error.response) {
+    errorMessage = error.response.data;
+  } else if (error.request) {
+    errorMessage = "No response from the server";
+  } else {
+    errorMessage = error.message;
+  }
 
-    return errorMessage;
+  return errorMessage;
 };
 
 export const getMiningUserData = async () => {
-    try {
-        const response = await axiosInstance.post('/get-mining-user-data', { initData, userId });
-        return response.data;
-    } catch (error) {
-        return handleError(error);
-    }
+  try {
+    const response = await axiosInstance.post("/get-mining-user-data", {
+      initData,
+      userId,
+    });
+    return response.data;
+  } catch (error) {
+    return handleError(error);
+  }
 };
 
 export const miningUserExists = async () => {
-    try {
-        const response = await axiosInstance.post('/mining-user-exists', { initData, userId });
-        return response.data;
-    } catch (error) {
-        return { status: false };
-    }
+  try {
+    const response = await axiosInstance.post("/mining-user-exists", {
+      initData,
+      userId,
+    });
+    return response.data;
+  } catch (error) {
+    return { status: false };
+  }
 };
 
 export const startMining = async (miningType) => {
-    try {
-        await axiosInstance.post('/start-mining', { initData, userId, miningType });
-    } catch (error) {
-        handleError(error);
-    }
+  try {
+    await axiosInstance.post("/start-mining", { initData, userId, miningType });
+  } catch (error) {
+    handleError(error);
+  }
 };
 
 export const saveMiningUserTask = async (taskId) => {
-    try {
-        return await axiosInstance.post('/save-mining-user-task', {initData, userId, taskId});  // Вернуть результат выполнения запроса
-    } catch (error) {
-        handleError(error);
-        // Если возникла ошибка, можно вернуть объект с информацией об ошибке
-        return { status: error};
-    }
+  try {
+    return await axiosInstance.post("/save-mining-user-task", {
+      initData,
+      userId,
+      taskId,
+    }); // Вернуть результат выполнения запроса
+  } catch (error) {
+    handleError(error);
+    // Если возникла ошибка, можно вернуть объект с информацией об ошибке
+    return { status: error };
+  }
 };
 
 export const getMiningTickersPrice = async () => {
-    try {
-        const response = await axiosInstance.post('/mining-tickers-price', { initData });
-        return response.data;
-    } catch (error) {
-        return { data: {} };
-    }
+  try {
+    const response = await axiosInstance.post("/mining-tickers-price", {
+      initData,
+    });
+    return response.data;
+  } catch (error) {
+    return { data: {} };
+  }
 };
 
 export const saveMiningUserCryptoCurrency = async (cryptoCurrency) => {
-    try {
-        await axiosInstance.post('/save-mining-user-crypto-currency', { initData, userId, cryptoCurrency });
-    } catch (error) {
-        handleError(error);
-    }
+  try {
+    await axiosInstance.post("/save-mining-user-crypto-currency", {
+      initData,
+      userId,
+      cryptoCurrency,
+    });
+  } catch (error) {
+    handleError(error);
+  }
 };
 
 export const miningWithdraw = async (withdrawAmount, withdrawAddress) => {
-    try {
-        // Отправляем запрос на /api/mining-withdraw с указанными данными
-        const response = await axiosInstance.post('/mining-withdraw', {
-            userId,
-            initData,
-            withdrawAmount,
-            withdrawAddress,
-        });
+  try {
+    // Отправляем запрос на /api/mining-withdraw с указанными данными
+    const response = await axiosInstance.post("/mining-withdraw", {
+      userId,
+      initData,
+      withdrawAmount,
+      withdrawAddress,
+    });
 
-        // Возвращаем результат выполнения запроса
-        return response.data;
-    } catch (error) {
-        // Обрабатываем ошибку и возвращаем объект с информацией об ошибке
-        return handleError(error);
-    }
+    // Возвращаем результат выполнения запроса
+    return response.data;
+  } catch (error) {
+    // Обрабатываем ошибку и возвращаем объект с информацией об ошибке
+    return handleError(error);
+  }
 };

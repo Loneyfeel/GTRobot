@@ -1,1 +1,1 @@
-export {default} from './ReferralsChart.jsx'
+export { default } from "./ReferralsChart.jsx";

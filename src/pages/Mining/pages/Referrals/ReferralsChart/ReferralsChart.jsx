@@ -1,41 +1,80 @@
-import React, { useEffect, useRef, useState } from 'react';
-import ApexCharts from 'react-apexcharts';
+import React, { useEffect, useState } from "react";
+import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts';
 
 const ReferralsChart = () => {
     const [referrals, setReferrals] = useState([]);
 
     useEffect(() => {
-        const fetchData = async () => {
-            try {
-                // Получаем данные из local.storage
-                const storedData = JSON.parse(localStorage.getItem('miningUserData')) || {};
-                setReferrals(storedData.referrals || []);
-            } catch (error) {
-                console.error('Error fetching user data:', error);
-            }
-        };
-
-        fetchData();
+        // const fetchData = async () => {
+        //   try {
+        //     // Получаем данные из local.storage
+        //     const storedData =
+        //         JSON.parse(localStorage.getItem("miningUserData")) || {};
+        //     setReferrals(storedData.referrals || []);
+        //   } catch (error) {
+        //     console.error("Error fetching user data:", error);
+        //   }
+        // };
+        //
+        // fetchData();
+        const testReferrals = generateTestData();
+        setReferrals(testReferrals);
     }, []);
 
-    const [options, setOptions] = useState({});
-    const userList = referrals.map(referral => ({
+    const generateTestData = () => {
+        const testData = [];
+        const currentDate = new Date();
+        const startDate = new Date(currentDate);
+        startDate.setDate(startDate.getDate() - 29); // Начинаем с 20 дней назад
+
+        for (let date = startDate; date <= currentDate; date.setDate(date.getDate() + 1)) {
+            const timestamp = date.getTime() / 1000;
+            // Генерируем случайное количество пользователей для каждой даты
+            const userCount = Math.floor(Math.random() * 3) + 1; // от 1 до 3 пользователей
+            for (let i = 0; i < userCount; i++) {
+                testData.push({
+                    user_name: `User ${i}`,
+                    timestamp: timestamp,
+                });
+            }
+        }
+        return testData;
+    };
+
+    const generateDateList = () => {
+        const currentDate = new Date();
+        const endDate = new Date(currentDate); // Конечная дата - текущая дата
+        const startDate = new Date(currentDate); // Начальная дата - 20 дней назад от текущей даты
+        startDate.setDate(startDate.getDate() - 29); // Вычитаем 19 дней
+
+        const dateList = [];
+
+        for (let date = startDate; date <= endDate; date.setDate(date.getDate() + 1)) {
+            const day = String(date.getDate()).padStart(2, "0");
+            const month = String(date.getMonth() + 1).padStart(2, "0");
+            const formattedDate = `${day}.${month}`;
+            dateList.push(formattedDate);
+        }
+
+        return dateList;
+    };
+
+    const userList = referrals.map((referral) => ({
         user_name: referral.user_name,
-        timestamp: referral.timestamp
+        timestamp: referral.timestamp,
     }));
     const dateList = generateDateList();
     const userCountByDate = {};
 
-    // Заполняем объект начальными значениями
-    dateList.forEach(date => {
+    dateList.forEach((date) => {
         userCountByDate[date] = 0;
     });
 
     // Подсчитываем количество пользователей по датам
-    userList.forEach(user => {
+    userList.forEach((user) => {
         const timestamp = user.timestamp;
         const userDate = new Date(timestamp * 1000);
-        const formattedDate = `${String(userDate.getDate()+1).padStart(2, '0')}.${String(userDate.getMonth() + 1).padStart(2, '0')}.${String(userDate.getFullYear()).slice(2)}`;
+        const formattedDate = `${String(userDate.getDate() + 1).padStart(2, "0")}.${String(userDate.getMonth() + 1).padStart(2, "0")}`;
 
         if (userCountByDate[formattedDate] !== undefined) {
             userCountByDate[formattedDate]++;
@@ -43,119 +82,31 @@ const ReferralsChart = () => {
     });
 
     // Преобразуем объект в массив значений
-    const userCountList = dateList.map(date => userCountByDate[date]);
+    const data = dateList.map((date) => ({ date, count: userCountByDate[date] || 0 }));
 
+    // Находим максимальное значение данных
+    const maxCount = Math.max(...data.map(entry => entry.count));
 
-    useEffect(() => {
-        setOptions(referralsChart('', userCountList, dateList));
-    }, [userCountList.reverse(), dateList]);
+    // Определяем количество меток на оси Y (максимальное значение + 1)
+    const yAxisTicks = Array.from({ length: maxCount + 1 }, (_, i) => i + 1);
 
     return (
-        <div>
-            <ApexCharts
-                options={options}
-                series={[{ data: userCountList }]}
-                type="area"
-                height={250}
-            />
+        <div style={{
+            width: '95%',
+            height: 250,
+            paddingRight: '30px'
+        }}>
+            <ResponsiveContainer>
+                <LineChart
+                    data={data}
+                >
+                    <XAxis dataKey="date" tick={{ fill: "#FFF" }}/>
+                    <YAxis domain={[1, maxCount + 1]} ticks={yAxisTicks} />
+                    <Line type="monotone" dataKey="count" stroke="#8884d8" activeDot={{ r: 5 }} />
+                </LineChart>
+            </ResponsiveContainer>
         </div>
     );
 };
-
-function generateDateList() {
-    const currentDate = new Date();
-    const dateList = [];
-
-    for (let i = -1; i < 20; i++) {
-    // for (let i = -30; i < 30; i++) {
-        const newDate = new Date(currentDate);
-        newDate.setDate(currentDate.getDate() - i);
-
-        const day = String(newDate.getDate()).padStart(2, '0');
-        const month = String(newDate.getMonth() + 1).padStart(2, '0');
-        const year = String(newDate.getFullYear()).slice(2);
-
-        const formattedDate = `${day}.${month}.${year}`;
-        dateList.push(formattedDate);
-    }
-
-    return dateList;
-}
-
-function referralsChart(name, series, categories) {
-    return {
-        series: [{
-            name: '',
-            data: series
-        }],
-        chart: {
-            type: 'area',
-            height: 250,
-            toolbar: {
-                show: false
-            },
-            zoom: {
-                enabled: false
-            },
-        },
-        dataLabels: {
-            enabled: false
-        },
-        markers: {
-            size: 0,
-        },
-        title: {
-            text: name,
-            align: 'center'
-        },
-        fill: {
-            colors: [cleanColor('--tg-theme-button-color')]
-        },
-        xaxis: {
-            categories: categories.map(date => {
-                const [day, month] = date.split('.');
-                return `${day-1}.${month}`;
-            }).reverse(),
-            labels: {
-                style: {
-                    colors: Array(categories.length).fill(cleanColor('--tg-theme-hint-color')),
-                    fontSize: '10px',
-                },
-            },
-        },
-        yaxis: {
-            labels: {
-                formatter: function (value) {
-                    return Math.round(value);
-                },
-                style: {
-                    colors: [cleanColor('--tg-theme-text-color')],
-                },
-            }
-        },
-        tooltip: {
-            x: {
-                formatter: function (value) {
-                    const [day, month] = value.split('.');
-                    return `${day-1}.${month}`;
-                }
-            }
-        }
-    };
-}
-
-function cleanColor(color) {
-    color = getComputedStyle(document.documentElement).getPropertyValue(color);
-    color = color.trim();
-    color = color.replace(/^#+/, '');
-    if (color.length < 6) {
-        color = color.padStart(6, '0');
-    } else if (color.length > 6) {
-        color = color.slice(0, 6);
-    }
-
-    color = '#' + color;
-    return color;
-}
 
 export default ReferralsChart;

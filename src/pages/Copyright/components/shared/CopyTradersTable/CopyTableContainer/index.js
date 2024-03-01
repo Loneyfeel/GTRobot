@@ -1,1 +1,1 @@
-export {default} from './CopyTableContainer.jsx'
+export { default } from "./CopyTableContainer.jsx";

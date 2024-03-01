@@ -1,1 +1,1 @@
-export {default} from './miniTVW.jsx'
+export { default } from "./miniTVW.jsx";

@@ -1,1 +1,1 @@
-export {default} from './MainMining.jsx'
+export { default } from "./MainMining.jsx";

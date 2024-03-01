@@ -1,1 +1,1 @@
-export {default} from './Screener.jsx'
+export { default } from "./Screener.jsx";

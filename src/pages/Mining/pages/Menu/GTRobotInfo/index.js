@@ -1,1 +1,1 @@
-export {default} from './GTRobotInfo.jsx'
+export { default } from "./GTRobotInfo.jsx";

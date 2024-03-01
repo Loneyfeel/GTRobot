@@ -1,1 +1,1 @@
-export {default} from './Collect.jsx'
+export { default } from "./Collect.jsx";

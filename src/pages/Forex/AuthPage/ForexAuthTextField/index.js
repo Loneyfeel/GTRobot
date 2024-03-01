@@ -1,1 +1,1 @@
-export {default} from './ForexAuthTextField.jsx'
+export { default } from "./ForexAuthTextField.jsx";
