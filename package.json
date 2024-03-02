@@ -19,6 +19,7 @@
     "@mui/system": "^5.14.17",
     "@uidotdev/usehooks": "^2.4.1",
     "@vkruglikov/react-telegram-web-app": "^2.1.5",
+    "apexcharts": "^3.46.0",
     "axios": "^1.6.0",
     "eruda": "^3.0.1",
     "framer-motion": "^10.6.8",

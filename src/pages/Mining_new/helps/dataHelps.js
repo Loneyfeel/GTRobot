@@ -16,7 +16,7 @@ export async function checkUserExists() {
 export async function fetchDataAndUpdateLocalStorage() {
     try {
         const storedQueryId = localStorage.getItem('miningQueryId');
-        // if (storedQueryId !== currentQueryId) {
+        if (storedQueryId !== currentQueryId) {
             const response = await getMiningUserData();
             localStorage.setItem('miningQueryId', currentQueryId);
 
@@ -27,7 +27,7 @@ export async function fetchDataAndUpdateLocalStorage() {
                 // Устанавливаем начальные тестовые данные в локальное хранилище при возникновении ошибки
                 localStorage.setItem('miningUserData', JSON.stringify(testData.userData));
             }
-        // }
+        }
     } catch (error) {
         console.error('Error fetching user data:', error);
     }
@@ -52,7 +52,7 @@ export async function fetchTickersPricesAndUpdateLocalStorage () {
         if (tickersPrices.length > 0) {
             localStorage.setItem('prices', JSON.stringify(tickersPrices));
         } else {
-            localStorage.setItem('prices', JSON.stringify(testData.tickersPrices));
+            localStorage.setItem('prices', JSON.stringify(testData.prices));
         }
     } catch (error) {
         console.error('Error fetching tickers prices:', error);

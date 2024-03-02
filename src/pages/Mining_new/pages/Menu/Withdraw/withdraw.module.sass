@@ -1,0 +1,90 @@
+.withdraw
+  display: flex
+  flex-direction: column
+  align-items: center
+  color: var(--text_color)
+  min-height: 40vh
+  width: 100%
+  &__content
+    display: flex
+    flex-direction: column
+    align-items: center
+    width: 90%
+    &__input_box
+      width: 100%
+      display: flex
+      flex-direction: column
+      align-items: center
+      border-radius: 7px
+      padding: 5px
+      &__label
+        width: 100%
+        padding: 5px
+        margin-left: 30px
+        cursor: default
+      &__input_text_box
+        display: flex
+        align-items: center
+        position: relative
+        width: 100%
+        &__input
+          padding-inline: 15px
+          border-radius: 50px
+          border: none
+          height: 50px
+          background-color: var(--component_bg_color)
+          width: 100%
+          outline: none
+          color: var(--text_color)
+          font-family: 'Gilroy', sans-serif
+          font-size: 16px
+          font-weight: 300
+          &::placeholder
+            padding-left: 10px
+            font-family: 'Gilroy', sans-serif
+            font-size: 16px
+            font-weight: 300
+            color: var(--component_stroke_color_light)
+        &__icon
+          position: absolute
+          right: 5px
+      &__all
+        width: 80%
+        display: flex
+        justify-content: space-between
+        align-items: flex-end
+        padding-top: 10px
+        &__button
+          font-weight: 600
+          cursor: pointer
+        &__min
+          font-size: 16px
+          font-weight: 400
+          color: var(--component_stroke_color_light)
+    &__converter
+      display: flex
+      flex-direction: column
+      align-items: flex-start
+      justify-content: space-around
+      width: 200px
+      height: 85px
+      background-image: linear-gradient(to left, rgba(152, 152, 152, 0.95), rgba(62, 62, 62, 0.95))
+      border: 1px solid var(--component_stroke_color)
+      border-radius: 20px
+      padding: 8px 20px
+      margin: 20px
+      &__text
+        display: flex
+        align-items: center
+        font-weight: 300
+        font-size: 18px
+        &_img
+          width: 24px
+          height: 24px
+          margin-left: 10px
+      &__count
+        font-weight: 800
+        &_big
+          font-size: 42px
+        &_small
+          font-size: 22px

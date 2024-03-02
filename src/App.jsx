@@ -30,7 +30,6 @@ function App() {
         });
         setLoading(false);
         setLanguage(response.data);
-        // setLanguage('uz');
       } catch (error) {
         console.error("Произошла ошибка при выполнении POST-запроса:", error);
         if (error.response.data.errorCode === 1006) {

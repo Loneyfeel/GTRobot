@@ -8,7 +8,6 @@ import { useTranslation } from "react-i18next";
 import { useUserExists, useFetchDataAndUpdateLocalStorage, useUserTasks, useTickersPrice } from './hooks';
 import BottomNavigationMenu from "./components/BottomNavigationMenu/index.js";
 import { CloudMining, GTRobotMining, Referrals, Menu } from './pages';
-
 const Helps = lazy(() => import('./screens/Helps'));
 const Tasks = lazy(() => import('./screens/Tasks'));
 
@@ -48,6 +47,9 @@ const Mining = () => {
             setSelectedTab(0); // Установите первоначальное значение selectedTab
             localStorage.setItem('selectedTab', "0");
         }
+        setUserTasks(useUserTasks());
+
+        console.log('Найти это в Mining.jsx isUserExists', isUserExists)
     }, []); // Пустой массив зависимостей для выполнения только один раз
 
     return (
@@ -77,7 +79,7 @@ const Mining = () => {
                                             <Route path="/cloud-mining" element={<CloudMining />} />
                                             <Route path="/gtrobot-mining" element={<GTRobotMining />} />
                                             <Route path="/referrals" element={<Referrals />} />
-                                            <Route path="/menu" element={<Menu />} />
+                                            <Route path="/menu/:item?" element={<Menu onTabChange={handleTabChange}/>} />
                                         </Routes>
                                     </Suspense>
                                     <Suspense>

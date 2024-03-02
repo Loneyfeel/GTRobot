@@ -7,6 +7,7 @@ import PageTitle from "../../components/PageTitle/index.js";
 import { CloudCard, StartButton, Timer } from './components';
 import CustomButton from "@components/CustomButton/index.js";
 import { motion } from "framer-motion";
+import {useNavigate} from "react-router-dom";
 
 const CloudMining = () => {
     const userDataStorage = JSON.parse(localStorage.getItem("miningUserData")); //Получаем данные
@@ -31,9 +32,9 @@ const CloudMining = () => {
         const currencyPrice = prices.find(price => Object.keys(price)[0] === cryptoCurrency);
         // Обновляем состояние userCurrencyPrice с ценой, если объект найден, или null, если объект не найден
         setUserCurrencyPrice(currencyPrice ? Object.values(currencyPrice)[0] : null);
-
-
     }, [cryptoCurrency, prices]);
+
+    const navigate = useNavigate();
 
     return (
         <>
@@ -72,7 +73,7 @@ const CloudMining = () => {
                         <CustomButton
                             content={"Вывести"}
                             onClick={() => {
-                                console.log("НАПИШИ ТУТ ПЕРЕХОД В ВЫВОД")
+                                navigate('/menu/wallet');
                             }}
                         />
                     </Box>
