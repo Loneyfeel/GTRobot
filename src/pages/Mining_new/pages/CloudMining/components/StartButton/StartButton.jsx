@@ -12,7 +12,7 @@ import {fetchDataAndUpdateLocalStorageInSession} from "../../../../helps/dataHel
 import {startMining} from "../../../../api/api.js";
 import CustomButton from "@components/CustomButton/index.js";
 
-const StartButton = ({isMiningActive, setContentVisible}) => {
+const StartButton = ({isMiningActive, setContentVisible, setIsStartUserMiningTimestamp, setIsEndUserMiningTimestamp}) => {
     const {t} = useTranslation();
     const [timerStarted, setTimerStarted] = useState(!isMiningActive);
 
@@ -22,7 +22,11 @@ const StartButton = ({isMiningActive, setContentVisible}) => {
 
     async function handleStartButtonClick(){
         await startMining("regular")
-        await fetchDataAndUpdateLocalStorageInSession()
+        await fetchDataAndUpdateLocalStorageInSession().then(() => {
+            const userDataStorage = JSON.parse(localStorage.getItem("miningUserData"));
+            setIsStartUserMiningTimestamp(userDataStorage.mining.startUserMiningTimestamp);
+            setIsEndUserMiningTimestamp(userDataStorage.mining.endUserMiningTimestamp);
+        });
         setContentVisible(false);
         setTimeout(() => setContentVisible(true), 3500); // Подождать 1 секунду для завершения анимации (время может варьироваться в зависимости от анимации)
     }

@@ -106,12 +106,10 @@ const Helps = ({ setIsUserExists }) => {
                 transition={transition}
                 className={style.content}
             >
-                {/*<Box className={style.content}>*/}
                 <Suspense>
                     <Box className={style.content__title}>{objects[currentIndex].text}</Box>
                     <Box className={style.content__component}>{objects[currentIndex].component}</Box>
                 </Suspense>
-                {/*</Box>*/}
             </motion.div>
         </Box>
     )

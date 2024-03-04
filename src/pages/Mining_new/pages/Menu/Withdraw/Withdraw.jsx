@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import style from './withdraw.module.sass'
-import { Box, Button, TextField} from "@mui/material";
-import {miningWithdraw} from "../../../../Mining/components/Requests/Requests.js";
+import { Box} from "@mui/material";
+import {miningWithdraw} from "../../../api/api.js";
 import {useTranslation} from "react-i18next";
 
 import btcIcon from "../../../assets/shared/cryptoCoins/bitcoin.svg";
@@ -15,6 +15,9 @@ import dogeMiniIcon from '../../../assets/Menu/Widthdraw/dogeIcon.svg'
 import shibMiniIcon from '../../../assets/Menu/Widthdraw/shibIcon.svg'
 
 import tether from "../../../assets/Menu/Widthdraw/tether.svg";
+
+import info from '../../../assets/Menu/Widthdraw/infoCircle.svg'
+
 import CustomSnackBar from "../../../components/CustomSnackBar/index.js";
 import CustomButton from "@components/CustomButton/index.js";
 
@@ -36,88 +39,168 @@ const Withdraw = () => {
     const [isWithdrawError2012SnackbarOpen, setIsWithdrawError2012SnackbarOpen] = useState(false);
     const [isWithdrawError2013SnackbarOpen, setIsWithdrawError2013SnackbarOpen] = useState(false);
 
+    const [holdingBalance, setHoldingBalance ] = useState(0);
+    const [balanceToHoldingTimestamp, setBalanceToHoldingTimestamp ] = useState();
+    const [daysBalanceToHoldingTimestamp, setDaysBalanceToHoldingTimestamp ] = useState();
+    const [holdingTimestamp, setHoldingTimestamp ] = useState();
+    const [daysHoldingTimestamp, setDaysHoldingTimestamp ] = useState();
+    const withdrawNotAvailableDays = 20;
+    const holdingPeriod = 90;
+
     useEffect(() => {
         const storedData = JSON.parse(localStorage.getItem("miningUserData")) || {};
         const registrationDate = storedData.registrationDate || 0;
-        const withdrawNotAvailableDays = 20;
 
-        // Рассчитываем разницу в днях
+        // Рассчитываем разницу в днях между текущей датой и датой регистрации
         const currentDate = new Date();
         const registrationDateObject = new Date(registrationDate * 1000);
         const timeDifference = currentDate - registrationDateObject;
 
-        // Рассчитываем, сколько периодов по 20 дней прошло с момента регистрации
+        // Рассчитываем, сколько периодов по 22 дня прошло с момента регистрации
         const periodsPassed = Math.floor(
-            timeDifference / (withdrawNotAvailableDays * 24 * 60 * 60 * 1000),
+            timeDifference / ((withdrawNotAvailableDays + 2) * 24 * 60 * 60 * 1000),
         );
 
         // Рассчитываем дату начала следующего периода вывода
         const nextWithdrawalStartDate = new Date(
             registrationDateObject.getTime() +
-            (periodsPassed + 1) * withdrawNotAvailableDays * 24 * 60 * 60 * 1000,
+            (periodsPassed * (withdrawNotAvailableDays + 2) + withdrawNotAvailableDays) * 24 * 60 * 60 * 1000,
         );
 
-        // Рассчитываем дату окончания периода вывода (2 дня после начала)
-        const nextWithdrawalEndDate = new Date(nextWithdrawalStartDate);
-        nextWithdrawalEndDate.setDate(nextWithdrawalStartDate.getDate() + 2);
-
-        const daysDifference = Math.floor(
+        // Рассчитываем дни до следующего вывода
+        const daysUntilWithdrawal = Math.ceil(
             (nextWithdrawalStartDate - currentDate) / (24 * 60 * 60 * 1000),
         );
 
-        setDaysUntilWithdrawal(daysDifference);
+        // Рассчитываем дни до окончания периода для перевода в холдинг
+        const balanceToHoldingDays = Math.ceil(
+            (currentDate - new Date(storedData.holding.balanceToHoldingTimestamp * 1000)) / (24 * 60 * 60 * 1000),
+        );
+        const daysBalanceToHoldingTimestamp = withdrawNotAvailableDays - balanceToHoldingDays;
+
+        // Рассчитываем дни до окончания периода холдинга
+        const holdingDays = Math.ceil(
+            (currentDate - new Date(storedData.holding.holdingTimestamp * 1000)) / (24 * 60 * 60 * 1000),
+        );
+        const daysHoldingTimestamp = holdingPeriod - holdingDays;
+
+        // Обновляем состояния
+        setDaysUntilWithdrawal(daysUntilWithdrawal);
+        setDaysBalanceToHoldingTimestamp(daysBalanceToHoldingTimestamp);
+        setDaysHoldingTimestamp(daysHoldingTimestamp);
+
+        // Обновляем состояния для холдинга
+        setBalanceToHoldingTimestamp(storedData.holding.balanceToHoldingTimestamp);
+        setHoldingBalance(storedData.holding.holdingBalance || 0);
+        setHoldingTimestamp(storedData.holding.holdingTimestamp);
     }, []);
 
+
+
     const handleWithdrawal = async () => {
-        // if (daysUntilWithdrawal >= 0) {
-        if (false) {
+        if (!daysUntilWithdrawal > 0) {
             setDaysErrorSnackbarOpen(true);
         } else {
             window.Telegram.WebApp.showConfirm(
-                `${t("mining.pages.menu.withdraw.btn_helps.balance")}: ${withdrawAmount} \n` +
-                `${t("mining.pages.menu.withdraw.btn_helps.address")}: ${walletAddress}\n\n` +
-                `${t("mining.pages.menu.withdraw.btn_helps.question")}?`,
+               `${t("mining.pages.menu.withdraw.holding.question")}`,
                 async (confirm) => {
-                    if (confirm) {
-                        handleWithdraw();
-                        try {
-                            const withdrawalResponse = await miningWithdraw(
-                                parseFloat(withdrawAmount),
-                                walletAddress,
-                            );
-                            if (withdrawalResponse && withdrawalResponse.errorCode) {
-                                switch (withdrawalResponse.errorCode) {
-                                    case 404:
-                                        setIsWithdrawError404SnackbarOpen(true);
-                                        break;
-                                    case 2010:
-                                        setIsWithdrawError2010SnackbarOpen(true);
-                                        break;
-                                    case 2011:
-                                        setIsWithdrawError2011SnackbarOpen(true);
-                                        break;
-                                    case 2012:
-                                        setIsWithdrawError2012SnackbarOpen(true);
-                                        break;
-                                    case 2013:
-                                        setIsWithdrawError2013SnackbarOpen(true);
-                                        break;
-                                    default:
-                                        setIsWithdrawError404SnackbarOpen(true);
-                                        console.log(
-                                            `Unexpected error: ${withdrawalResponse.errorCode}`,
-                                        );
-                                        break;
-                                }
-                            } else {
-                                setSuccessSnackbarOpen(true);
-                            }
-                        } catch (error) {
-                            console.error("Ошибка при выполнении miningWithdraw:", error);
-                        }
-                    }
-                },
-            );
+                   if (confirm) {
+                       window.Telegram.WebApp.showConfirm(
+                           `${t("mining.pages.menu.withdraw.btn_helps.balance")}: ${withdrawAmount + holdingBalance} \n` +
+                           `${t("mining.pages.menu.withdraw.btn_helps.address")}: ${walletAddress}\n\n` +
+                           `${t("mining.pages.menu.withdraw.btn_helps.question")}?`,
+                           async (confirm) => {
+                               if (confirm) {
+                                   handleWithdraw();
+                                   try {
+                                       const withdrawalResponse = await miningWithdraw(
+                                           parseFloat(withdrawAmount + holdingBalance),
+                                           walletAddress,
+                                           true
+                                       );
+                                       if (withdrawalResponse && withdrawalResponse.errorCode) {
+                                           switch (withdrawalResponse.errorCode) {
+                                               case 404:
+                                                   setIsWithdrawError404SnackbarOpen(true);
+                                                   break;
+                                               case 2010:
+                                                   setIsWithdrawError2010SnackbarOpen(true);
+                                                   break;
+                                               case 2011:
+                                                   setIsWithdrawError2011SnackbarOpen(true);
+                                                   break;
+                                               case 2012:
+                                                   setIsWithdrawError2012SnackbarOpen(true);
+                                                   break;
+                                               case 2013:
+                                                   setIsWithdrawError2013SnackbarOpen(true);
+                                                   break;
+                                               default:
+                                                   setIsWithdrawError404SnackbarOpen(true);
+                                                   console.log(
+                                                       `Unexpected error: ${withdrawalResponse.errorCode}`,
+                                                   );
+                                                   break;
+                                           }
+                                       } else {
+                                           setSuccessSnackbarOpen(true);
+                                       }
+                                   } catch (error) {
+                                       console.error("Ошибка при выполнении miningWithdraw:", error);
+                                   }
+                               }
+                           }
+                       )
+                   } else {
+                       window.Telegram.WebApp.showConfirm(
+                           `${t("mining.pages.menu.withdraw.btn_helps.balance")}: ${withdrawAmount} \n` +
+                           `${t("mining.pages.menu.withdraw.btn_helps.address")}: ${walletAddress}\n\n` +
+                           `${t("mining.pages.menu.withdraw.btn_helps.question")}?`,
+                           async (confirm) => {
+                               if (confirm) {
+                                   handleWithdraw();
+                                   try {
+                                       const withdrawalResponse = await miningWithdraw(
+                                           parseFloat(withdrawAmount),
+                                           walletAddress,
+                                           false
+                                       );
+                                       if (withdrawalResponse && withdrawalResponse.errorCode) {
+                                           switch (withdrawalResponse.errorCode) {
+                                               case 404:
+                                                   setIsWithdrawError404SnackbarOpen(true);
+                                                   break;
+                                               case 2010:
+                                                   setIsWithdrawError2010SnackbarOpen(true);
+                                                   break;
+                                               case 2011:
+                                                   setIsWithdrawError2011SnackbarOpen(true);
+                                                   break;
+                                               case 2012:
+                                                   setIsWithdrawError2012SnackbarOpen(true);
+                                                   break;
+                                               case 2013:
+                                                   setIsWithdrawError2013SnackbarOpen(true);
+                                                   break;
+                                               default:
+                                                   setIsWithdrawError404SnackbarOpen(true);
+                                                   console.log(
+                                                       `Unexpected error: ${withdrawalResponse.errorCode}`,
+                                                   );
+                                                   break;
+                                           }
+                                       } else {
+                                           setSuccessSnackbarOpen(true);
+                                       }
+                                   } catch (error) {
+                                       console.error("Ошибка при выполнении miningWithdraw:", error);
+                                   }
+                               }
+                           },
+                       );
+                   }
+                }
+            )
         }
     };
 
@@ -192,6 +275,7 @@ const Withdraw = () => {
 
     const [balance, setBalance] = useState(0);
     const [cryptoCurrency, setCryptoCurrency] = useState("");
+    const [pricePerCoin, setPricePerCoin] = useState(0);
 
     useEffect(() => {
         const storedData = JSON.parse(localStorage.getItem("miningUserData")) || {};
@@ -199,8 +283,16 @@ const Withdraw = () => {
         setCryptoCurrency(storedData.cryptoCurrency || "btc");
     }, []);
 
-    const prices = JSON.parse(localStorage.getItem("prices")) || {};
-    const pricePerCoin = prices[cryptoCurrency] || 0;
+    useEffect(() => {
+        const prices = JSON.parse(localStorage.getItem("prices")) || [];
+        const priceObject = prices.find(price => price[cryptoCurrency]);
+        if (priceObject) {
+            setPricePerCoin(priceObject[cryptoCurrency]);
+        } else {
+            setPricePerCoin(0); // или любое другое значение по умолчанию
+        }
+    }, [cryptoCurrency]);
+
 
     // Функция для форматирования баланса с заданным количеством знаков после запятой
     const formatNumber = (balance, digits) => {
@@ -211,7 +303,7 @@ const Withdraw = () => {
         return formattedBalance;
     };
 
-    const formatedCost = formatNumber(pricePerCoin, 6)
+    const formatedCost = formatNumber(pricePerCoin, 9)
 
     return (
         <>
@@ -309,6 +401,38 @@ const Withdraw = () => {
                             }}
                         />
                     </Box>
+                    <Box className={style.withdraw__content__usdt}>
+                        <Box className={style.withdraw__content__usdt__info_box}>
+                           <img
+                               className={style.withdraw__content__usdt__info_box__img}
+                               src={info}
+                               alt={'info'}
+                               onClick={() => {
+                                   window.Telegram.WebApp.showConfirm(
+                                       `${t("mining.pages.menu.withdraw.withdraw_alert_1")}`,
+                                       () => {
+                                           window.Telegram.WebApp.showConfirm(
+                                               balanceToHoldingTimestamp ? (
+                                                   holdingBalance > 0 ?
+                                                       `${t("mining.pages.menu.withdraw.withdraw_alert_2")}\n\n${t("mining.pages.menu.withdraw.holding.alert_3")} ${daysHoldingTimestamp}  ${t("mining.pages.menu.withdraw.holding.alert_4")}` :
+                                                       `${t("mining.pages.menu.withdraw.withdraw_alert_2")}\n\n${t("mining.pages.menu.withdraw.holding.alert_1")} ${balanceToHoldingTimestamp}  ${t("mining.pages.menu.withdraw.holding.alert_2")}`
+                                               ) : (
+                                                   `${t("mining.pages.menu.withdraw.withdraw_alert_2")}`
+                                               )
+                                           )
+                                       },
+                                       { hideCancelButton: true }
+                                   );
+                               }}
+                           />
+                            <Box className={style.withdraw__content__usdt__info_box__text}>
+                                {t("mining.pages.menu.withdraw.usdt_count")}
+                            </Box>
+                        </Box>
+                        <Box className={style.withdraw__content__usdt__count}>
+                            {holdingBalance}$
+                        </Box>
+                    </Box>
                     <CustomButton
                         content={t("mining.pages.menu.withdraw.menu_btn")}
                         onClick={handleWithdrawal}
@@ -320,7 +444,7 @@ const Withdraw = () => {
                 <CustomSnackBar text={t("mining.pages.menu.withdraw.snackbars.success")} openState={isSuccessSnackbarOpen} setIsFunction={setSuccessSnackbarOpen}/>
                 <CustomSnackBar text={t("mining.pages.menu.withdraw.snackbars.error_balance")} openState={isAmountErrorSnackbarOpen} setIsFunction={setAmountErrorSnackbarOpen} severity={'error'}/>
                 <CustomSnackBar text={t("mining.pages.menu.withdraw.snackbars.error_full")} openState={isEmptyFieldsErrorSnackbarOpen} setIsFunction={setEmptyFieldsErrorSnackbarOpen} severity={'error'}/>
-                <CustomSnackBar text={`${t("mining.pages.mainMining.days_snackbar_1")} ${daysUntilWithdrawal} ${t("mining.pages.mainMining.days_snackbar_2")}`} openState={isDaysErrorSnackbarOpen} setIsFunction={setDaysErrorSnackbarOpen} severity={'error'}/>
+                <CustomSnackBar text={`${t("mining.pages.cloudMining.days_snackbar_1")} ${daysUntilWithdrawal} ${t("mining.pages.cloudMining.days_snackbar_2")}`} openState={isDaysErrorSnackbarOpen} setIsFunction={setDaysErrorSnackbarOpen} severity={'error'}/>
                 <CustomSnackBar text={t("mining.pages.menu.withdraw.snackbars.error404")} openState={isWithdrawError404SnackbarOpen} setIsFunction={setIsWithdrawError404SnackbarOpen} severity={'error'}/>
                 <CustomSnackBar text={t("mining.pages.menu.withdraw.snackbars.error2010")} openState={isWithdrawError2010SnackbarOpen} setIsFunction={setIsWithdrawError2010SnackbarOpen} severity={'error'}/>
                 <CustomSnackBar text={t("mining.pages.menu.withdraw.snackbars.error2011")} openState={isWithdrawError2011SnackbarOpen} setIsFunction={setIsWithdrawError2011SnackbarOpen} severity={'error'}/>

@@ -8,6 +8,8 @@ import { useTranslation } from "react-i18next";
 import { useUserExists, useFetchDataAndUpdateLocalStorage, useUserTasks, useTickersPrice } from './hooks';
 import BottomNavigationMenu from "./components/BottomNavigationMenu/index.js";
 import { CloudMining, GTRobotMining, Referrals, Menu } from './pages';
+import {fetchDataAndUpdateLocalStorage} from "./helps/dataHelps.js";
+import {miningUserExists} from "../Mining/components/Requests/Requests.js";
 const Helps = lazy(() => import('./screens/Helps'));
 const Tasks = lazy(() => import('./screens/Tasks'));
 
@@ -15,21 +17,50 @@ const Mining = () => {
     const { t } = useTranslation();
 
     const [selectedTab, setSelectedTab] = useState(0);
+    const [backdropVisible, setBackdropVisible] = useState(false);
 
     const handleTabChange = (index) => {
         setSelectedTab(index);
         localStorage.setItem('selectedTab', index);
     };
 
-    const { isUserExists, isLoading, setIsUserExists } = useUserExists();
-    const { userDataLoading } = useFetchDataAndUpdateLocalStorage();
+    const [isUserExists, setIsUserExists] = useState(false)
     const [userTasks, setUserTasks] = useState([]);
+
     useTickersPrice()
 
-    useEffect(() => {
-        if (userDataLoading) {
-            setUserTasks(useUserTasks());
+    const fetchLocalStorageTasks = () => {
+        try {
+            const storedDataString = localStorage.getItem("miningUserData");
+            if (storedDataString) {
+                const storedData = JSON.parse(storedDataString);
+                setUserTasks(storedData.activeTasks);
+            } else {
+                console.log('No data found in miningUserData');
+            }
+        } catch (error) {
+            console.error('Ошибка при получении данных:', error);
         }
+    };
+
+    const checkUserExists = async () => {
+        try {
+            const userExistsResponse = await miningUserExists();
+
+            if (!userExistsResponse.status) {
+                setIsUserExists(false);
+            } else {
+                setIsUserExists(userExistsResponse.status)
+            }
+        } catch (error) {
+            console.error('Error checking user existence:', error);
+        }
+    };
+
+    useEffect(() => {
+
+        checkUserExists()
+
         const savedTab = localStorage.getItem('selectedTab');
         if (savedTab !== null) {
             setSelectedTab(parseInt(savedTab, 10));
@@ -37,24 +68,31 @@ const Mining = () => {
             setSelectedTab(0); // Установите первоначальное значение selectedTab
             localStorage.setItem('selectedTab', "0");
         }
-    }, [userDataLoading]); // Удалите selectedTab из зависимостей
+
+        setBackdropVisible(true);
+        const timeout = setTimeout(() => {
+            setBackdropVisible(false);
+        }, 500);
+
+        return () => clearTimeout(timeout);
+    }, []);
+
 
     useEffect(() => {
-        const savedTab = localStorage.getItem('selectedTab');
-        if (savedTab !== null) {
-            setSelectedTab(parseInt(savedTab, 10));
-        } else {
-            setSelectedTab(0); // Установите первоначальное значение selectedTab
-            localStorage.setItem('selectedTab', "0");
+        if (isUserExists) {
+            fetchDataAndUpdateLocalStorage()
+                .then(() => {
+                    fetchLocalStorageTasks(); // Вызываем fetchLocalStorageTasks только после успешного получения данных из fetchDataAndUpdateLocalStorage
+                })
+                .catch(error => {
+                    console.error('Error fetching data and updating localStorage:', error);
+                });
         }
-        setUserTasks(useUserTasks());
-
-        console.log('Найти это в Mining.jsx isUserExists', isUserExists)
-    }, []); // Пустой массив зависимостей для выполнения только один раз
+    }, [isUserExists]);
 
     return (
         <>
-            <Backdrop open={isLoading} sx={{ zIndex: 9999, bgcolor: '#000' }}>
+            <Backdrop open={backdropVisible} sx={{ zIndex: 9999, bgcolor: '#000' }}>
                 <CircularProgress sx={{ color: '#fff' }} />
             </Backdrop>
             <Box className={style.mining}>

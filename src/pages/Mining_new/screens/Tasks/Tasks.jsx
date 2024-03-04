@@ -53,14 +53,11 @@ const Tasks = ({ userTasks, setUserTasks }) => {
         for (const task of userTasks) {
             const clicks = clickedTasks[task.task_id] || 0;
             if (clicks >= 2) {
-                newTasks = newTasks.filter(item => item.task_id !== task.task_id); // Фильтруем задачи
-                delete newClickedTasks[task.task_id]; // Удаляем клики для данной задачи
-                setUserTasks(prevUserTasks => prevUserTasks.filter(item => item.task_id !== task.task_id)); // Удаляем задачу из userTasks
                 const response = await saveMiningUserTask(task.task_id);
                 if (response.status === 200) {
-                    // newTasks = newTasks.filter(item => item.task_id !== task.task_id); // Фильтруем задачи
-                    // delete newClickedTasks[task.task_id]; // Удаляем клики для данной задачи
-                    // setUserTasks(prevUserTasks => prevUserTasks.filter(item => item.task_id !== task.task_id)); // Удаляем задачу из userTasks
+                    newTasks = newTasks.filter(item => item.task_id !== task.task_id); // Фильтруем задачи
+                    delete newClickedTasks[task.task_id]; // Удаляем клики для данной задачи
+                    setUserTasks(prevUserTasks => prevUserTasks.filter(item => item.task_id !== task.task_id)); // Удаляем задачу из userTasks
                 } else {
                     console.error("Error:", response.status);
                     if (response.status.response?.data?.errorCode === 2001) {

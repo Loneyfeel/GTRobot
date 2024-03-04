@@ -20,7 +20,7 @@ import Mining from "./pages/Mining_new";
 
 function App() {
   const [loading, setLoading] = useState(true);
-  const [language, setLanguage] = useState("uz");
+  const [language, setLanguage] = useState("ru");
 
   useEffect(() => {
     const fetchUserLanguage = async () => {
@@ -28,8 +28,8 @@ function App() {
         const response = await axios.post(`${host}/api/user-locale`, {
           userId,
         });
-        setLoading(false);
         setLanguage(response.data);
+        setLoading(false);
       } catch (error) {
         console.error("Произошла ошибка при выполнении POST-запроса:", error);
         if (error.response.data.errorCode === 1006) {
@@ -114,7 +114,7 @@ function App() {
         {/*<Forex/>*/}
         {/*<NoSubscribe/>*/}
         {/*<Copyright/>*/}
-        <Router basename="/">
+        <Router basename="/mining">
           <Routes>
             <Route path="/*" exact element={<Mining />} />
           </Routes>

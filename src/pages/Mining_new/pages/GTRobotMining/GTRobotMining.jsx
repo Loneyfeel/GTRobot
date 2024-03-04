@@ -44,6 +44,8 @@ const GtRobotMining = () => {
                                     isDailyMiningActive={isDailyMiningActive}
                                     userSubscription={userSubscription}
                                     userGTRobotMiningBalance={userGTRobotMiningBalance}
+                                    setIsStartUserDailyMiningTimestamp={setIsStartUserDailyMiningTimestamp}
+                                    setIsEndUserDailyMiningTimestamp={setIsEndUserDailyMiningTimestamp}
                                 />
                             </motion.div>
                         </>

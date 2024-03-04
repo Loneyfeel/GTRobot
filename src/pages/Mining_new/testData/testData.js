@@ -62,6 +62,11 @@ export const testData = {
         "balance": 2.000055242,
         "cryptoCurrency": "ton",
         "dailyMiningBalance": 12.12424,
+        "holding":{
+            "balanceToHoldingTimestamp":null,
+            "holdingBalance":null,
+            "holdingTimestamp":null
+        },
         "mining": {
             "endUserDailyMiningTimestamp": null,
             "endUserMiningTimestamp": null,
@@ -117,7 +122,7 @@ export const testData = {
                 }
             ]
         },
-        "registrationDate": 1703835318,
+        "registrationDate": 1703961947,
         "statistics": {
             "dailyMiningRate": 1.0,
             "regularMiningRate": 0.847

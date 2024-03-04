@@ -91,7 +91,7 @@ export const saveMiningUserCryptoCurrency = async (cryptoCurrency) => {
   }
 };
 
-export const miningWithdraw = async (withdrawAmount, withdrawAddress) => {
+export const miningWithdraw = async (withdrawAmount, withdrawAddress, isWithdrawHold) => {
   try {
     // Отправляем запрос на /api/mining-withdraw с указанными данными
     const response = await axiosInstance.post("/mining-withdraw", {
@@ -99,6 +99,7 @@ export const miningWithdraw = async (withdrawAmount, withdrawAddress) => {
       initData,
       withdrawAmount,
       withdrawAddress,
+      isWithdrawHold
     });
 
     // Возвращаем результат выполнения запроса

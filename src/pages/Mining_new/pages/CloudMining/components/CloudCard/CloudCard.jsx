@@ -16,7 +16,7 @@ const CloudCard = ({ userCloudMiningBalance, userCurrencyPrice, cryptoCurrency }
     };
 
     // Форматирование текущего баланса
-    const currentBalance = formatBalance(userCloudMiningBalance, 10);
+    const currentBalance = formatBalance(userCloudMiningBalance, 12);
 
     // Расчет будущего баланса
     const futureBalance = userCloudMiningBalance * userCurrencyPrice * 57;
@@ -37,10 +37,21 @@ const CloudCard = ({ userCloudMiningBalance, userCurrencyPrice, cryptoCurrency }
                     {t("mining.pages.cloudMining.future_balance_1")}
                     <br />{t("mining.pages.cloudMining.future_balance_2")}:
                 </Box>
-                <Box className={style.cloudCard__future_count}>
+                <Box className={style.cloudCard__future_count}
+                sx={{
+                    fontSize: futureBalance > 1000000 ? '22px' : '32px'
+                }}>
                 {futureBalance > 0 ? (
                     <>
-                        ${formatBalance(futureBalance, 6)}
+                        {futureBalance > 1000000 ? (
+                            <>
+                            ${formatBalance(futureBalance, 9)}
+                                </>
+                        ) : (
+                            <>
+                            ${formatBalance(futureBalance, 6)}
+                            </>
+                        )}
                     </>
                 ) : (
                     <>

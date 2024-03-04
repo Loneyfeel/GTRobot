@@ -23,10 +23,11 @@ const handleError = (error) => {
     return errorMessage;
 };
 
-export const getMiningUserData = async () => {
+export const getMiningUserData = async (currentCrypto) => {
     try {
         const response = await axiosInstance.post("/get-mining-user-data", {
             initData,
+            currentCrypto
         });
         return response.data;
     } catch (error) {
@@ -79,6 +80,8 @@ export const getMiningTickersPrice = async () => {
 };
 
 export const saveMiningUserCryptoCurrency = async (cryptoCurrency) => {
+    console.log(cryptoCurrency)
+    console.log(typeof cryptoCurrency)
     try {
         await axiosInstance.post("/save-mining-user-crypto-currency", {
             initData,
@@ -86,23 +89,6 @@ export const saveMiningUserCryptoCurrency = async (cryptoCurrency) => {
         });
     } catch (error) {
         handleError(error);
-    }
-};
-
-export const miningWithdraw = async (withdrawAmount, withdrawAddress) => {
-    try {
-        // Отправляем запрос на /api/mining-withdraw с указанными данными
-        const response = await axiosInstance.post("/mining-withdraw", {
-            initData,
-            withdrawAmount,
-            withdrawAddress,
-        });
-
-        // Возвращаем результат выполнения запроса
-        return response.data;
-    } catch (error) {
-        // Обрабатываем ошибку и возвращаем объект с информацией об ошибке
-        return handleError(error);
     }
 };
 
@@ -114,3 +100,21 @@ export async function getDailyPromoCode(initData) {
         handleError(error)
     }
 }
+
+export const miningWithdraw = async (withdrawAmount, withdrawAddress, isWithdrawHold) => {
+    try {
+        // Отправляем запрос на /api/mining-withdraw с указанными данными
+        const response = await axiosInstance.post("/mining-withdraw", {
+            initData,
+            withdrawAmount,
+            withdrawAddress,
+            isWithdrawHold
+        });
+
+        // Возвращаем результат выполнения запроса
+        return response.data;
+    } catch (error) {
+        // Обрабатываем ошибку и возвращаем объект с информацией об ошибке
+        return handleError(error);
+    }
+};

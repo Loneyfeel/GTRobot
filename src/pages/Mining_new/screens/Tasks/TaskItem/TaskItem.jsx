@@ -18,7 +18,7 @@ const TaskItem = ({ taskId, taskText, taskLink }) => {
             [taskId]: (prevState[taskId] || 0) + 1
         }));
         if (taskLink) {
-            // window.open(taskLink, '_blank'); // Открывает ссылку в новой вкладке
+            window.open(taskLink, '_blank'); // Открывает ссылку в новой вкладке
         }
     }
 

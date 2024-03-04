@@ -25,7 +25,7 @@ export async function fetchDataAndUpdateLocalStorage() {
                 localStorage.setItem('miningUserData', JSON.stringify(response.data));
             } else {
                 // Устанавливаем начальные тестовые данные в локальное хранилище при возникновении ошибки
-                localStorage.setItem('miningUserData', JSON.stringify(testData.userData));
+                // localStorage.setItem('miningUserData', JSON.stringify(testData.userData));
             }
         }
     } catch (error) {
@@ -39,7 +39,7 @@ export async function fetchDataAndUpdateLocalStorage() {
 export async function fetchDataAndUpdateLocalStorageInSession() {
     try {
         const response = await getMiningUserData();
-        return response.data
+        localStorage.setItem('miningUserData', JSON.stringify(response.data));
     } catch (error) {
         console.error("Error fetching user data:", error);
     }

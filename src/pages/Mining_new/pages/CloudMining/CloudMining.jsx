@@ -68,6 +68,8 @@ const CloudMining = () => {
                             <StartButton
                                 isMiningActive={isMiningActive}
                                 setContentVisible={setContentVisible}
+                                setIsStartUserMiningTimestamp={setIsStartUserMiningTimestamp}
+                                setIsEndUserMiningTimestamp={setIsEndUserMiningTimestamp}
                             />
                         )}
                         <CustomButton

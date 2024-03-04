@@ -11,13 +11,17 @@ import HalfCircleProgressBar from "../shared/HalfCircleProgressBar/index.js";
 import CustomButton from "@components/CustomButton/index.js";
 import {tg} from "../../../../../../shared/telegram/telegram.js";
 
-const GTRobotStartButton = ({isDailyMiningActive, userGTRobotMiningBalance, userSubscription}) => {
+const GTRobotStartButton = ({isDailyMiningActive, userGTRobotMiningBalance, userSubscription, setIsStartUserDailyMiningTimestamp, setIsEndUserDailyMiningTimestamp}) => {
     const {t} = useTranslation();
     const [promocode, setPromocode] = useState('');
 
     async function handeGTRobotStartButtonClick() {
         await startMining("daily")
-        await fetchDataAndUpdateLocalStorageInSession()
+        await fetchDataAndUpdateLocalStorageInSession().then(() => {
+            const userDataStorage = JSON.parse(localStorage.getItem("miningUserData"));
+            setIsStartUserDailyMiningTimestamp(userDataStorage.mining.startUserDailyMiningTimestamp);
+            setIsEndUserDailyMiningTimestamp(userDataStorage.mining.endUserDailyMiningTimestamp);
+        });
     }
 
     async function handleGetPromocode() {

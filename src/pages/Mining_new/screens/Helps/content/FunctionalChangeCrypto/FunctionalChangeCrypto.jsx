@@ -5,12 +5,13 @@ import CustomButton from "@components/CustomButton/index.js";
 import { useTranslation } from "react-i18next";
 import CoinCard from './CoinCard';
 import DescriptionCard from "./DescriptionCard/index.js";
-import { saveMiningUserCryptoCurrency } from '../../../../api/api.js';
+import {getMiningUserData, saveMiningUserCryptoCurrency} from '../../../../api/api.js';
 
 import btc from '../../../../assets/shared/cryptoCoins/bitcoin.svg';
 import doge from '../../../../assets/shared/cryptoCoins/dogecoin.svg';
 import shib from '../../../../assets/shared/cryptoCoins/shibacoin.svg';
 import ton from '../../../../assets/shared/cryptoCoins/toncoin.svg';
+import {fetchDataAndUpdateLocalStorageInSession} from "../../../../helps/dataHelps.js";
 
 const FunctionalChangeCrypto = ({setIsUserExists}) => {
     const { t } = useTranslation();
@@ -23,13 +24,18 @@ const FunctionalChangeCrypto = ({setIsUserExists}) => {
     }
 
     function handleButtonChangeCryptoClick(selectedCoin) {
-        saveMiningUserCryptoCurrency(selectedCoin)
+        getMiningUserData(selectedCoin)
             .then(() => {
+                fetchDataAndUpdateLocalStorageInSession()
+                const timeout = setTimeout(() => {
+                    setIsUserExists(true)
+                }, 500);
+
+                return () => clearTimeout(timeout);
             })
             .catch(error => {
                 console.error('Error saving crypto currency:', error);
             });
-        setIsUserExists(true)
     }
 
     const coinData = {

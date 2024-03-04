@@ -4,6 +4,8 @@ import gif from "./assets/AnimatedSticker.gif";
 import { useTranslation } from "react-i18next";
 
 const NoSubscribe = () => {
+    window.Telegram.WebApp.BackButton.isVisible = false;
+
   const { t } = useTranslation();
   return (
     <>

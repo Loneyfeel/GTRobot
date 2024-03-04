@@ -65,24 +65,25 @@
     "button": "Obuna sotib oling"
   },
   "mining": {
-    "buttons": {
-      "mainMining": "Cloud",
-      "secMining": "GTRobot",
-      "referrals": "Referal",
-      "menu": "Menu"
-    },
     "pages": {
-      "mainMining": {
+      "cloudMining": {
         "title": "Cloud Mining",
         "start_btn": "Faollashtirish",
-        "error_alert": "Siz vazifalarni bajarmadingiz",
-        "future_balance_1": "2026 yilda bu",
-        "future_balance_2": " bo’lishi mumkin",
+        "balance": "Balans",
         "days_snackbar_1": "Kriptovalyutani chiqaraolishizga",
         "days_snackbar_2": "kun qo’ldi",
-        "alert_1":"Cloud Miningdan foydalanishingiz mumkin bo'lgan vaqt oralig'i: 00:00 - 16:00",
-        "alert_2":"Soat 16:00 dan keyin Cloud Mining uchun protsessorlar o'chiriladi va mutaxassislar nosozliklarni oldini olish uchun tekshirishiruv boshlaydilar.",
-        "deactiveTimer": "Mayningacha vaqt qo’ldi",
+        "future_balance_1": "",
+        "future_balance_2": "2026 yilda bu",
+        "future_balance_3": " bo’lishi mumkin",
+        "alert_1": "Cloud Miningdan foydalanishingiz mumkin bo'lgan vaqt oralig'i: 00:00 - 16:00",
+        "alert_2": "Soat 16:00 dan keyin Cloud Mining uchun protsessorlar o'chiriladi va mutaxassislar nosozliklarni oldini olish uchun tekshirishiruv boshlaydilar.",
+        "startButtonTimer": "Mayning-gacha vaqt qo\"ldi",
+        "timer": {
+          "speedometer_1": "фцвфцвфцвфцвфцвфц",
+          "speedometer_2": "Boost",
+          "speedometer_3": "фцвфцвфцвцфвфцвфцвnpm run dev"
+
+        },
         "userLevels": {
           "btnText": "Muddat: 30 kun",
           "upLevel": "mayningni tezlashtiring",
@@ -110,12 +111,14 @@
           }
         }
       },
-      "secMining": {
-        "title": "GTRobot Mining",
+      "gtrobotMining": {
+        "title": "GTRobot",
+        "balance": "Balans",
         "text_alert_1": "Siz 100$-lik limitga yetdingiz. Mayning qilgan kriptovalyutadan foydalanish uchun ",
         "text_alert_2": "ga murojaat qiling",
         "gtrobot_alert_1": "GTRobot mayningi - bu GTRobot tariflarini imtiyoz bilan sotib olish uchun kriptovalyutaga sarmoya kiritish imkonini beruvchi vositadir !",
-        "gtrobot_alert_2": "Yig'ilgan mablag'ga faqat GTRobot tariflarini sotib olish mumkin !",
+        "gtrobot_alert_2": "Ushbu mablag' faqat GTRobot tarifni sotib olish uchun ishlatilishi mumkin",
+        "gtrobot_alert_3": "VIP",
         "promoCode": {
           "alert_1": "Siz bir necha soniya ichida promokodni olasiz",
           "alert_2": "Promokodni olish uchun balansingiz yetarli emas",
@@ -128,47 +131,56 @@
       "menu": {
         "title": "Menu",
         "mining": {
-          "title": "Cloud Mining",
-          "text_mining_2": "Cloud Mining (Bulutli Mayning) - bu kriptovalyuta qazib olishni yangi usuli. Ushbu yondashuv foydalanuvchilarga boshqa maynerlar uskunasini ijaraga olgan holda tez va arzon kriptovalyuta qazib olish imkonini beradi.",
-          "text_mining_3": "Cloud Mining-dan foydalanish qoidalari:\nGTRobot faol ishtirokchilar soniga qarab, qazib olish tezligini aniqlab beradi. Kam faollik davrida ishtirokchilarning individual mukofotlari oshadi, ishtirokchilar soni ortishi bilan kriptovalyuta qazib olishi sekinlashadi. Cloud Mining-dan olingan daromadingiz boshqa ishtirokchilarga nisbatan faol bolishingizga bog’liq.",
-          "text_mining_4": "Muhim: Cloud Mining orqali siz vaqt o'tishi bilan qiymati oshishi kutilayotgan kriptovalyutalar portfelini yaratasiz va vaqt o’tgan sari foydangiz osib boradi."
+          "title": "Cloud Mining ",
+          "text_mining_1": "Cloud Mining (Bulutli Mayning) - bu kriptovalyuta qazib olishni yangi usuli. Ushbu yondashuv foydalanuvchilarga boshqa maynerlar uskunasini ijaraga olgan holda tez va arzon kriptovalyuta qazib olish imkonini beradi.",
+          "text_mining_2": "(Bulutli Mayning) - bu kriptovalyuta qazib olishni yangi usuli. Ushbu yondashuv foydalanuvchilarga boshqa maynerlar uskunasini ijaraga olgan holda tez va arzon kriptovalyuta qazib olish imkonini beradi.",
+          "text_mining_3": "Cloud Mining-dan foydalanish qoidalari:",
+          "text_mining_4": "GTRobot faol ishtirokchilar soniga qarab, qazib olish tezligini aniqlab beradi. Kam faollik davrida ishtirokchilarning individual mukofotlari oshadi, ishtirokchilar soni ortishi bilan kriptovalyuta qazib olishi sekinlashadi. Cloud Mining-dan olingan daromadingiz boshqa ishtirokchilarga nisbatan faol bolishingizga bog’liq.",
+          "text_mining_5": "Muhim:",
+          "text_mining_6": "Cloud Mining orqali siz vaqt o'tishi bilan qiymati oshishi kutilayotgan kriptovalyutalar portfelini yaratasiz va vaqt o’tgan sari foydangiz osib boradi."
         },
         "gtrobot-mining": {
           "title": "GTRobot Mining",
-          "text_gtr_2": "GTRobot Mining - Bu GTRobot tariflariga pul yig’ish usuli.",
-          "text_gtr_3": "Ushbu bo'limda siz 24 soatda bir marta mayningni faollashtirib,",
-          "text_gtr_4": " 100$ gacha bo’lgan miqdorda mayning qilishingiz mumkin !",
-          "text_gtr_5": "Diqqat: GTRobot mayningi yordamida yig’ilgan mablag'ni faqat robot tarif rejalarini sotib olish uchun chegirma sifatida ishlatilish mumkin."
-        },
-        "gtrobot-info": {
-          "title": "GTRobot mayningi ishlashi haqida",
-          "text_gtr_2": "GTRobot Cloud Mining-dan foydalanish imkoniyatini beradi. GTRobot faol ishtirokchilar soniga qarab, qazib olish tezligini aniqlab beradi. Kam faollik davrida ishtirokchilarning individual mukofotlari oshadi, ishtirokchilar soni ortishi bilan kriptovalyuta qazib olishi sekinlashadi. Shunday qilib, Cloud Mining-dan olingan daromadingiz boshqa ishtirokchilarga nisbatan faoliyatingiz bilan belgilanadi.",
-          "text_gtr_3": "Muhim: Cloud Mining - bu kelajakda daromad olish maqsadida kriptovalyutani qazib olish orqali siz kelajakga investitsiya kiritgan bo’lasiz. Cloud Mining orqali siz vaqt o'tishi bilan qiymati oshishi kutilayotgan kriptovalyutalar portfelini yaratasiz va vaqt o’tgan sari foydangiz osib boradi."
+          "text_gtr_1": "GTRobot Mining - Bu GTRobot tariflariga pul yig’ish usuli.",
+          "text_gtr_2": "Ushbu bo'limda siz 24 soatda bir marta mayningni faollashtirib,",
+          "text_gtr_3": " 100$ gacha bo’lgan miqdorda mayning qilishingiz mumkin !",
+          "text_gtr_4": "Diqqat: GTRobot mayningi yordamida yig’ilgan mablag'ni faqat robot tarif rejalarini sotib olish uchun chegirma sifatida ishlatilish mumkin."
         },
         "referral": {
           "title": "Referal sistemasi",
-          "text_ref_2": "Cloud Mining-da Referal taklifnoma tizimi mavjud. Bu qanday ishlaydi:",
-          "text_ref_3": "1. Siz Referal havola orqali foydalanuvchilarni taklif qilasiz.",
-          "text_ref_4": "2. Ular Cloud Mining bo'limiga o'tadilar va Mayning-ni faollashtiradilar.",
-          "text_ref_5": "3. Siz mayning tezligini oshirish uchun Boost olasiz. Bu sizga boshqa foydalanuvchilarga qaraganda ko'proq daromad qilishingizni afzalliklarini beradi.",
-          "text_ref_6": "Muhim: siz taklif qilganlar foydalanuvchilar mayningda faol bo'lishi kerak, aks holda sizning Boost-ingiz kamayadi."
+          "text_ref_1": "Cloud Mining-da Referal taklifnoma tizimi mavjud. Bu qanday ishlaydi:",
+          "text_ref_2": "1. Siz Referal havola orqali foydalanuvchilarni taklif qilasiz.",
+          "text_ref_3": "2. Ular Cloud Mining bo'limiga o'tadilar va Mayning-ni faollashtiradilar.",
+          "text_ref_4": "3. Siz mayning tezligini oshirish uchun Boost olasiz. Bu sizga boshqa foydalanuvchilarga qaraganda ko'proq daromad qilishingizni afzalliklarini beradi.",
+          "text_ref_5": "Muhim:",
+          "text_ref_6": "Siz taklif qilganlar foydalanuvchilar mayningda faol bo'lishi kerak, aks holda sizning Boost-ingiz kamayadi."
         },
         "coins": {
           "title": "Kriptovalyutalar",
-          "text_btc": "Bitcoin (BTC) Satoshi Nakamoto tomonidan yaratilgan to'liq markazlashmagan raqamli kriptovalyutadir. Bitcoin tarmog'i 2009 yil 3 yanvarda, kripto inqilob boshlangan kunning o'zidayoq ishga tushirildi.",
-          "text_ton": "Toncoin (TON) - bu 2018 yilda Telegram messenjeri tomonidan ishlab chiqilgan markazlashtirilmagan birinchi qatlamli blokcheyn. Blokcheyn platformasi Pavel Durov tomonidan yaratilgan va Telegram jamoasi tomonidan ishlab chiqilgan.",
-          "text_shib": "Shiba Inu (SHIB) - 2020 yil avgust oyida \"Ryoshi\" taxallusi ostida anonim tarzda yaratilgan. Vitalik Buterin (ETH asoschisi) sarlavhalari va tvitlari bilan birgalikda sarmoyadorlar hamjamiyatini tanganing yoqimli jozibasi jalb qilgani uchun mem tangasi tezda qiziqish va qadriyatga ega bo'ldi. Bundan tashqari, bu kriptovalyuta endi Jeremy Davinci tomonidan qo'llab-quvvatlana boshladi, u 2013 yilda Bitcoinni kamida 1 dollarga sotib olishni so'radi.",
-          "text_doge": "Dogecoin (DOGE) - mashhur internet mem \"doge\" dan yaratilgan va uning logotipi сиба-ину itini tasvirlaydi. Tesla bosh direktori Elon Mask Dogecoin uning sevimli kriptovalyutasi ekanligini va shu tariqa kriptovalyutani yaxshi qo‘llab-quvvatlashini ta’kidlagan bir nechta tvitlar joylashtirib borilayapti."
+          "text_btc_1": "Bitcoin (BTC)",
+          "text_btc_2": " - Satoshi Nakamoto tomonidan yaratilgan to'liq markazlashmagan raqamli kriptovalyutadir. Bitcoin tarmog'i 2009 yil 3 yanvarda, kripto inqilob boshlangan kunning o'zidayoq ishga tushirildi.",
+          "text_ton_1": "Toncoin (TON)",
+          "text_ton_2": " - bu 2018 yilda Telegram messenjeri tomonidan ishlab chiqilgan markazlashtirilmagan birinchi qatlamli blokcheyn. Blokcheyn platformasi Pavel Durov tomonidan yaratilgan va Telegram jamoasi tomonidan ishlab chiqilgan.",
+          "text_shib_1": "Shiba Inu (SHIB)",
+          "text_shib_2": " - 2020 yil avgust oyida \"Ryoshi\" taxallusi ostida anonim tarzda yaratilgan. Vitalik Buterin (ETH asoschisi) sarlavhalari va tvitlari bilan birgalikda sarmoyadorlar hamjamiyatini tanganing yoqimli jozibasi jalb qilgani uchun mem tangasi tezda qiziqish va qadriyatga ega bo'ldi. Bundan tashqari, bu kriptovalyuta endi Jeremy Davinci tomonidan qo'llab-quvvatlana boshladi, u 2013 yilda Bitcoinni kamida 1 dollarga sotib olishni so'radi.",
+          "text_doge_1": "Dogecoin (DOGE)",
+          "text_doge_2": " - mashhur internet mem \"doge\" dan yaratilgan va uning logotipi сиба-ину itini tasvirlaydi. Tesla bosh direktori Elon Mask Dogecoin uning sevimli kriptovalyutasi ekanligini va shu tariqa kriptovalyutani yaxshi qo‘llab-quvvatlashini ta’kidlagan bir nechta tvitlar joylashtirib borilayapti."
         },
         "withdraw": {
           "menu_btn": "Kriptovalyutani chiqarish",
           "title": "Kriptovalyutani chiqarish",
+          "cost": "Narx",
           "textField_1": "Chiqarish miqdori",
           "textField_2": "Hamyon manzili USDT-TRC20",
           "send": "Siz yuborasiz",
           "receive": "Sizga tushadi",
           "main_btn": "Chiqarish",
           "max": "Umumiy",
+          "usdt_count": "USDT hisobi",
+          "withdraw_alert_1": "Pulni yechib olishning minimal chegarasiga yetganingizdan so‘ng, kriptovalyutani yechib olishingiz uchun 20 kun mavjud bo‘ladi. \nUshbu muddat ichidan aktivlarni chiqarmasangiz, balansingiz avtomatik ravishda \"USDT \"ga aylantiriladi.",
+          "withdraw_alert_2": "Agarda siz uch oy ichida, mablag'larni chiqarib olmasangiz balansingiz to’lliq kuyadi.",
+          "withdraw_alert_3": "Hisobingiz USDT-ga o'tkazilishiga",
+          "withdraw_alert_4": "kun qoldi.",
           "btn_helps": {
             "balance": "Balans",
             "address": "Hamyon",
@@ -183,58 +195,64 @@
             "error2011": "Hozirda pul chiqarib bo'lmaydi",
             "error2012": "Kiritilgan miqdor minimal chiqarishdan kam",
             "error2013": "Chiqarish miqdori etarli emas"
+          },
+          "holding": {
+            "alert_1": "Hisobingiz USDT-ga o'tkazilishiga",
+            "alert_2": "kun qoldi.",
+            "alert_3": "USDT hisobidagi aktivlarni kuyib ketishiga",
+            "alert_4": "kun qo’ldi, iltimos kriptovalyutangizni chiqarib oling.",
+            "question": "USDT hisobidan mablag’ni chiqarib olmoachimisiz?"
           }
-        },
-        "changeCrypto": {
-          "menu_btn": "Kriptovalyutani almashtirish",
-          "title": "Kriptovalyutani tanlang",
-          "change_alert_1": "Mayning uchun kriptovalyutani o'zgartirsangiz, siz barcha qazib olingan aktivlaringizni ushbu kriptovalyutaga o'tkazasiz. Almashuv paytida siz 20% mablag’ingizni yo’qotishingiz mumkin.",
-          "change_alert_2": "Siz bunga rozimisiz?"
         }
       },
       "ref": {
-        "title": "Referal sistemasi",
-        "bonus": "Umumiy boost",
+        "title": "Referallar",
         "btn": "Foydalanuvchilarni taklif qilish",
         "list": "Taklif etilgan foydalanuvchilar",
-        "no_referrals": "Taklif qilingan foydalanuvchilar yo'q",
         "snackbar_text": "Sizning Referal havolaingiz ko'chirildi",
         "graphic": "Takliflar jadvali",
-        "null_error": "Foydalanuvchi"
+        "invite": "Taklif qilish"
       }
     },
     "components": {
       "helps": {
-        "start": "Dunyo miqyosi bo’yicha Telegram tarmog’idagi ilk bor Cloud Mining",
-        "change-crypto": "Kriptovalyutani tanlash imkoniyati",
-        "collect": "Kuniga bir necha marta daromad to'plang!",
-        "more-money": "Cloud Mining - pul ishlashning yangi usuli",
-        "getting-start": "Hoziroq Cloud Mining-ni sinab ko'ring !",
-        "referrals": "Ko'proq do'stlar-ko'proq daromad",
-        "functionalChangeCrypto": {
+        "start_1": "Dunyo miqyosida",
+        "start_2": "ilk bor",
+        "start_3": "Cloud Mining Telegramda",
+        "change-crypto_1": "Mayning uchun Kripovalyutani",
+        "change-crypto_2": "tanlash",
+        "change-crypto_3": "imkoniyati",
+        "referrals_1": "Ko'proq do'stlar - ",
+        "referrals_2": "Ko'proq",
+        "referrals_3": "daromad",
+        "changeCrypto": {
           "change": "Kriptovalyutani tanlash",
           "success": "Tanlandi",
-          "error": "Kriptovalyutani tanlang"
+          "changeCryptoTitle_1": "Kriptovalyutani",
+          "changeCryptoTitle_2": "tanlang"
         },
         "survey": {
-          "question_1": "Kriptovalyuta Mayningi nimaligini bilasizmi?",
-          "text_1": "Mining - bu maxsus uskunalar yordamida raqamli valyutani qazib olish. Oddiy qilib aytganda, blokcheyn tranzaktsiyalarni tekshirish va qo'shish, bu odatda murakkab matematik muammolarni hal qilish orqali amalga oshiriladi. Ularning sa'y-harakatlari uchun maynerlar kriptovalyuta shaklida mukofot oladilar.",
-          "question_2": "Cloud Mining haqida ma’lumotingiz bormi?",
+          "question_1_1": "Mayning",
+          "question_1_2": "nimaligini",
+          "question_1_3": "bilasizmi",
+          "text_1": "Mining - bu maxsus uskunalar yordamida raqamli valyutani qazib olish usuli. Oddiy qilib aytganda, blokcheyn tranzaktsiyalarni tekshirish va qo'shish, bu odatda murakkab matematik muammolarni hal qilish orqali amalga oshiriladi. Ularning sa'y-harakatlari uchun maynerlar kriptovalyuta shaklida mukofot oladilar.",
+          "question_2_1": "Cloud Mining",
+          "question_2_2": "nimaligini bilasizmi",
           "text_2": "Cloud Mining (Bulutli mayning) - bu online vaqtida kompyuter uskunasiga egalik qilish yoki ishlatish zaruratisiz kriptovalyutalarni qazib olish. Foydalanuvchi masofaviy ma'lumotlar markazidagi kompyuter uskunalaridan foydalanib, evaziga hisoblash quvvatini ijaraga oladi va buning evaziga qazib olingan kriptovalyutani bir qismini oladi.",
-          "question_3": "GTRobot Cloud Miningi qanday ishlashini bilasizmi?",
-          "text_3_1": "GTRobot Cloud Mining-dan foydalanish imkoniyatini beradi. GTRobot faol ishtirokchilar soniga qarab, qazib olish tezligini aniqlab beradi. Kam faollik davrida ishtirokchilarning individual mukofotlari oshadi, ishtirokchilar soni ortishi bilan kriptovalyuta qazib olishi sekinlashadi. Shunday qilib, Cloud Mining-dan olingan daromadingiz boshqa ishtirokchilarga nisbatan faoliyatingiz bilan belgilanadi.",
-          "text_3_2": "Muhim: Cloud Mining - kriptovalyutani qazib olish orqali siz kelajakga investitsiya kiritgan bo’lasiz. Cloud Mining orqali siz vaqt o'tishi bilan qiymati oshishi kutilayotgan kriptovalyutalar portfelini yaratasiz va vaqt o’tgan sari foydangiz osib boradi.",
           "yes": "Ha",
           "no": "Yo'q",
-          "next": "Keyingi",
-          "details": "Batafsil ma’lumot"
+          "snackbar": "Ma'lumot bilan tanishib chiqing"
         }
       },
       "taskList": {
         "title": "Barcha vazifalarni bajaring",
         "new_title": "Yangi vazifa",
         "check_btn": "Bajardim",
-        "incomplete_tasks_warning":  "Siz vazifani bajarmadingiz, qayta orinib ko’ring"
+        "prefix": {
+          "subscribe": "ga obuna bo’ling",
+          "like": "ga layk qo'ying"
+        },
+        "incomplete_tasks_warning": "Siz vazifani bajarmadingiz, qayta orinib ko’ring"
       }
     }
   }
