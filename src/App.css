@@ -32,7 +32,7 @@ img {
   --header_bg_color: var(--tg-theme-header-bg-color);
   --section_bg_color: var(--tg-theme-section-bg-color);
 
-  --text_color: var(--tg-theme-text-color);
+  /*--text_color: var(--tg-theme-text-color);*/
   --hint_color: var(--tg-theme-hint-color);
   --link_color: var(--tg-theme-link-color);
 
@@ -46,7 +46,7 @@ img {
 
   /*--bg_color: #000;*/
   /*--button_text_color: #fff*/
-  /*--text_color: #fff*/
+  --text_color: #fff;
   --component_bg_color: rgba(25, 25, 25, 0.9);
   --component_stroke_color: rgba(255, 255, 255, 0.2);
   --component_stroke_color_light: rgba(255, 255, 255, 0.5);
@@ -55,4 +55,8 @@ img {
 
 .gray {
   filter: grayscale(100%);
+}
+
+video::-webkit-media-controls-start-playback-button {
+  display: none !important;
 }

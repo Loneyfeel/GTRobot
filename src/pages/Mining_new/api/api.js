@@ -23,11 +23,11 @@ const handleError = (error) => {
     return errorMessage;
 };
 
-export const getMiningUserData = async (currentCrypto) => {
+export const getMiningUserData = async (cryptoCurrency) => {
     try {
         const response = await axiosInstance.post("/get-mining-user-data", {
             initData,
-            currentCrypto
+            cryptoCurrency
         });
         return response.data;
     } catch (error) {
@@ -80,8 +80,6 @@ export const getMiningTickersPrice = async () => {
 };
 
 export const saveMiningUserCryptoCurrency = async (cryptoCurrency) => {
-    console.log(cryptoCurrency)
-    console.log(typeof cryptoCurrency)
     try {
         await axiosInstance.post("/save-mining-user-crypto-currency", {
             initData,

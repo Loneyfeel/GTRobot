@@ -157,7 +157,8 @@ const Menu = ({ onTabChange }) => {
                                 '&.MuiAccordion-root.Mui-expanded': {
                                     margin: '0',
                                     marginBottom: '10px'
-                                }
+                                },
+                                color: 'var(--text_color)'
                             }}
                         >
                             <AccordionSummary
@@ -172,6 +173,7 @@ const Menu = ({ onTabChange }) => {
                                     '&.MuiAccordionSummary-content.Mui-expanded':{
                                         margin: '0'
                                     },
+                                    color: 'var(--text_color)'
                                 }}
                                 >
                                 <img
@@ -187,6 +189,7 @@ const Menu = ({ onTabChange }) => {
                                     fontWeight: '400',
                                     fontSize: '16px',
                                     lineHeight: '1.5',
+                                    color: 'var(--text_color)'
                                 }}>
                                     {item.title}
                                 </Box>
@@ -205,6 +208,7 @@ const Menu = ({ onTabChange }) => {
                                     fontWeight: '400',
                                     fontSize: '16px',
                                     lineHeight: '1.5',
+                                    color: 'var(--text_color)'
                                 }}>{item.text}</Box>}
                             </AccordionDetails>
                         </Accordion>

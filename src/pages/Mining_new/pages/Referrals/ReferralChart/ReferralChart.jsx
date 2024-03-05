@@ -6,6 +6,7 @@ import Chart from 'react-apexcharts';
 const AreaChart = ({ referralsData }) => {
     // Функция для агрегации данных по временным меткам
     const aggregateData = (referralsData) => {
+        if (!Array.isArray(referralsData)) return [];
         const dataMap = {};
         const currentDate = new Date();
         const lastTwentyDays = new Date();

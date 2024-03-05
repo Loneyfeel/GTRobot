@@ -72,8 +72,8 @@
         "balance": "Balans",
         "days_snackbar_1": "Kriptovalyutani chiqaraolishizga",
         "days_snackbar_2": "kun qo’ldi",
-        "future_balance_1": "",
-        "future_balance_2": "2026 yilda bu",
+        "future_balance_1": "2026 yilda bu",
+        "future_balance_2": " ",
         "future_balance_3": " bo’lishi mumkin",
         "alert_1": "Cloud Miningdan foydalanishingiz mumkin bo'lgan vaqt oralig'i: 00:00 - 16:00",
         "alert_2": "Soat 16:00 dan keyin Cloud Mining uchun protsessorlar o'chiriladi va mutaxassislar nosozliklarni oldini olish uchun tekshirishiruv boshlaydilar.",
@@ -119,6 +119,7 @@
         "gtrobot_alert_1": "GTRobot mayningi - bu GTRobot tariflarini imtiyoz bilan sotib olish uchun kriptovalyutaga sarmoya kiritish imkonini beruvchi vositadir !",
         "gtrobot_alert_2": "Ushbu mablag' faqat GTRobot tarifni sotib olish uchun ishlatilishi mumkin",
         "gtrobot_alert_3": "VIP",
+        "timer_balance_text": "Daromad",
         "promoCode": {
           "alert_1": "Siz bir necha soniya ichida promokodni olasiz",
           "alert_2": "Promokodni olish uchun balansingiz yetarli emas",

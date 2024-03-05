@@ -24,12 +24,12 @@ const FunctionalChangeCrypto = ({setIsUserExists}) => {
     }
 
     function handleButtonChangeCryptoClick(selectedCoin) {
+
         getMiningUserData(selectedCoin)
             .then(() => {
-                fetchDataAndUpdateLocalStorageInSession()
                 const timeout = setTimeout(() => {
                     setIsUserExists(true)
-                }, 500);
+                }, 200);
 
                 return () => clearTimeout(timeout);
             })

@@ -34,8 +34,7 @@ const CloudCard = ({ userCloudMiningBalance, userCurrencyPrice, cryptoCurrency }
             </Box>
             <Box className={style.cloudCard__future}>
                 <Box className={style.cloudCard__future_text}>
-                    {t("mining.pages.cloudMining.future_balance_1")}
-                    <br />{t("mining.pages.cloudMining.future_balance_2")}:
+                    {t("mining.pages.cloudMining.future_balance_1")}<br />{t("mining.pages.cloudMining.future_balance_2")}
                 </Box>
                 <Box className={style.cloudCard__future_count}
                 sx={{

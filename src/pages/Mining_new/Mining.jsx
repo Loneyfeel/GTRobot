@@ -10,10 +10,14 @@ import BottomNavigationMenu from "./components/BottomNavigationMenu/index.js";
 import { CloudMining, GTRobotMining, Referrals, Menu } from './pages';
 import {fetchDataAndUpdateLocalStorage} from "./helps/dataHelps.js";
 import {miningUserExists} from "../Mining/components/Requests/Requests.js";
+import {tg} from "../../shared/telegram/telegram.js";
 const Helps = lazy(() => import('./screens/Helps'));
 const Tasks = lazy(() => import('./screens/Tasks'));
 
 const Mining = () => {
+
+    tg.setHeaderColor('#000')
+
     const { t } = useTranslation();
 
     const [selectedTab, setSelectedTab] = useState(0);

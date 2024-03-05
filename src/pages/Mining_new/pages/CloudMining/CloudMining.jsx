@@ -8,8 +8,10 @@ import { CloudCard, StartButton, Timer } from './components';
 import CustomButton from "@components/CustomButton/index.js";
 import { motion } from "framer-motion";
 import {useNavigate} from "react-router-dom";
+import {useTranslation} from "react-i18next";
 
 const CloudMining = () => {
+    const { t } = useTranslation();
     const userDataStorage = JSON.parse(localStorage.getItem("miningUserData")); //Получаем данные
     const prices = JSON.parse(localStorage.getItem("prices")) //Получаем цены
     const [cryptoCurrency, setCryptoCurrency] = useState(userDataStorage.cryptoCurrency) //Получаем выбранную монету
@@ -73,7 +75,7 @@ const CloudMining = () => {
                             />
                         )}
                         <CustomButton
-                            content={"Вывести"}
+                            content={t("mining.pages.menu.withdraw.main_btn")}
                             onClick={() => {
                                 navigate('/menu/wallet');
                             }}

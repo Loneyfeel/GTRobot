@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import style from './referrals.module.sass'
 import PageTitle from "../../components/PageTitle/index.js";
 import {useTranslation} from "react-i18next";
@@ -28,9 +28,14 @@ const Referrals = () => {
     }
 
     //Данные рефералов
-    const [referralsData, setReferralsData] = useState(userDataStorage.referrals.referrals)
+    const [referralsData, setReferralsData] = useState(
+        Array.isArray(userDataStorage.referrals.referrals)
+            ? userDataStorage.referrals.referrals
+            : [userDataStorage.referrals.referrals]
+    );
+
     // Выбираем только последние три элемента массива
-    const latestReferrals = referralsData.slice(-3);
+    const [latestReferrals, setLatestReferrals]  = useState(referralsData.slice(0, 3));
 
     return (
         <>
@@ -42,7 +47,7 @@ const Referrals = () => {
                             Boost
                         </Box>
                         <Box className={style.referrals__boost__count_number}>
-                            %{boost}
+                            {boost*100}%
                         </Box>
                     </Box>
                     <CustomButton
@@ -66,13 +71,17 @@ const Referrals = () => {
                         {t("mining.pages.ref.list")}:
                     </Box>
                     <Box className={style.referrals__list__cards}>
-                        {latestReferrals.map((referral, index) => (
-                            <ReferralCard
-                                key={index}
-                                userName={referral.userName}
-                                userProfilePhoto={referral.userProfilePhoto}
-                            />
-                        ))}
+                        {referralsData && (
+                            <>
+                                {latestReferrals && latestReferrals.map((referral, index) => (
+                                        <ReferralCard
+                                            key={index}
+                                            userName={referral.userName}
+                                            userProfilePhoto={referral.userProfilePhoto}
+                                        />
+                                ))}
+                            </>
+                        )}
                         <Box className={`${style.referrals__list__cards_card} ${style.referrals__list__cards_card_active}`}
                             onClick={handleInviteButtonClick}
                         >
@@ -121,7 +130,7 @@ const ReferralCard = ({ userName, userProfilePhoto }) => {
                         height: '15vw'
                     }}
                     alt={userName}
-                    src={userProfilePhoto} // Используем userProfilePhoto в качестве src
+                    src={ `data:image/jpeg;base64,${userProfilePhoto}`} // Используем userProfilePhoto в качестве src
                 >
                     <img src={user} alt={'user'}/>
                 </Avatar>

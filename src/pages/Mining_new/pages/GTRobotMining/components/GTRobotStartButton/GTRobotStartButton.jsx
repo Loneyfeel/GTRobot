@@ -25,7 +25,7 @@ const GTRobotStartButton = ({isDailyMiningActive, userGTRobotMiningBalance, user
     }
 
     useEffect(() => {
-        setPromocode(localStorage.getItem('promoCode'))
+        setPromocode(localStorage.getItem('promoCode') || '')
     }, []);
 
     async function handleGetPromocode() {

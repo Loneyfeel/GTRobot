@@ -20,7 +20,7 @@ import Mining from "./pages/Mining_new";
 
 function App() {
   const [loading, setLoading] = useState(true);
-  const [language, setLanguage] = useState("ru");
+  const [language, setLanguage] = useState("uz");
 
   useEffect(() => {
     const fetchUserLanguage = async () => {

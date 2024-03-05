@@ -68,13 +68,13 @@ export const testData = {
             "holdingTimestamp":null
         },
         "mining": {
-            "endUserDailyMiningTimestamp": null,
-            "endUserMiningTimestamp": null,
+            "endUserDailyMiningTimestamp": 1709687130,
+            "endUserMiningTimestamp": 1709687130,
             "isDailyMiningActivated": true,
             "isDailyMiningActive": true,
             "isMiningActive": true,
-            "startUserDailyMiningTimestamp": null,
-            "startUserMiningTimestamp": null
+            "startUserDailyMiningTimestamp": 1709676330,
+            "startUserMiningTimestamp": 1709676330
         },
         "referrals": {
             "referralBonus": 0.22,

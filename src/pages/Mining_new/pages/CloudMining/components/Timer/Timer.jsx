@@ -5,7 +5,7 @@ import ellipse from '../../../../assets/CloudMining/ellipse.svg'
 import GaugeComponent from 'react-gauge-component'
 import {Box } from "@mui/material";
 import {useTranslation} from "react-i18next";
-import codeVideo from "../../../../assets/CloudMining/codeVideo.webm"
+import codeVideo from "../../../../assets/CloudMining/codeVideo.mp4"
 import {fetchDataAndUpdateLocalStorageInSession} from "../../../../helps/dataHelps.js";
 
 const Timer = ({
@@ -115,11 +115,10 @@ const Timer = ({
                     className={style.cloudTimer__timer}
                     date={Date.now() + calculateTimeDifference()}
                     onComplete={fetchDataAndUpdateLocalStorageInSession}
-                    renderer={({hours, minutes}) => {
+                    renderer={({hours, minutes, seconds}) => {
                         return (
                             <span className={style.cloudTimer__timer_text}>
-                                 <span
-                                     className={style.cloudTimer__timer_text_1}>Осталось</span> <b>{hours}</b> ч <b>{minutes}</b> мин
+                                <b>{hours.toString().padStart(2, '0')}</b>:<b>{minutes.toString().padStart(2, '0')}</b>:<b>{seconds.toString().padStart(2, '0')}</b>
                              </span>
                         );
                     }}
