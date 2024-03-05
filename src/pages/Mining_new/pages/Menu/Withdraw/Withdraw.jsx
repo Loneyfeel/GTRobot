@@ -49,7 +49,14 @@ const Withdraw = () => {
 
     useEffect(() => {
         const storedData = JSON.parse(localStorage.getItem("miningUserData")) || {};
-        const registrationDate = storedData.registrationDate || 0;
+
+
+
+        // const registrationDate = storedData.registrationDate || 0; // ЭТО ПРАВИЛЬНЫЙ СТАРТ ОТСЧЕТА
+        const registrationDate = 1709300242; // ограничение вывода до 20.03.2024
+
+
+
 
         // Рассчитываем разницу в днях между текущей датой и датой регистрации
         const currentDate = new Date();
@@ -98,7 +105,7 @@ const Withdraw = () => {
 
 
     const handleWithdrawal = async () => {
-        if (!daysUntilWithdrawal > 0) {
+        if (daysUntilWithdrawal > 0) {
             setDaysErrorSnackbarOpen(true);
         } else {
             window.Telegram.WebApp.showConfirm(

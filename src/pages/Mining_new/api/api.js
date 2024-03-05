@@ -92,12 +92,13 @@ export const saveMiningUserCryptoCurrency = async (cryptoCurrency) => {
     }
 };
 
-export async function getDailyPromoCode(initData) {
+export async function getDailyPromoCode() {
     try {
         const response = await axios.post(`${host}/api/get-daily-promo-code`, { initData });
         return response.data.data.promoCode || null;
     } catch (error) {
         handleError(error)
+        return error.response.data.errorCode
     }
 }
 

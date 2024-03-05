@@ -79,9 +79,9 @@
         "alert_2": "Soat 16:00 dan keyin Cloud Mining uchun protsessorlar o'chiriladi va mutaxassislar nosozliklarni oldini olish uchun tekshirishiruv boshlaydilar.",
         "startButtonTimer": "Mayning-gacha vaqt qo\"ldi",
         "timer": {
-          "speedometer_1": "фцвфцвфцвфцвфцвфц",
+          "speedometer_1": "Samaradorlik",
           "speedometer_2": "Boost",
-          "speedometer_3": "фцвфцвфцвцфвфцвфцвnpm run dev"
+          "speedometer_3": "Maynerlarni soni"
 
         },
         "userLevels": {

@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import style from './gtrobotStartButton.module.sass'
 import {Box} from "@mui/material";
 import { useCopyToClipboard } from "@uidotdev/usehooks";
@@ -24,19 +24,23 @@ const GTRobotStartButton = ({isDailyMiningActive, userGTRobotMiningBalance, user
         });
     }
 
+    useEffect(() => {
+        setPromocode(localStorage.getItem('promoCode'))
+    }, []);
+
     async function handleGetPromocode() {
         tg.showAlert(
             `${t('mining.pages.gtrobotMining.promoCode.alert_1')}`,
             async () => {
                 try {
                     const response = await getDailyPromoCode();
-                    if (response.data?.data?.promoCode) {
-                        const promoCode = response.data.data.promoCode;
+                    if (response) {
+                        const promoCode = response
                         setPromocode(promoCode);
                         localStorage.setItem('promoCode', promoCode);
                         await fetchDataAndUpdateLocalStorageInSession();
-                    } else if (response.data?.errorCode) {
-                        const errorCode = response.data.errorCode;
+                    } else if (response) {
+                        const errorCode = response;
                         if (errorCode === 2020) {
                             console.error('Ошибка 2020: У пользователя не достаточный баланс для вывода');
                             tg.showAlert(`${t('mining.pages.gtrobotMining.promoCode.alert_2')}`);

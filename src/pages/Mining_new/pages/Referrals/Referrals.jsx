@@ -127,7 +127,7 @@ const ReferralCard = ({ userName, userProfilePhoto }) => {
                 </Avatar>
             </Box>
             <Box className={style.referrals__list__cards_card__text}>
-                {userName}awdawdawdawd
+                {userName}
             </Box>
         </Box>
     );
