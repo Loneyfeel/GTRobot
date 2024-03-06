@@ -15,43 +15,37 @@ const GtRobotMining = () => {
 
     return (
         <>
-            <Box className={style.gtrobotMining}>
+            <motion.div
+                className={style.gtrobotMining}
+                initial={{opacity: 0}}
+                animate={{opacity: 1}}
+                transition={{duration: 1}}
+            >
                 <PageTitle text={'GTRobot Mining'}/>
-                    {isEndUserDailyMiningTimestamp ? (
-                        <>
-                            <motion.div
-                                initial={{opacity: 0}}
-                                animate={{opacity: 1}}
-                                transition={{duration: 1}}
-                            >
-                                <GTRobotTimer
-                                    userGTRobotMiningBalance={userGTRobotMiningBalance}
-                                    setUserGTRobotMiningBalance={setUserGTRobotMiningBalance}
-                                    isEndUserDailyMiningTimestamp={isEndUserDailyMiningTimestamp}
-                                    isStartUserDailyMiningTimestamp={isStartUserDailyMiningTimestamp}
-                                    userSubscription={userSubscription}
-                                />
-                            </motion.div>
-                        </>
-                    ) : (
-                        <>
-                            <motion.div
-                                initial={{opacity: 0}}
-                                animate={{opacity: 1}}
-                                transition={{duration: 1}}
-                            >
-                                <GTRobotStartButton
-                                    isDailyMiningActive={isDailyMiningActive}
-                                    userSubscription={userSubscription}
-                                    userGTRobotMiningBalance={userGTRobotMiningBalance}
-                                    setIsStartUserDailyMiningTimestamp={setIsStartUserDailyMiningTimestamp}
-                                    setIsEndUserDailyMiningTimestamp={setIsEndUserDailyMiningTimestamp}
-                                />
-                            </motion.div>
-                        </>
-                    )}
-                    <GTRobotCard userGTRobotMiningBalance={userGTRobotMiningBalance}/>
-            </Box>
+                {isEndUserDailyMiningTimestamp ? (
+                    <>
+                        <GTRobotTimer
+                            userGTRobotMiningBalance={userGTRobotMiningBalance}
+                            setUserGTRobotMiningBalance={setUserGTRobotMiningBalance}
+                            isEndUserDailyMiningTimestamp={isEndUserDailyMiningTimestamp}
+                            isStartUserDailyMiningTimestamp={isStartUserDailyMiningTimestamp}
+                            userSubscription={userSubscription}
+                        />
+                    </>
+                ) : (
+                    <>
+                        <GTRobotStartButton
+                            isDailyMiningActive={isDailyMiningActive}
+                            userSubscription={userSubscription}
+                            userGTRobotMiningBalance={userGTRobotMiningBalance}
+                            setIsStartUserDailyMiningTimestamp={setIsStartUserDailyMiningTimestamp}
+                            setIsEndUserDailyMiningTimestamp={setIsEndUserDailyMiningTimestamp}
+                        />
+                    </>
+                )}
+                <GTRobotCard userGTRobotMiningBalance={userGTRobotMiningBalance}/>
+            </motion.div>
+
         </>
     );
 }

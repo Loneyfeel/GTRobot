@@ -40,9 +40,9 @@ const FunctionalChangeCrypto = ({setIsUserExists}) => {
 
     const coinData = {
         btc: { name: "Bitcoin", description: <p><b>{t("mining.pages.menu.coins.text_btc_1")}</b> {t("mining.pages.menu.coins.text_btc_2")}</p> },
-        doge: { name: "Dogecoin", description: <p><b>{t("mining.pages.menu.coins.text_ton_1")}</b> {t("mining.pages.menu.coins.text_ton_2")}</p> },
-        ton: { name: "Toncoin", description: <p><b>{t("mining.pages.menu.coins.text_shib_1")}</b> {t("mining.pages.menu.coins.text_shib_2")}</p> },
-        shib: { name: "Shiba Inu", description: <p><b>{t("mining.pages.menu.coins.text_doge_1")}</b> {t("mining.pages.menu.coins.text_doge_2")}</p> }
+        doge: { name: "Dogecoin", description: <p><b>{t("mining.pages.menu.coins.text_doge_1")}</b> {t("mining.pages.menu.coins.text_doge_2")}</p> },
+        ton: { name: "Toncoin", description: <p><b>{t("mining.pages.menu.coins.text_ton_1")}</b> {t("mining.pages.menu.coins.text_ton_2")}</p> },
+        shib: { name: "Shiba Inu", description: <p><b>{t("mining.pages.menu.coins.text_shib_1")}</b> {t("mining.pages.menu.coins.text_shib_2")}</p> }
     };
 
     return (

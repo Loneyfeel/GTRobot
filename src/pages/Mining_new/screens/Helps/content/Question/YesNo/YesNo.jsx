@@ -3,20 +3,32 @@ import { Box } from "@mui/material";
 import style from './yesNo.module.sass';
 import circle from '../../../../../assets/Helps/content/Question/circle.svg';
 import { useTranslation } from "react-i18next";
+import arrow from "../../../../../assets/Helps/arrow.svg";
 
-const YesNo = ({ setIsText, text, setIsCheckVisible }) => {
+const YesNo = ({ setIsText, text, setIsCheckVisible, setArrowSrc, currentIndex, setCurrentIndex, setAnimationKey }) => {
     const { t } = useTranslation();
     const [selectedOption, setSelectedOption] = useState(null);
+
+    function handleButtonNextClick (direction){
+        setArrowSrc({left: arrow, right: arrow});
+            setCurrentIndex(prevIndex => prevIndex + (direction === 'left' ? -1 : 1));
+            setAnimationKey(prevKey => prevKey + 1); // Обновляем ключ анимации
+    }
 
     useEffect(() => {
         setIsCheckVisible(true);
         setSelectedOption(null);
     }, [text]);
 
-    const handleButtonClick = (option) => {
+    function handleYesNoButtonClick(option){
         setIsText(option === "yes" ? "" : text);
         setIsCheckVisible(option === "no");
         setSelectedOption(option);
+        if (option === "yes"){
+            setTimeout(() => {
+                handleButtonNextClick('right');
+            }, 300);
+        }
     };
 
     return (
@@ -25,7 +37,7 @@ const YesNo = ({ setIsText, text, setIsCheckVisible }) => {
                 <Box
                     key={option}
                     className={style.yesNo__button}
-                    onClick={() => handleButtonClick(option)}
+                    onClick={() => handleYesNoButtonClick(option)}
                 >
                     <Box className={style.yesNo__button__circle}>
                         <img src={circle} alt={'circle'} className={style.yesNo__button__circle_img}/>

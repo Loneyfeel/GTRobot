@@ -114,6 +114,7 @@
       "gtrobotMining": {
         "title": "GTRobot",
         "balance": "Balans",
+        "gtrobot_btn": "Faollashtirish",
         "text_alert_1": "Siz 100$-lik limitga yetdingiz. Mayning qilgan kriptovalyutadan foydalanish uchun ",
         "text_alert_2": "ga murojaat qiling",
         "gtrobot_alert_1": "GTRobot mayningi - bu GTRobot tariflarini imtiyoz bilan sotib olish uchun kriptovalyutaga sarmoya kiritish imkonini beruvchi vositadir !",

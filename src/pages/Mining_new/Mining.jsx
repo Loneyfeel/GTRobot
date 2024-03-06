@@ -5,12 +5,13 @@ import bgImg from './assets/shared/background.png';
 import { Routes, Route } from 'react-router-dom';
 import { Backdrop, Box, CircularProgress } from "@mui/material";
 import { useTranslation } from "react-i18next";
-import { useUserExists, useFetchDataAndUpdateLocalStorage, useUserTasks, useTickersPrice } from './hooks';
+import { useTickersPrice } from './hooks';
 import BottomNavigationMenu from "./components/BottomNavigationMenu/index.js";
 import { CloudMining, GTRobotMining, Referrals, Menu } from './pages';
 import {fetchDataAndUpdateLocalStorage} from "./helps/dataHelps.js";
 import {miningUserExists} from "../Mining/components/Requests/Requests.js";
 import {tg} from "../../shared/telegram/telegram.js";
+import {testData} from "./testData/testData.js";
 const Helps = lazy(() => import('./screens/Helps'));
 const Tasks = lazy(() => import('./screens/Tasks'));
 
@@ -52,7 +53,7 @@ const Mining = () => {
             const userExistsResponse = await miningUserExists();
 
             if (!userExistsResponse.status) {
-                setIsUserExists(false);
+                setIsUserExists(testData.userExits);
             } else {
                 setIsUserExists(userExistsResponse.status)
             }

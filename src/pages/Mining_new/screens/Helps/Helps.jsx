@@ -15,6 +15,22 @@ import { useTranslation } from "react-i18next";
 const Helps = ({ setIsUserExists }) => {
     const {t} = useTranslation();
 
+    const [arrowSrc, setArrowSrc] = useState({left: arrow, right: arrow});
+    const [currentIndex, setCurrentIndex] = useState(0);
+    const [animationKey, setAnimationKey] = useState(0); // Добавленное состояние для обновления ключа анимации
+
+    function handleArrowMouseDown (direction){
+        setArrowSrc(prevState => ({...prevState, [direction]: arrowActive}));
+    }
+
+    function handleButtonClick (direction){
+        setArrowSrc({left: arrow, right: arrow});
+        if ((direction === 'left' && currentIndex > 0) || (direction === 'right' && currentIndex < objects.length - 1)) {
+            setCurrentIndex(prevIndex => prevIndex + (direction === 'left' ? -1 : 1));
+            setAnimationKey(prevKey => prevKey + 1); // Обновляем ключ анимации
+        }
+    }
+
     const objects = [
         {
             text: <span><b>{t("mining.components.helps.start_1")}</b> {t("mining.components.helps.start_2")}
@@ -30,34 +46,28 @@ const Helps = ({ setIsUserExists }) => {
         },
         {
             text: <span>{t("mining.components.helps.survey.question_1_1")} <br/>{t("mining.components.helps.survey.question_1_2")} <b>{t("mining.components.helps.survey.question_1_3")}</b>?</span>,
-            component: <Question text={t("mining.components.helps.survey.text_1")} animation={question_1}/>
+            component: <Question text={t("mining.components.helps.survey.text_1")}
+                                 animation={question_1}
+                                 setArrowSrc={setArrowSrc}
+                                 currentIndex={currentIndex}
+                                 setCurrentIndex={setCurrentIndex}
+                                 setAnimationKey={setAnimationKey} />
         },
         {
             text:
                 <span>{t("mining.components.helps.survey.question_2_1")}<br/><b>{t("mining.components.helps.survey.question_2_2")}</b>?</span>,
-            component: <Question text={t("mining.components.helps.survey.text_2")} animation={question_2}/>
+            component: <Question text={t("mining.components.helps.survey.text_2")}
+                                 animation={question_2}
+                                 setArrowSrc={setArrowSrc}
+                                 currentIndex={currentIndex}
+                                 setCurrentIndex={setCurrentIndex}
+                                 setAnimationKey={setAnimationKey}/>
         },
         {
             text: <span>{t("mining.components.helps.changeCrypto.changeCryptoTitle_1")} <b>{t("mining.components.helps.changeCrypto.changeCryptoTitle_2")}</b></span>,
             component: <FunctionalChangeCrypto setIsUserExists={setIsUserExists}/>
         }
     ];
-
-    const [arrowSrc, setArrowSrc] = useState({left: arrow, right: arrow});
-    const [currentIndex, setCurrentIndex] = useState(0);
-    const [animationKey, setAnimationKey] = useState(0); // Добавленное состояние для обновления ключа анимации
-
-    const handleArrowMouseDown = direction => {
-        setArrowSrc(prevState => ({...prevState, [direction]: arrowActive}));
-    };
-
-    const handleButtonClick = direction => {
-        setArrowSrc({left: arrow, right: arrow});
-        if ((direction === 'left' && currentIndex > 0) || (direction === 'right' && currentIndex < objects.length - 1)) {
-            setCurrentIndex(prevIndex => prevIndex + (direction === 'left' ? -1 : 1));
-            setAnimationKey(prevKey => prevKey + 1); // Обновляем ключ анимации
-        }
-    };
 
     const containerVariants = {
         hidden: {opacity: 0},
@@ -85,19 +95,7 @@ const Helps = ({ setIsUserExists }) => {
                                   className={`${style.arrows__right} ${currentIndex === objects.length - 1 && style.arrows__disabled}`}/>}
                 />
             </Box>
-            <Box
-                className={style.area}
-                sx={{
-                    display: currentIndex < 3 ? 'block' : 'none'
-                }}
-            >
-                <Box className={`${style.area__half} ${style.area_left}`}
-                     onClick={() => handleButtonClick('left')}
-                />
-                <Box className={`${style.area__half} ${style.area_right}`}
-                     onClick={() => handleButtonClick('right')}
-                />
-            </Box>
+
             <motion.div
                 key={animationKey} // Подключаем ключ анимации
                 variants={containerVariants}
@@ -110,6 +108,19 @@ const Helps = ({ setIsUserExists }) => {
                     <Box className={style.content__title}>{objects[currentIndex].text}</Box>
                     <Box className={style.content__component}>{objects[currentIndex].component}</Box>
                 </Suspense>
+                <Box
+                    className={style.area}
+                    sx={{
+                        display: currentIndex < 5 ? 'block' : 'none'
+                    }}
+                >
+                    <Box className={`${style.area__half} ${style.area_left}`}
+                         onClick={() => handleButtonClick('left')}
+                    />
+                    <Box className={`${style.area__half} ${style.area_right}`}
+                         onClick={() => handleButtonClick('right')}
+                    />
+                </Box>
             </motion.div>
         </Box>
     )

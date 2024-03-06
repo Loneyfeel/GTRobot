@@ -1,31 +1,30 @@
 import React from 'react';
-import { buildStyles, CircularProgressbar } from "react-circular-progressbar";
 import style from "./halfCircleProgressBar.module.sass";
 import {Box} from "@mui/material";
 import {useTranslation} from "react-i18next";
 
-const HalfCircleProgressBar = ({ value, max }) => {
+import Progress from 'react-circle-progress-bar'
+
+const HalfCircleProgressBar = ({ value, max, width, height, gradient, text, widthStick }) => {
     const { t } = useTranslation();
 
-    const maxRotation = 260;
-    const pointerRotation = (value / max) * maxRotation - 130;
+    const maxRotation = 275;
+    const pointerRotation = (value / max) * maxRotation - 135;
 
     return (
         <>
-            <div style={{width: '300px', height: '300px', position: 'relative'}}>
-                <CircularProgressbar
-                    value={value}
-                    maxValue={max}  // Set the maxValue prop
-                    strokeWidth={7}
-                    circleRatio={0.7}
-                    styles={buildStyles({
-                        rotation: 0.65,
-                        strokeLinecap: 'round',
-                        pathColor: `rgba(200, 200, 200, ${(value + 20) / max})`,
-                        trailColor: 'rgba(255, 255, 255, 0.15)',
-                        transition: 'stroke-dashoffset 1s ease',
-                        pathTransition: 'stroke-dashoffset 1s ease'
-                    })}
+            <div style={{width: `${width}`, height: `${width}`, position: 'relative'}}>
+                <Progress
+                    progress={value}
+                    hideBall={true}
+                    hideValue={true}
+                    strokeWidth={12}
+                    background={'rgba(255, 255, 255, 0.15)'}
+                    gradient={gradient}
+                    reduction={0.25}
+                    style={{
+                        width: `${width}`
+                    }}
                 />
                 <div
                     style={{
@@ -34,17 +33,19 @@ const HalfCircleProgressBar = ({ value, max }) => {
                         left: '50%',
                         transformOrigin: 'bottom',
                         transform: `translate(-50%, -100%) rotate(${pointerRotation}deg)`,
-                        width: '5px',
-                        height: '100px',
+                        width: `${widthStick}`,
+                        height: height,
                         backgroundImage: 'linear-gradient(to bottom, #FFFFFF, #252525)',
                         borderRadius: '10px',
                         transition: 'transform 1s ease',
                     }}
                 />
             </div>
-            <Box className={style.halfCircleProgressBar__text}>
-                {t('mining.pages.gtrobotMining.timer_balance_text')}
-            </Box>
+            {text && (
+                <Box className={style.halfCircleProgressBar__text}>
+                    {t('mining.pages.gtrobotMining.timer_balance_text')}
+                </Box>
+            )}
         </>
     );
 }

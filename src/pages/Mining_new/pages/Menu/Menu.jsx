@@ -14,6 +14,8 @@ import doge from '../../assets/shared/cryptoCoins/dogecoin.svg'
 import ton from '../../assets/shared/cryptoCoins/toncoin.svg'
 import shib from '../../assets/shared/cryptoCoins/shibacoin.svg'
 import { useTranslation } from "react-i18next";
+import { motion } from "framer-motion";
+
 import Withdraw from './Withdraw'
 
 const Menu = ({ onTabChange }) => {
@@ -140,6 +142,11 @@ const Menu = ({ onTabChange }) => {
 
     return (
         <>
+            <motion.div
+                initial={{opacity: 0}} // Начальное состояние - видимый
+                animate={{opacity: 1}} // Анимация по изменению видимости
+                transition={{duration: 1}} // Длительность анимации
+            >
             <Box className={style.menu}>
                 <PageTitle text={'Menu'} />
                 <Box className={style.menu__navigation}>
@@ -215,6 +222,7 @@ const Menu = ({ onTabChange }) => {
                     ))}
                 </Box>
             </Box>
+            </motion.div>
         </>
     );
 };

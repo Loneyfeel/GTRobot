@@ -1,12 +1,11 @@
 import React, {useEffect, useState} from 'react';
 import style from './timer.module.sass'
 import Countdown from 'react-countdown';
-import ellipse from '../../../../assets/CloudMining/ellipse.svg'
-import GaugeComponent from 'react-gauge-component'
 import {Box } from "@mui/material";
 import {useTranslation} from "react-i18next";
 import codeVideo from "../../../../assets/CloudMining/codeVideo.mp4"
 import {fetchDataAndUpdateLocalStorageInSession} from "../../../../helps/dataHelps.js";
+import HalfCircleProgressBar from "../../../GTRobotMining/components/shared/HalfCircleProgressBar/index.js";
 
 const Timer = ({
                    userCurrencyPrice,
@@ -67,25 +66,14 @@ const Timer = ({
                 <Box className={style.cloudTimer__speedometers}>
                     {speedometersText.map((speedometer, index) => (
                         <Box key={index} className={style.cloudTimer__speedometers_box}>
-                            <img src={ellipse} alt={'ellipse'} className={style.cloudTimer__speedometers_box__img}/>
-                            <GaugeComponent
-                                id={`gauge-component${index}`}
-                                type={'radial'}
-                                arc={{
-                                    width: 0
-                                }}
+                            <HalfCircleProgressBar
                                 value={speedometer.value}
-                                labels={{
-                                    valueLabel: {
-                                        hide: true
-                                    },
-                                    tickLabels: {
-                                        hideMinMax: true
-                                    }
-                                }}
-                                pointer={{
-                                    color: '#848585',
-                                }}
+                                max={100}
+                                width={'30vw'}
+                                height={'38px'}
+                                widthStick={'4px'}
+                                gradient={[{stop: 0.0, color: 'red'}, {stop: 0.5, color: '#8f6804'},  {stop: 1, color: '#25e000'}]}
+                                text={false}
                             />
                             <Box className={style.cloudTimer__speedometers_box__text}>
                                 {speedometer.text}

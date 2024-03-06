@@ -7,7 +7,7 @@ import YesNo from "./YesNo/index.js";
 import CustomSnackBar from "../../../../components/CustomSnackBar/index.js";
 import {useTranslation} from "react-i18next";
 
-const Question = ({text, animation}) => {
+const Question = ({text, animation, setArrowSrc, currentIndex, setCurrentIndex, setAnimationKey}) => {
     const { t } = useTranslation();
 
     const [isText, setIsText] = useState('')
@@ -38,6 +38,10 @@ const Question = ({text, animation}) => {
                             setIsText={setIsText}
                             text={text}
                             setIsCheckVisible={setIsCheckVisible}
+                            setArrowSrc={setArrowSrc}
+                            currentIndex={currentIndex}
+                            setCurrentIndex={setCurrentIndex}
+                            setAnimationKey={setAnimationKey}
                         />
                     }
                     style={{

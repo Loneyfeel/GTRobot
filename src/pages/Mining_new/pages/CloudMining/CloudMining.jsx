@@ -11,7 +11,7 @@ import {useNavigate} from "react-router-dom";
 import {useTranslation} from "react-i18next";
 
 const CloudMining = () => {
-    const { t } = useTranslation();
+    const {t} = useTranslation();
     const userDataStorage = JSON.parse(localStorage.getItem("miningUserData")); //Получаем данные
     const prices = JSON.parse(localStorage.getItem("prices")) //Получаем цены
     const [cryptoCurrency, setCryptoCurrency] = useState(userDataStorage.cryptoCurrency) //Получаем выбранную монету
@@ -40,14 +40,19 @@ const CloudMining = () => {
 
     return (
         <>
-            <Box className={style.cloudMining}>
-                <PageTitle text={'Cloud Mining'}/>
+            <motion.div
+                className={style.cloudMining}
+                initial={{opacity: 0}}
+                animate={{opacity: 1}}
+                transition={{duration: 1}}
+            >
                 <motion.div
                     className={style.cloudMining__content}
                     initial={{opacity: 1}} // Начальное состояние - видимый
                     animate={{opacity: isContentVisible ? 1 : 0}} // Анимация по изменению видимости
                     transition={{duration: 1}} // Длительность анимации
                 >
+                    <PageTitle text={'Cloud Mining'}/>
                     <Box className={style.cloudMining__content}>
                         <CloudCard
                             userCloudMiningBalance={userCloudMiningBalance}
@@ -100,7 +105,7 @@ const CloudMining = () => {
                         />
                     </motion.div>
                 )}
-            </Box>
+            </motion.div>
         </>
     );
 }

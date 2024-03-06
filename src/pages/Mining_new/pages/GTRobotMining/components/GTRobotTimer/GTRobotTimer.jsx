@@ -1,10 +1,9 @@
 import React, {useEffect, useState} from 'react';
 import style from './gtrobotTimer.module.sass';
 import { Box } from '@mui/material';
-import 'react-circular-progressbar/dist/styles.css';
 import Countdown from 'react-countdown';
 import { fetchDataAndUpdateLocalStorageInSession } from '../../../../helps/dataHelps.js';
-import HalfCircleProgressBar from '../shared/HalfCircleProgressBar/index.js';
+import HalfCircleProgressBar from '../shared/HalfCircleProgressBar';
 
 const GtRobotTimer = ({
                           userGTRobotMiningBalance,
@@ -35,10 +34,21 @@ const GtRobotTimer = ({
         return () => clearInterval(interval);
     }, [isStartUserDailyMiningTimestamp, setUserGTRobotMiningBalance]);
 
+
+
+
     return (
         <Box className={style.gtrobotTimer}>
             <Box className={style.gtrobotTimer__speedometer_box}>
-                <HalfCircleProgressBar value={userGTRobotMiningBalance} max={userSubscription !== 'ultra' ? 100 : 300}/>
+                <HalfCircleProgressBar
+                    value={(userGTRobotMiningBalance % 10) * 10}
+                    max={100}
+                    width={'300px'}
+                    height={'100px'}
+                    gradient={[{stop: 0.0, color: '#fff'}, {stop: 1, color: '#fff'}]}
+                    widthStick={'5px'}
+                    text={true}
+                />
                 <Countdown
                     className={style.gtrobotTimer__timer}
                     date={Date.now() + calculateTimeDifference()}
