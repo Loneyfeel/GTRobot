@@ -5,6 +5,7 @@
 }
 html {
   scroll-behavior: smooth;
+  background-color: #000;
 }
 
 body {
@@ -47,6 +48,7 @@ img {
   /*--bg_color: #000;*/
   /*--button_text_color: #fff*/
   --text_color: #fff;
+  --text-light: rgb( 170, 170, 170);
   --component_bg_color: rgba(25, 25, 25, 0.9);
   --component_stroke_color: rgba(255, 255, 255, 0.2);
   --component_stroke_color_light: rgba(255, 255, 255, 0.5);

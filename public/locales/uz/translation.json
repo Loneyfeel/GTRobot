@@ -78,6 +78,8 @@
         "alert_1": "Cloud Miningdan foydalanishingiz mumkin bo'lgan vaqt oralig'i: 00:00 - 16:00",
         "alert_2": "Soat 16:00 dan keyin Cloud Mining uchun protsessorlar o'chiriladi va mutaxassislar nosozliklarni oldini olish uchun tekshirishiruv boshlaydilar.",
         "startButtonTimer": "Mayning-gacha vaqt qo\"ldi",
+        "whatIs_btn": "Nima uchun?",
+        "timer_text": "Vaqt qo’ldi:",
         "timer": {
           "speedometer_1": "Samaradorlik",
           "speedometer_2": "Boost",
@@ -118,8 +120,9 @@
         "text_alert_1": "Siz 100$-lik limitga yetdingiz. Mayning qilgan kriptovalyutadan foydalanish uchun ",
         "text_alert_2": "ga murojaat qiling",
         "gtrobot_alert_1": "GTRobot mayningi - bu GTRobot tariflarini imtiyoz bilan sotib olish uchun kriptovalyutaga sarmoya kiritish imkonini beruvchi vositadir !",
-        "gtrobot_alert_2": "Ushbu mablag' faqat GTRobot tarifni sotib olish uchun ishlatilishi mumkin",
+        "gtrobot_alert_2": "Ushbu mablag' faqat GTRobot",
         "gtrobot_alert_3": "VIP",
+        "gtrobot_alert_4": "tarifini sotib olish uchun ishlatilishi mumkin",
         "timer_balance_text": "Daromad",
         "promoCode": {
           "alert_1": "Siz bir necha soniya ichida promokodni olasiz",

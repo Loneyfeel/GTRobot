@@ -1,9 +1,13 @@
 import MainButtons from "./MainButtons/index.js";
 import MainTitle from "./MainTitle/index.js";
 import { Box } from "@mui/material";
+import {tg} from "../../shared/telegram/telegram.js";
 
 const MainMenu = () => {
-  window.Telegram.WebApp.BackButton.isVisible = false;
+    tg.setHeaderColor('#000')
+
+
+    window.Telegram.WebApp.BackButton.isVisible = false;
   window.Telegram.WebApp.ready();
   window.Telegram.WebApp.BackButton.onClick(async () => {
     window.Telegram.WebApp.HapticFeedback.notificationOccurred("error");

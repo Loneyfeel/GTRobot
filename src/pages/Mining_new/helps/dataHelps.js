@@ -25,7 +25,7 @@ export async function fetchDataAndUpdateLocalStorage() {
                 localStorage.setItem('miningUserData', JSON.stringify(response.data));
             } else {
                 // Устанавливаем начальные тестовые данные в локальное хранилище при возникновении ошибки
-                localStorage.setItem('miningUserData', JSON.stringify(testData.userData));
+                // localStorage.setItem('miningUserData', JSON.stringify(testData.userData));
             }
         }
     } catch (error) {
@@ -42,7 +42,7 @@ export async function fetchDataAndUpdateLocalStorageInSession() {
             localStorage.setItem('miningUserData', JSON.stringify(response.data));
         } else {
             // Устанавливаем начальные тестовые данные в локальное хранилище при возникновении ошибки
-            localStorage.setItem('miningUserData', JSON.stringify(testData.userData));
+            // localStorage.setItem('miningUserData', JSON.stringify(testData.userData));
         }
     } catch (error) {
         console.error("Error fetching user data:", error);
@@ -52,12 +52,13 @@ export async function fetchDataAndUpdateLocalStorageInSession() {
 export async function fetchTickersPricesAndUpdateLocalStorage () {
     try {
         const response = await getMiningTickersPrice();
-        let tickersPrices = response.data;
-        tickersPrices = [tickersPrices]
-        if (tickersPrices.length > 0) {
+
+        const tickersPrices = response.data;
+
+        if (tickersPrices) {
             localStorage.setItem('prices', JSON.stringify(tickersPrices));
         } else {
-            localStorage.setItem('prices', JSON.stringify(testData.prices));
+            // localStorage.setItem('prices', JSON.stringify(testData.prices));
         }
     } catch (error) {
         console.error('Error fetching tickers prices:', error);

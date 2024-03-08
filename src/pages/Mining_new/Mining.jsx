@@ -18,6 +18,7 @@ const Tasks = lazy(() => import('./screens/Tasks'));
 const Mining = () => {
 
     tg.setHeaderColor('#000')
+    tg.setBackgroundColor('#000')
 
     const { t } = useTranslation();
 
@@ -53,7 +54,7 @@ const Mining = () => {
             const userExistsResponse = await miningUserExists();
 
             if (!userExistsResponse.status) {
-                setIsUserExists(testData.userExits);
+                // setIsUserExists(testData.userExits);
             } else {
                 setIsUserExists(userExistsResponse.status)
             }
@@ -77,7 +78,7 @@ const Mining = () => {
         setBackdropVisible(true);
         const timeout = setTimeout(() => {
             setBackdropVisible(false);
-        }, 500);
+        }, 2500);
 
         return () => clearTimeout(timeout);
     }, []);
@@ -106,39 +107,41 @@ const Mining = () => {
                     src={bgImg}
                     alt={"background"}
                 />
-                <Box className={style.mining}>
-                    {isUserExists ? (
-                        <>
-                            {userTasks.length > 0 ? (
-                                <>
-                                    <Suspense fallback={null}>
-                                        <Tasks userTasks={userTasks} setUserTasks={setUserTasks} />
-                                    </Suspense>
-                                </>
-                            ) : (
-                                <>
-                                    <Suspense>
-                                        <Routes>
-                                            <Route path="/cloud-mining" element={<CloudMining />} />
-                                            <Route path="/gtrobot-mining" element={<GTRobotMining />} />
-                                            <Route path="/referrals" element={<Referrals />} />
-                                            <Route path="/menu/:item?" element={<Menu onTabChange={handleTabChange}/>} />
-                                        </Routes>
-                                    </Suspense>
-                                    <Suspense>
-                                        <BottomNavigationMenu selectedTab={selectedTab} onTabChange={handleTabChange} />
-                                    </Suspense>
-                                </>
-                            )}
-                        </>
-                    ) : (
-                        <>
-                            <Suspense fallback={null}>
-                                <Helps setIsUserExists={setIsUserExists} />
-                            </Suspense>
-                        </>
-                    )}
-                </Box>
+                {!backdropVisible && (
+                    <Box className={style.mining}>
+                        {isUserExists ? (
+                            <>
+                                {userTasks.length > 0 ? (
+                                    <>
+                                        <Suspense fallback={null}>
+                                            <Tasks userTasks={userTasks} setUserTasks={setUserTasks} />
+                                        </Suspense>
+                                    </>
+                                ) : (
+                                    <>
+                                        <Suspense>
+                                            <Routes>
+                                                <Route path="/cloud-mining" element={<CloudMining />} />
+                                                <Route path="/gtrobot-mining" element={<GTRobotMining />} />
+                                                <Route path="/referrals" element={<Referrals />} />
+                                                <Route path="/menu/:item?" element={<Menu onTabChange={handleTabChange}/>} />
+                                            </Routes>
+                                        </Suspense>
+                                        <Suspense>
+                                            <BottomNavigationMenu selectedTab={selectedTab} onTabChange={handleTabChange} />
+                                        </Suspense>
+                                    </>
+                                )}
+                            </>
+                        ) : (
+                            <>
+                                <Suspense fallback={null}>
+                                    <Helps setIsUserExists={setIsUserExists} />
+                                </Suspense>
+                            </>
+                        )}
+                    </Box>
+                )}
             </Box>
         </>
     );

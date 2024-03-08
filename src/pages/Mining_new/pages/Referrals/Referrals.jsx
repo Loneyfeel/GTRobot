@@ -61,7 +61,7 @@ const Referrals = () => {
                             onClick={handleInviteButtonClick}
                             style={{
                                 fontSize: '16px',
-                                marginTop: '20px',
+                                marginTop: '10px',
                                 width: '100%'
                             }}
                         />

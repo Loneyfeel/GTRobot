@@ -1,5 +1,3 @@
-import {lazy} from "react";
-
-export const GTRobotCard = lazy(() => import('./GTRobotCard'));
-export const GTRobotStartButton = lazy(() => import('./GTRobotStartButton'));
-export const GTRobotTimer = lazy(() => import('./GTRobotTimer'));
+export { default as GTRobotCard } from './GTRobotCard';
+export { default as GTRobotStartButton } from './GTRobotStartButton';
+export { default as GTRobotTimer } from './GTRobotTimer';

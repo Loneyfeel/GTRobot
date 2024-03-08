@@ -121,7 +121,7 @@ const AreaChart = ({ referralsData }) => {
             reversed: false,
             logarithmic: false,
             logBase: 10,
-            tickAmount: 5,
+            tickAmount: 4,
         },
         grid: {
             show: true,
@@ -144,7 +144,7 @@ const AreaChart = ({ referralsData }) => {
             options={options}
             series={series}
             type="area"
-            height={350}
+            height={150}
             width={'100%'}
         />
     );

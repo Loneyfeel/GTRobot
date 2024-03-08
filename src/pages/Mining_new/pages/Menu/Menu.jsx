@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import style from './menu.module.sass';
 import { useLocation } from 'react-router-dom';
-import { Box, Accordion, AccordionSummary, AccordionDetails, Typography } from '@mui/material';
+import { Box, Accordion, AccordionSummary, AccordionDetails } from '@mui/material';
 import PageTitle from '../../components/PageTitle/index.js';
 import clouds from '../../assets/shared/bottomNavigation/cloud.svg';
 import referrals from '../../assets/shared/bottomNavigation/referrals.svg';

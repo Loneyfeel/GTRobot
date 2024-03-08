@@ -13,7 +13,13 @@ const HalfCircleProgressBar = ({ value, max, width, height, gradient, text, widt
 
     return (
         <>
-            <div style={{width: `${width}`, height: `${width}`, position: 'relative'}}>
+            <div
+                style={{
+                    width: `${width}`,
+                    height: `${width}`,
+                    position: 'relative',
+                    marginBlock: '-20px'
+            }}>
                 <Progress
                     progress={value}
                     hideBall={true}
@@ -22,6 +28,8 @@ const HalfCircleProgressBar = ({ value, max, width, height, gradient, text, widt
                     background={'rgba(255, 255, 255, 0.15)'}
                     gradient={gradient}
                     reduction={0.25}
+                    transitionDuration={1}
+                    transitionTimingFunction={'ease-in-out'}
                     style={{
                         width: `${width}`
                     }}
@@ -35,9 +43,9 @@ const HalfCircleProgressBar = ({ value, max, width, height, gradient, text, widt
                         transform: `translate(-50%, -100%) rotate(${pointerRotation}deg)`,
                         width: `${widthStick}`,
                         height: height,
-                        backgroundImage: 'linear-gradient(to bottom, #FFFFFF, #252525)',
+                        backgroundImage: 'linear-gradient(to bottom, #FFFFFF, #454545)',
                         borderRadius: '10px',
-                        transition: 'transform 1s ease',
+                        transition: 'transform 1000ms ease-in-out',
                     }}
                 />
             </div>

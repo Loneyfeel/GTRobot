@@ -29,11 +29,12 @@ const CloudMining = () => {
 
     const [userCloudMiningRate, setUserCloudMiningRate] = useState(userDataStorage.statistics.regularMiningRate) // Количество пользователей (3й спидометр)
 
+    const [timerStarted, setTimerStarted] = useState(isMiningActive);
+
+
     useEffect(() => {
-        // Находим объект цены для криптовалюты пользователя
-        const currencyPrice = prices.find(price => Object.keys(price)[0] === cryptoCurrency);
         // Обновляем состояние userCurrencyPrice с ценой, если объект найден, или null, если объект не найден
-        setUserCurrencyPrice(currencyPrice ? Object.values(currencyPrice)[0] : null);
+        setUserCurrencyPrice(prices[cryptoCurrency]);
     }, [cryptoCurrency, prices]);
 
     const navigate = useNavigate();
@@ -52,14 +53,18 @@ const CloudMining = () => {
                     animate={{opacity: isContentVisible ? 1 : 0}} // Анимация по изменению видимости
                     transition={{duration: 1}} // Длительность анимации
                 >
-                    <PageTitle text={'Cloud Mining'}/>
                     <Box className={style.cloudMining__content}>
-                        <CloudCard
-                            userCloudMiningBalance={userCloudMiningBalance}
-                            userCurrencyPrice={userCurrencyPrice}
-                            cryptoCurrency={cryptoCurrency}
-                        />
-                        {isEndUserMiningTimestamp ? (
+                        {timerStarted && (
+                            <>
+                                <PageTitle text={'Cloud Mining'}/>
+                                <CloudCard
+                                    userCloudMiningBalance={userCloudMiningBalance}
+                                    userCurrencyPrice={userCurrencyPrice}
+                                    cryptoCurrency={cryptoCurrency}
+                                />
+                            </>
+                        )}
+                        {isEndUserMiningTimestamp && isContentVisible ? (
                             <Timer
                                 userCurrencyPrice={userCurrencyPrice}
                                 userCloudMiningBalance={userCloudMiningBalance}
@@ -79,12 +84,18 @@ const CloudMining = () => {
                                 setIsEndUserMiningTimestamp={setIsEndUserMiningTimestamp}
                             />
                         )}
-                        <CustomButton
-                            content={t("mining.pages.menu.withdraw.main_btn")}
-                            onClick={() => {
-                                navigate('/menu/wallet');
-                            }}
-                        />
+                        {timerStarted && (
+                            <CustomButton
+                                content={t("mining.pages.menu.withdraw.main_btn")}
+                                onClick={() => {
+                                    navigate('/menu/wallet');
+                                }}
+                                style={{
+                                    height: '40px',
+                                    fontSize: '16px'
+                                }}
+                            />
+                        )}
                     </Box>
                 </motion.div>
                 {!isContentVisible && (

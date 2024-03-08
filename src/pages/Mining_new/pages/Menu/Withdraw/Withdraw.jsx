@@ -290,19 +290,24 @@ const Withdraw = () => {
         setCryptoCurrency(storedData.cryptoCurrency || "btc");
     }, []);
 
+    // const [priceObject, setPriceObject] = useState(null)
+
     useEffect(() => {
         const prices = JSON.parse(localStorage.getItem("prices")) || [];
-        const priceObject = prices.find(price => price[cryptoCurrency]);
+        const priceObject = prices[cryptoCurrency];
         if (priceObject) {
-            setPricePerCoin(priceObject[cryptoCurrency]);
+            setPricePerCoin(priceObject);
         } else {
             setPricePerCoin(0); // или любое другое значение по умолчанию
         }
     }, [cryptoCurrency]);
 
-
     // Функция для форматирования баланса с заданным количеством знаков после запятой
     const formatNumber = (balance, digits) => {
+        if (balance === undefined) {
+            return ''; // Возвращаем пустую строку или другое значение по умолчанию
+        }
+
         let formattedBalance = balance.toFixed(digits);
         if (formattedBalance.length > digits) {
             formattedBalance = formattedBalance.slice(0, digits);
@@ -310,7 +315,13 @@ const Withdraw = () => {
         return formattedBalance;
     };
 
-    const formatedCost = formatNumber(pricePerCoin, 9)
+    const [formatedCost, setFormatedCost] = useState('0.000000000');
+
+    useEffect(() => {
+        if (pricePerCoin !== undefined) {
+            setFormatedCost(formatNumber(pricePerCoin, 9));
+        }
+    }, [pricePerCoin]);
 
     return (
         <>

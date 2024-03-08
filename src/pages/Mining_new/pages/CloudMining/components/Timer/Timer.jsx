@@ -3,7 +3,6 @@ import style from './timer.module.sass'
 import Countdown from 'react-countdown';
 import {Box } from "@mui/material";
 import {useTranslation} from "react-i18next";
-import codeVideo from "../../../../assets/CloudMining/codeVideo.mp4"
 import {fetchDataAndUpdateLocalStorageInSession} from "../../../../helps/dataHelps.js";
 import HalfCircleProgressBar from "../../../GTRobotMining/components/shared/HalfCircleProgressBar/index.js";
 
@@ -45,20 +44,34 @@ const Timer = ({
 
 
     const [userBoost, setUserBoost] = useState(userSubscriptionBoost + userReferralBoost)
+
+    const [speedBalance_1, setSpeedBalance_1] = useState(0)
+    const [speedBalance_2, setSpeedBalance_2] = useState(0)
+    const [speedBalance_3, setSpeedBalance_3] = useState(0)
+
     const speedometersText = [
         {
             text: `${t("mining.pages.cloudMining.timer.speedometer_1")}`,
-            value: userSubscriptionBoost*100
+            value: speedBalance_1
         },
         {
             text: `${t("mining.pages.cloudMining.timer.speedometer_2")} ${userBoost*100}%`,
-            value: userBoost*100
+            value: speedBalance_2
         },
         {
             text: `${t("mining.pages.cloudMining.timer.speedometer_3")}`,
-            value: userCloudMiningRate*100
-        }
-        ]
+            value: speedBalance_3
+        }]
+
+
+
+    useEffect(() => {
+        setTimeout(async () => {
+            setSpeedBalance_1(userSubscriptionBoost*100)
+            setSpeedBalance_2(userBoost*33)
+            setSpeedBalance_3(userCloudMiningRate*100)
+        }, 200);
+    }, []);
 
     return (
         <>
@@ -69,10 +82,10 @@ const Timer = ({
                             <HalfCircleProgressBar
                                 value={speedometer.value}
                                 max={100}
-                                width={'30vw'}
-                                height={'38px'}
-                                widthStick={'4px'}
-                                gradient={[{stop: 0.0, color: 'red'}, {stop: 0.5, color: '#8f6804'},  {stop: 1, color: '#25e000'}]}
+                                width={'20vw'}
+                                height={'6.5vw'}
+                                widthStick={'3px'}
+                                gradient={[{stop: 0.3, color: 'red'}, {stop: 0.5, color: 'rgb(215,215,215)'}]}
                                 text={false}
                             />
                             <Box className={style.cloudTimer__speedometers_box__text}>
@@ -81,26 +94,12 @@ const Timer = ({
                         </Box>
                     ))}
                 </Box>
-                <Box className={style.cloudTimer__animation}>
-                    <Box className={style.cloudTimer__animation_box}>
-                        <video
-                            controls={false}
-                            autoPlay
-                            muted
-                            loop
-                            playsInline
-                            poster="https://cdn.indiawealth.in/public/images/transparent-background-mini.png"
-                            style={{
-                                width: '100%',
-                                height: '100%'
-                            }}
-                        >
-                            <source src={codeVideo} type="video/mp4"/>
-                        </video>
-                    </Box>
+            </Box>
+            <Box  className={style.cloudTimer__timer}>
+                <Box className={style.cloudTimer__timer__title}>
+                    {t('mining.pages.cloudMining.timer_text')}
                 </Box>
                 <Countdown
-                    className={style.cloudTimer__timer}
                     date={Date.now() + calculateTimeDifference()}
                     onComplete={fetchDataAndUpdateLocalStorageInSession}
                     renderer={({hours, minutes, seconds}) => {

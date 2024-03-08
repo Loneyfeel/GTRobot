@@ -104,7 +104,13 @@ const GTRobotStartButton = ({isDailyMiningActive, userGTRobotMiningBalance, user
                 ) : (
                     <>
                         <HalfCircleProgressBar value={userGTRobotMiningBalance}
-                                               max={userSubscription !== 'ultra' ? 100 : 300}/>
+                                               max={userSubscription !== 'ultra' ? 100 : 300}
+                                               width={'300px'}
+                                               height={'100px'}
+                                               gradient={[{stop: 0.0, color: '#fff'}, {stop: 1, color: '#fff'}]}
+                                               widthStick={'5px'}
+                                               text={false}
+                        />
                         {promocode && promocode !== '' ? (
                             <>
                                 <Box className={style.gtrobotMining__promoCode}>

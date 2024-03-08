@@ -19,6 +19,8 @@ const CustomSnackBar = ({ text, openState, severity, setIsFunction }) => {
             sx={{
                 display: 'flex',
                 justifyContent: 'center',
+                alignItems: 'center',
+                height: '10vh',
             }}
         >
             <Alert
@@ -33,6 +35,9 @@ const CustomSnackBar = ({ text, openState, severity, setIsFunction }) => {
                         bgcolor: 'unset',
                         borderRadius: '50px',
                         paddingInline: '20px'
+                    },
+                    "& .MuiAlert-action": {
+                        paddingTop: '0'
                     }
                 }}
             >

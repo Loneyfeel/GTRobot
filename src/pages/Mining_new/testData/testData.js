@@ -59,25 +59,25 @@ export const testData = {
             //     "task_text": "like_to YouTube"
             // }
         ],
-        "balance": 2.000055242,
+        "balance": 120.004201,
         "cryptoCurrency": "ton",
-        "dailyMiningBalance": 12.12424,
+        "dailyMiningBalance": 60,
         "holding":{
             "balanceToHoldingTimestamp":null,
             "holdingBalance":null,
             "holdingTimestamp":null
         },
         "mining": {
-            "endUserDailyMiningTimestamp": 1709687130,
-            "endUserMiningTimestamp": 1709687130,
+            "endUserDailyMiningTimestamp": 1709866087,
+            "endUserMiningTimestamp": null,
             "isDailyMiningActivated": true,
-            "isDailyMiningActive": true,
+            "isDailyMiningActive": 1709866087,
             "isMiningActive": true,
-            "startUserDailyMiningTimestamp": 1709676330,
-            "startUserMiningTimestamp": 1709676330
+            "startUserDailyMiningTimestamp": 1709551687,
+            "startUserMiningTimestamp": 1709551687
         },
         "referrals": {
-            "referralBonus": 0.22,
+            "referralBonus": 10.22,
             "referralCode": "MjQ5MDcwODYz",
             "referrals": [
                 {
@@ -101,7 +101,7 @@ export const testData = {
                     "userProfilePhoto": null
                 },
                 {
-                    "timestamp": 1708777734,
+                    "timestamp": 1709818348,
                     "userName": "Buytly",
                     "userProfilePhoto": "/9j/4AAQSkZJRgABwHdP/9k="
                 },
@@ -116,7 +116,7 @@ export const testData = {
                     "userProfilePhoto": "data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iaXNvLTg4NTktMSI/Pg0KPCEtLSBHZW5lcmF0b3I6IEFkb2JlIElsbHVzdHJhdG9yIDE2LjAuMCwgU1ZHIEV4cG9ydCBQbHVnLUluIC4gU1ZHIFZlcnNpb246IDYuMDAgQnVpbGQgMCkgIC0tPg0KPCFET0NUWVBFIHN2ZyBQVUJMSUMgIi0vL1czQy8vRFREIFNWRyAxLjEvL0VOIiAiaHR0cDovL3d3dy53My5vcmcvR3JhcGhpY3MvU1ZHLzEuMS9EVEQvc3ZnMTEuZHRkIj4NCjxzdmcgdmVyc2lvbj0iMS4xIiBpZD0iQ2FwYV8xIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIiB4PSIwcHgiIHk9IjBweCINCgkgd2lkdGg9IjQ1OXB4IiBoZWlnaHQ9IjQ1OXB4IiB2aWV3Qm94PSIwIDAgNDU5IDQ1OSIgc3R5bGU9ImVuYWJsZS1iYWNrZ3JvdW5kOm5ldyAwIDAgNDU5IDQ1OTsiIHhtbDpzcGFjZT0icHJlc2VydmUiPg0KPGc+DQoJPGcgaWQ9InNoYXJlIj4NCgkJPHBhdGggZD0iTTQ1OSwyMTYuNzVMMjgwLjUsMzguMjV2MTAyYy0xNzguNSwyNS41LTI1NSwxNTMtMjgwLjUsMjgwLjVDNjMuNzUsMzMxLjUsMTUzLDI5MC43LDI4MC41LDI5MC43djEwNC41NUw0NTksMjE2Ljc1eiIvPg0KCTwvZz4NCjwvZz4NCjxnPg0KPC9nPg0KPGc+DQo8L2c+DQo8Zz4NCjwvZz4NCjxnPg0KPC9nPg0KPGc+DQo8L2c+DQo8Zz4NCjwvZz4NCjxnPg0KPC9nPg0KPGc+DQo8L2c+DQo8Zz4NCjwvZz4NCjxnPg0KPC9nPg0KPGc+DQo8L2c+DQo8Zz4NCjwvZz4NCjxnPg0KPC9nPg0KPGc+DQo8L2c+DQo8Zz4NCjwvZz4NCjwvc3ZnPg0K"
                 },
                 {
-                    "timestamp": 1708777734,
+                    "timestamp": 1709818348,
                     "userName": "Buyt123ly",
                     "userProfilePhoto": "data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iaXNvLTg4NTktMSI/Pg0KPCEtLSBHZW5lcmF0b3I6IEFkb2JlIElsbHVzdHJhdG9yIDE2LjAuMCwgU1ZHIEV4cG9ydCBQbHVnLUluIC4gU1ZHIFZlcnNpb246IDYuMDAgQnVpbGQgMCkgIC0tPg0KPCFET0NUWVBFIHN2ZyBQVUJMSUMgIi0vL1czQy8vRFREIFNWRyAxLjEvL0VOIiAiaHR0cDovL3d3dy53My5vcmcvR3JhcGhpY3MvU1ZHLzEuMS9EVEQvc3ZnMTEuZHRkIj4NCjxzdmcgdmVyc2lvbj0iMS4xIiBpZD0iQ2FwYV8xIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIiB4PSIwcHgiIHk9IjBweCINCgkgd2lkdGg9IjQ1OXB4IiBoZWlnaHQ9IjQ1OXB4IiB2aWV3Qm94PSIwIDAgNDU5IDQ1OSIgc3R5bGU9ImVuYWJsZS1iYWNrZ3JvdW5kOm5ldyAwIDAgNDU5IDQ1OTsiIHhtbDpzcGFjZT0icHJlc2VydmUiPg0KPGc+DQoJPGcgaWQ9InNoYXJlIj4NCgkJPHBhdGggZD0iTTQ1OSwyMTYuNzVMMjgwLjUsMzguMjV2MTAyYy0xNzguNSwyNS41LTI1NSwxNTMtMjgwLjUsMjgwLjVDNjMuNzUsMzMxLjUsMTUzLDI5MC43LDI4MC41LDI5MC43djEwNC41NUw0NTksMjE2Ljc1eiIvPg0KCTwvZz4NCjwvZz4NCjxnPg0KPC9nPg0KPGc+DQo8L2c+DQo8Zz4NCjwvZz4NCjxnPg0KPC9nPg0KPGc+DQo8L2c+DQo8Zz4NCjwvZz4NCjxnPg0KPC9nPg0KPGc+DQo8L2c+DQo8Zz4NCjwvZz4NCjxnPg0KPC9nPg0KPGc+DQo8L2c+DQo8Zz4NCjwvZz4NCjxnPg0KPC9nPg0KPGc+DQo8L2c+DQo8Zz4NCjwvZz4NCjwvc3ZnPg0K"
                 }
@@ -131,12 +131,12 @@ export const testData = {
         "userSubscriptionBonus": 0
     },
     "errorCode": null,
-    "prices": [
-        { "btc": 60297.3 },
-        { "doge": 0.099067 },
-        { "shib": 0.000011 },
-        { "ton": 2.5985 }
-    ]
+    "prices": {
+        "btc": 60297.3,
+        "doge": 0.099067,
+        "shib": 0.000011,
+        "ton": 10.01
+    }
 }
 
 // export const testData1 = {

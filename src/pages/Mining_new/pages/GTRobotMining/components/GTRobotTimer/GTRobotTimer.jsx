@@ -34,14 +34,25 @@ const GtRobotTimer = ({
         return () => clearInterval(interval);
     }, [isStartUserDailyMiningTimestamp, setUserGTRobotMiningBalance]);
 
+    const [speedBalance, setSpeedBalance] = useState(0)
 
+    useEffect(() => {
+        setTimeout( () => {
+            setSpeedBalance(95)
+        }, 500);
+    }, []);
 
+    useEffect(() => {
+        setTimeout( () => {
+            setSpeedBalance((userGTRobotMiningBalance % 10) * 10)
+        }, 1500);
+    }, [userGTRobotMiningBalance]);
 
     return (
         <Box className={style.gtrobotTimer}>
             <Box className={style.gtrobotTimer__speedometer_box}>
                 <HalfCircleProgressBar
-                    value={(userGTRobotMiningBalance % 10) * 10}
+                    value={speedBalance}
                     max={100}
                     width={'300px'}
                     height={'100px'}

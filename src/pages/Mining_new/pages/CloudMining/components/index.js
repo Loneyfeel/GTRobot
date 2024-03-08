@@ -1,5 +1,3 @@
-import {lazy} from "react";
-
-export const CloudCard = lazy(() => import('./CloudCard'));
-export const StartButton = lazy(() => import('./StartButton'));
-export const Timer = lazy(() => import('./Timer'));
+export { default as CloudCard } from './CloudCard';
+export { default as StartButton } from './StartButton';
+export { default as Timer } from './Timer';

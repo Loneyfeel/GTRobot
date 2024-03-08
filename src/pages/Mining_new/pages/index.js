@@ -1,6 +1,4 @@
-import {lazy} from "react";
-
-export const CloudMining = lazy(() => import('./CloudMining'));
-export const GTRobotMining = lazy(() => import('./GTRobotMining'));
-export const Referrals = lazy(() => import('./Referrals'));
-export const Menu = lazy(() => import('./Menu'));
+export { default as CloudMining } from './CloudMining';
+export { default as GTRobotMining } from './GTRobotMining';
+export { default as Referrals } from './Referrals';
+export { default as Menu } from './Menu';

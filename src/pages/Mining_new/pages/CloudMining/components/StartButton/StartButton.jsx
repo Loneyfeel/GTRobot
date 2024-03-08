@@ -16,10 +16,6 @@ const StartButton = ({isMiningActive, setContentVisible, setIsStartUserMiningTim
     const {t} = useTranslation();
     const [timerStarted, setTimerStarted] = useState(!isMiningActive);
 
-    useEffect(() => {
-
-    }, []);
-
     async function handleStartButtonClick(){
         await startMining("regular")
         await fetchDataAndUpdateLocalStorageInSession().then(() => {
@@ -27,7 +23,7 @@ const StartButton = ({isMiningActive, setContentVisible, setIsStartUserMiningTim
             setIsStartUserMiningTimestamp(userDataStorage.mining.startUserMiningTimestamp);
             setIsEndUserMiningTimestamp(userDataStorage.mining.endUserMiningTimestamp);
         });
-        setContentVisible(false);
+        setContentVisible(false)
         setTimeout(() => setContentVisible(true), 3500); // Подождать 1 секунду для завершения анимации (время может варьироваться в зависимости от анимации)
     }
     return (
@@ -38,14 +34,14 @@ const StartButton = ({isMiningActive, setContentVisible, setIsStartUserMiningTim
                         {t("mining.pages.cloudMining.startButtonTimer")}:
                     </Box>
                     <Countdown
-                        date={DateTime.now().setZone('Asia/Tashkent').endOf('day').toJSDate()} // Устанавливаем конечное время на сегодня 23:59:59 по Ташкенту
-                        onComplete={() => fetchDataAndUpdateLocalStorageInSession()}
-                        renderer={({hours, minutes}) => (
-                            <span className={style.startButton_timer__count}>{hours} ч : {minutes} мин</span>
+                        date={DateTime.now().setZone('Asia/Tashkent').endOf('day').toJSDate()+5000} // Устанавливаем конечное время на сегодня 23:59:59 по Ташкенту
+                        onComplete={fetchDataAndUpdateLocalStorageInSession}
+                        renderer={({hours, minutes, seconds}) => (
+                            <span className={style.startButton_timer__count}>{hours} ч : {minutes} мин {seconds}</span>
                         )}
                     />
                     <CustomButton
-                    content={'Что это?'}
+                    content={t("mining.pages.cloudMining.whatIs_btn")}
                     onClick={() => {
                         window.Telegram.WebApp.showAlert(
                         `${t("mining.pages.cloudMining.alert_1")}\n\n${t("mining.pages.cloudMining.alert_2")}`,
