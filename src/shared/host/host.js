@@ -1,3 +1,3 @@
 const proxy = "https://corsproxy.io/?";
-// export const host = `${proxy}https://c7cc-188-167-179-158.ngrok-free.app`
+// export const host = `${proxy}https://16aa-62-221-72-59.ngrok-free.app`
 export const host = "";

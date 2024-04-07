@@ -1,0 +1,64 @@
+.history
+  position: absolute
+  width: 100%
+  height: 100vh
+  background-color: #000
+  z-index: 10
+  transition: left 300ms ease
+  display: flex
+  flex-direction: column
+  align-items: center
+  color: var(--text_color)
+  overflow: auto
+  cursor: default
+  &__title
+    display: flex
+    flex-direction: column
+    align-items: center
+    margin-top: 15px
+    &__icon
+      &_img
+        width: 100px
+    &__text
+      font-size: 32px
+      font-weight: 700
+  &__statistic
+    display: flex
+    flex-direction: column
+    align-items: center
+    margin-top: 20px
+    border-top: 1px solid var(--component_stroke_color)
+    width: 95%
+    &__box
+      display: flex
+      align-items: center
+      justify-content: space-around
+      width: 100%
+      margin-top: 20px
+      &_count
+        font-size: 24px
+        font-weight: 600
+        line-height: 1.2
+      &_text
+        font-size: 14px
+        line-height: 1.4
+      &__money
+        display: flex
+        flex-direction: column
+        align-items: center
+        width: 50%
+        border-right: 1px solid var(--component_stroke_color)
+      &__counting
+        display: flex
+        flex-direction: column
+        align-items: center
+        width: 50%
+  &__operations
+    width: 100%
+    margin-bottom: 20px
+    &__empty
+      display: flex
+      align-items: center
+      justify-content: center
+      width: 100%
+      margin-top: 50px

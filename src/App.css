@@ -53,6 +53,8 @@ img {
   --component_stroke_color: rgba(255, 255, 255, 0.2);
   --component_stroke_color_light: rgba(255, 255, 255, 0.5);
   --menu_button_color: rgba(108, 108, 108, 0.35);
+
+  --tracking-gray: rgb(224, 224, 244);
 }
 
 .gray {
@@ -61,4 +63,18 @@ img {
 
 video::-webkit-media-controls-start-playback-button {
   display: none !important;
+}
+
+.MuiPopper-root .MuiPaper-root .MuiAutocomplete-noOptions {
+  background-color: var(--component_bg_color);
+  color: #fff;
+}
+.MuiAutocomplete-popper .MuiAutocomplete-paper{
+  width: 75px;
+}
+.MuiPopper-root{
+  background-color: var(--component_bg_color);
+}
+.MuiPopper-root .MuiPaper-root{
+  background-color: var(--component_bg_color);
 }

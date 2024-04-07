@@ -7,7 +7,7 @@ import axios from "axios";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { useThemeParams } from "@vkruglikov/react-telegram-web-app";
 import { host } from "./shared/host/host.js";
-import { userId } from "./shared/telegram/telegram.js";
+import {tg, userId} from "./shared/telegram/telegram.js";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 
 // import MainMenu from "./pages/MainMenu";
@@ -16,7 +16,8 @@ import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 // import Forex from "./pages/Forex";
 // import NoSubscribe from "./pages/NoSuscribe";
 // import Copyright from "./pages/Copyright";
-import Mining from "./pages/Mining_new";
+import TrackingCryptoWallets from "./pages/TrackingCryptoWallets";
+// import Mining from "./pages/Mining";
 
 function App() {
   const [loading, setLoading] = useState(true);
@@ -105,6 +106,10 @@ function App() {
       },
     },
   });
+
+  tg.setHeaderColor('#000')
+  tg.setBackgroundColor('#000')
+
   return (
     <>
       <ThemeProvider theme={theme}>
@@ -114,11 +119,12 @@ function App() {
         {/*<Forex/>*/}
         {/*<NoSubscribe/>*/}
         {/*<Copyright/>*/}
-        <Router basename="/mining">
-          <Routes>
-            <Route path="/*" exact element={<Mining />} />
-          </Routes>
-        </Router>
+        <TrackingCryptoWallets/>
+        {/*<Router basename="/mining">*/}
+        {/*  <Routes>*/}
+        {/*    <Route path="/*" exact element={<Mining />} />*/}
+        {/*  </Routes>*/}
+        {/*</Router>*/}
       </ThemeProvider>
     </>
   );

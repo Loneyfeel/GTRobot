@@ -6,8 +6,15 @@
       "bot_descr": "Bot qanday ishlaydi",
       "call": "Murojaat",
       "about": "Biz haqimizda",
-      "referal": "Referal"
-    }
+      "referral": "Referal",
+      "commands": "Bot buyruqlari",
+      "start": "Botni qayta ishga tushirish",
+      "language": "Tilni o’zgartirish",
+      "getid": "ID-ni bilish",
+      "kurs": "Kriptovalyutani kursini bilish",
+      "mining": "Cloud Mining"
+    },
+    "no": "Mavjud emas"
   },
   "toolsMenu": {
     "title": "Ish Qurollari",
@@ -75,8 +82,8 @@
         "future_balance_1": "2026 yilda bu",
         "future_balance_2": " ",
         "future_balance_3": " bo’lishi mumkin",
-        "alert_1": "Cloud Miningdan foydalanishingiz mumkin bo'lgan vaqt oralig'i: 00:00 - 16:00",
-        "alert_2": "Soat 16:00 dan keyin Cloud Mining uchun protsessorlar o'chiriladi va mutaxassislar nosozliklarni oldini olish uchun tekshirishiruv boshlaydilar.",
+        "alert_1": "Cloud Miningdan foydalanishingiz mumkin bo'lgan vaqt oralig'i: 00:00 - 8:00",
+        "alert_2": "Soat 8:00 dan keyin Cloud Mining uchun protsessorlar o'chiriladi va mutaxassislar nosozliklarni oldini olish uchun tekshirishiruv boshlaydilar.",
         "startButtonTimer": "Mayning-gacha vaqt qo\"ldi",
         "whatIs_btn": "Nima uchun?",
         "timer_text": "Vaqt qo’ldi:",
@@ -137,7 +144,7 @@
         "title": "Menu",
         "mining": {
           "title": "Cloud Mining ",
-          "text_mining_1": "Cloud Mining (Bulutli Mayning) - bu kriptovalyuta qazib olishni yangi usuli. Ushbu yondashuv foydalanuvchilarga boshqa maynerlar uskunasini ijaraga olgan holda tez va arzon kriptovalyuta qazib olish imkonini beradi.",
+          "text_mining_1": "Cloud Mining ",
           "text_mining_2": "(Bulutli Mayning) - bu kriptovalyuta qazib olishni yangi usuli. Ushbu yondashuv foydalanuvchilarga boshqa maynerlar uskunasini ijaraga olgan holda tez va arzon kriptovalyuta qazib olish imkonini beradi.",
           "text_mining_3": "Cloud Mining-dan foydalanish qoidalari:",
           "text_mining_4": "GTRobot faol ishtirokchilar soniga qarab, qazib olish tezligini aniqlab beradi. Kam faollik davrida ishtirokchilarning individual mukofotlari oshadi, ishtirokchilar soni ortishi bilan kriptovalyuta qazib olishi sekinlashadi. Cloud Mining-dan olingan daromadingiz boshqa ishtirokchilarga nisbatan faol bolishingizga bog’liq.",
@@ -176,7 +183,7 @@
           "title": "Kriptovalyutani chiqarish",
           "cost": "Narx",
           "textField_1": "Chiqarish miqdori",
-          "textField_2": "Hamyon manzili USDT-TRC20",
+          "textField_2": "Hamyon manzili TON",
           "send": "Siz yuborasiz",
           "receive": "Sizga tushadi",
           "main_btn": "Chiqarish",
@@ -188,8 +195,10 @@
           "withdraw_alert_4": "kun qoldi.",
           "btn_helps": {
             "balance": "Balans",
+            "balance_hold": "USDT hisobidagi miqdor",
             "address": "Hamyon",
-            "question": "Barchasi tog'ri"
+            "question": "Barchasi tog'ri",
+            "warning": "USDT hisobidagi mablag’ingiz avtomatik ravishda kiritgan hamyoningizga o’tkaziladi"
           },
           "snackbars": {
             "error_full": "Iltimos barcha qatorlarni to'ldiring",
@@ -207,6 +216,22 @@
             "alert_3": "USDT hisobidagi aktivlarni kuyib ketishiga",
             "alert_4": "kun qo’ldi, iltimos kriptovalyutangizni chiqarib oling.",
             "question": "USDT hisobidan mablag’ni chiqarib olmoachimisiz?"
+          }
+        },
+        "history": {
+          "btn": "Pul chiqarish tarixi",
+          "withdraw": "Umimiy chiqarib olingan",
+          "operations_count": "Otkazmalar",
+          "empty": "Sizning otkazmalar tarixi bo’sh",
+          "title": {
+            "withdraw": "Pul chiqarish",
+            "holding": "Avto-almashuv"
+          },
+          "status": {
+            "success": "Otkazma tasdiqlandi",
+            "error": "Otkazma rad etildi",
+            "wait": "Tasdiqlash kutilayapti",
+            "holding": "Ayirboshlash tugallandi"
           }
         }
       },
