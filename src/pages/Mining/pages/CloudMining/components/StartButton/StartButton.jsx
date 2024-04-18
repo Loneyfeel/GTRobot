@@ -10,6 +10,7 @@ import Countdown from 'react-countdown';
 import { fetchDataAndUpdateLocalStorageInSession } from "../../../../helps/dataHelps.js";
 import { startMining } from "../../../../api/api.js";
 import CustomButton from "@components/CustomButton/index.js";
+import moment from 'moment-timezone';
 
 const StartButton = ({ isMiningActive, setContentVisible, setIsStartUserMiningTimestamp, setIsEndUserMiningTimestamp }) => {
     const { t } = useTranslation();
@@ -42,11 +43,31 @@ const StartButton = ({ isMiningActive, setContentVisible, setIsStartUserMiningTi
         setTimeLeft({ hours, minutes, seconds });
     }
 
+    const [localTimeAt00, setLocalTimeAt00] = useState('');
+    const [localTimeAt08, setLocalTimeAt08] = useState('');
+    function localTimeTashkent(){
+        // Определяем начальную точку - 00:00 по Ташкенту
+        const startAtTashkent = moment.tz('00:00', 'HH:mm', 'Asia/Tashkent');
+        // Определяем вторую точку - 08:00 по Ташкенту
+        const endAtTashkent = moment.tz('08:00', 'HH:mm', 'Asia/Tashkent');
+        // Получаем локальное время, эквивалентное 00:00 по Ташкенту
+        const localHourEquivalentAt00 = startAtTashkent.clone().local().format('HH');
+        // Получаем локальное время, эквивалентное 08:00 по Ташкенту
+        const localHourEquivalentAt08 = endAtTashkent.clone().local().format('HH');
+        // Обновляем состояние компонентов
+        setLocalTimeAt00(localHourEquivalentAt00);
+        setLocalTimeAt08(localHourEquivalentAt08);
+    }
+
     useEffect(() => {
         formattedTime();
         const intervalId = setInterval(() => {
             formattedTime();
         }, 1000);
+        localTimeTashkent()
+
+
+
         return () => clearInterval(intervalId);
     }, []);
 
@@ -63,7 +84,7 @@ const StartButton = ({ isMiningActive, setContentVisible, setIsStartUserMiningTi
                         content={t("mining.pages.cloudMining.whatIs_btn")}
                         onClick={() => {
                             window.Telegram.WebApp.showAlert(
-                                `${t("mining.pages.cloudMining.alert_1")}\n\n${t("mining.pages.cloudMining.alert_2")}`,
+                                `${t("mining.pages.cloudMining.alert_1")} ${localTimeAt08}:00 - ${localTimeAt00}:00\n\n${t("mining.pages.cloudMining.alert_2")} ${localTimeAt00}:00 ${t("mining.pages.cloudMining.alert_3")}`,
                             );
                         }}
                         startIcon={<InfoOutlinedIcon sx={{ marginRight: '10px' }} />}

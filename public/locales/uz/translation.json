@@ -22,6 +22,7 @@
       "analysis": "Tahlil & Signal",
       "monitoring": "Monitoring",
       "forex": "100% Avtomatik",
+      "topWhales": "Top Whales",
       "mining": "Cloud Mining"
     }
   },
@@ -76,14 +77,14 @@
       "cloudMining": {
         "title": "Cloud Mining",
         "start_btn": "Faollashtirish",
-        "balance": "Balans",
+        "balance": "Hozirgi balans:",
         "days_snackbar_1": "Kriptovalyutani chiqaraolishizga",
         "days_snackbar_2": "kun qo’ldi",
-        "future_balance_1": "2026 yilda bu",
-        "future_balance_2": " ",
-        "future_balance_3": " bo’lishi mumkin",
-        "alert_1": "Cloud Miningdan foydalanishingiz mumkin bo'lgan vaqt oralig'i: 00:00 - 8:00",
-        "alert_2": "Soat 8:00 dan keyin Cloud Mining uchun protsessorlar o'chiriladi va mutaxassislar nosozliklarni oldini olish uchun tekshirishiruv boshlaydilar.",
+        "future_balance_1": "2028 yilda qiymati:",
+        "future_balance_2": " bo’lishi mumkin",
+        "alert_1": "Cloud Mining-dan foydalanish mumkin bo’lgan vaqt oralig’i:",
+        "alert_2": "Soat",
+        "alert_3": "dan keyin Cloud Mining uchun protsessorlar o’chiriladi va mutaxassislar nosozliklarni oldini olish uchun tekshiruv boshlaydilar.",
         "startButtonTimer": "Mayning-gacha vaqt qo\"ldi",
         "whatIs_btn": "Nima uchun?",
         "timer_text": "Vaqt qo’ldi:",
@@ -284,6 +285,31 @@
         },
         "incomplete_tasks_warning": "Siz vazifani bajarmadingiz, qayta orinib ko’ring"
       }
+    }
+  },
+  "tracking": {
+    "page_all": "TOP",
+    "page_verified": "Tanlangan portfellar",
+    "search": "Qidiruv",
+    "search_network": "Qidiruv",
+    "filter_network_all": "Tarmoqlar",
+    "verified": "Tasdiqlangan",
+    "Not_verified": "Tasdiqlanmagan",
+    "copyAddress": "Maznlil ko'chirib olindi",
+    "info": "Ma'lumot",
+    "cost": "Portfelni qiymati",
+    "portfolio": "Portfel",
+    "portfolio_btn": "Portfelni ko'chirib olish",
+    "buyCard": {
+      "title": "Depozitni tanlang",
+      "confirmation": "Tasdiqlash",
+      "confirmation_text": "Tasdiqlash",
+      "confirmation_text_close": "Yopish"
+    },
+    "filters": {
+      "business": "Tadbirkorlar",
+      "stars": "Mashhur insonlar",
+      "investors": "Kriptoinvestorlar"
     }
   }
 }

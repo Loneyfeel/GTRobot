@@ -1,0 +1,74 @@
+.buyDialog
+  display: flex
+  justify-content: center
+  align-items: center
+  position: relative
+  width: 100%
+  height: 100%
+  overflow: hidden
+  color: var(--text_color)
+  &__content
+    width: 100vw
+    height: 40vh
+    &__choice
+      position: relative
+      width: 90vw
+      margin-right: 10vw
+      &__top
+        display: flex
+        width: 100%
+        justify-content: center
+        align-items: center
+        margin-bottom: 10px
+      &__buttons
+        display: grid
+        grid-template-columns: repeat(3, 1fr)
+        grid-template-rows: repeat(2, auto)
+        gap: 20px
+        overflow: hidden
+        &_item
+          display: flex
+          justify-content: center
+          align-items: center
+          width: 25vw
+          height: 10vh
+          position: relative
+          background-color: var(--component_bg_color)
+          border: 1px solid var(--component_stroke_color)
+          border-radius: 20px
+          font-size: 20px
+          font-weight: 400
+          cursor: pointer
+          &::after
+            content: ""
+            position: absolute
+            width: 130%
+            height: 1px
+            background-color: #35383F
+            bottom: -10px
+            left: 50%
+            transform: translateX(-50%)
+            pointer-events: none
+          &::before
+            content: ""
+            position: absolute
+            width: 1px
+            height: 100%
+            background-color: var(--component_stroke_color)
+            bottom: 0
+            left: 28vw
+            transform: translateX(-50%)
+            pointer-events: none
+          &:hover
+            border-color: #9A9A9A
+    &__confirmation
+      position: relative
+      height: 40vh
+      width: 90vw
+      margin-right: 10vw
+      &__list
+        display: flex
+        justify-content: center
+        flex-wrap: wrap
+    &__success
+      width: 90vw

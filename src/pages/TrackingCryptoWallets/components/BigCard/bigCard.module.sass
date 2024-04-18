@@ -1,0 +1,97 @@
+.bigCard
+  position: fixed
+  display: flex
+  justify-content: center
+  top: 0
+  width: 100%
+  overflow-y: auto
+  background-color: #000
+  z-index: 100
+  transition: left 200ms ease
+  height: 100vh
+  scrollbar-width: none
+  color: var(--text_color)
+  &__content
+    width: 95%
+    &__favorite
+      position: absolute
+      top: 0
+      right: 0
+      padding: 10px 15px
+      cursor: pointer
+      &_img
+        width: 30px
+    &__arrow
+      height: 40px
+    &__info
+      display: flex
+      flex-direction: column
+      align-items: center
+      width: 100%
+      border-bottom: 1px solid #35383F
+      padding-bottom: 15px
+      margin-block: 15px
+      &__photo
+        width: 50%
+        &_img
+          border-radius: 20px
+          width: 100%
+      &__name
+        display: flex
+        align-items: center
+        margin-block: 15px
+        &_text
+          font-size: 24px
+          font-weight: 600
+          line-height: 1.2
+        &_verified
+          padding-top: 5px
+          margin-left: 5px
+          &_img
+            width: 20px
+      &__address
+        display: flex
+        justify-content: center
+        align-items: center
+        width: 100%
+        cursor: pointer
+        &__text
+          width: 80%
+          overflow-wrap: break-word
+          text-align: center
+          font-weight: 600
+    &__portfolio
+      color: var(--text_color)
+      &__card
+        display: flex
+        justify-content: flex-start
+        align-items: center
+        width: 100%
+        padding-bottom: 10px
+        margin-bottom: 10px
+        border-bottom: 1px solid #35383F
+        &__percent
+          width: 25%
+        &__coinIcon
+          border-radius: 50px
+          overflow: hidden
+          display: flex
+          justify-content: center
+          align-items: center
+          width: 25px
+          height: 25px
+          margin-right: 8px
+          background-color: #fff
+          &_img
+            height: 25px
+        &__coin
+          width: 28%
+        &__amount
+          margin-left: auto
+          width: 32%
+      &__button
+        height: 50px
+        width: 100%
+        &_box
+          padding-inline: 16px
+          margin-bottom: 15px

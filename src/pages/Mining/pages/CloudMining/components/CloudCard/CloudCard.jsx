@@ -22,11 +22,11 @@ const CloudCard = ({ userCloudMiningBalance, userCurrencyPrice, cryptoCurrency }
     return (
         <>
             <Box>
-                <BalanceBox balance={userCloudMiningBalance} currensy={cryptoCurrency} count={13}/>
+                <BalanceBox balance={userCloudMiningBalance} currensy={cryptoCurrency} count={13} text={t("mining.pages.cloudMining.balance")}/>
                 <Box className={style.cloudCard}>
                     <Box className={style.cloudCard__future}>
                         <Box className={style.cloudCard__future_text}>
-                            {t("mining.pages.cloudMining.future_balance_1")}{t("mining.pages.cloudMining.future_balance_2")}
+                            {t("mining.pages.cloudMining.future_balance_1")}
                         </Box>
                         <Box className={style.cloudCard__future_count}
                              sx={{
@@ -50,9 +50,9 @@ const CloudCard = ({ userCloudMiningBalance, userCurrencyPrice, cryptoCurrency }
                                 </>
                             )}
                         </Box>
-                        {i18n.language === 'ru' && (
+                        {i18n.language === 'uz' && (
                             <Box className={style.cloudCard__future_text}>
-                                {t("mining.pages.cloudMining.future_balance_3")}
+                                {t("mining.pages.cloudMining.future_balance_2")}
                             </Box>
                         )}
                     </Box>

@@ -10,7 +10,7 @@ const GTRobotCard = ({userGTRobotMiningBalance}) => {
     return (
         <>
             <Box className={style.gtrobotCard}>
-                <BalanceBox balance={userGTRobotMiningBalance} currensy={'usdt'} count={8}/>
+                <BalanceBox balance={userGTRobotMiningBalance} currensy={'usdt'} count={8} text={t("mining.pages.gtrobotMining.balance")}/>
                 <Box className={style.gtrobotCard__info}>
                     {t("mining.pages.gtrobotMining.gtrobot_alert_2")} <b> {t("mining.pages.gtrobotMining.gtrobot_alert_3")}</b> {t("mining.pages.gtrobotMining.gtrobot_alert_4")}
                 </Box>

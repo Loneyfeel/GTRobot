@@ -8,7 +8,7 @@ import {useTranslation} from "react-i18next";
 
 import search from '../assets/search.svg'
 import diagram from '../assets/diagram.svg'
-import cloud from '../assets/cloud.svg'
+import wallet from '../assets/wallet.svg'
 
 const Buttons = () => {
     const { t, i18n } = useTranslation();
@@ -21,9 +21,9 @@ const Buttons = () => {
     return (
         <>
             <Box className={style.buttons}>
-                <MenuButton icon={search} text={t("toolsMenu.buttons.analysis")} url={appendLocaleToUrl("/signals")}/>
+                <MenuButton icon={search} text={t("toolsMenu.buttons.analysis")} url={appendLocaleToUrl("https://t.me/GTRTrade_bot")}/>
                 <MenuButton icon={diagram} text={t("toolsMenu.buttons.monitoring")}  url={appendLocaleToUrl("/klines")}/>
-                {/*<MenuButton icon={cloud} text={t("toolsMenu.buttons.mining")} url={appendLocaleToUrl("/mining?v=1")}/>*/}
+                <MenuButton icon={wallet} text={t("toolsMenu.buttons.topWhales")}  url={appendLocaleToUrl("/top-whales")}/>
             </Box>
         </>
     );
