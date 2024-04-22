@@ -51,7 +51,7 @@ const TrackingCryptoWallets = () => {
             })
             .catch(error => {
                 // Обрабатываем ошибку, если она возникла
-                console.error('Ошибка при получении данных о кошельках китов:', error);
+                console.error('Ошибка при получении данных о кошельках:', error);
             });
     };
 
@@ -66,10 +66,10 @@ const TrackingCryptoWallets = () => {
     useEffect(() => {
         getWhaleWallets(setBackdropVisible, 'all', '', '', [], '')
             .then(response => {
-                setWalletsData(response.data.data);
                 if (response.errorCode === 1006){
                     window.location.href = "/premium";
                 }
+                setWalletsData(response.data.data);
             })
             .catch(error => {
                 // Обрабатываем ошибку, если она возникла
@@ -393,6 +393,8 @@ const TrackingCryptoWallets = () => {
                                 {searchResultsCount === 0 && searchValue.trim() !== '' && (
                                     <>
                                         <AddCustomWallet
+                                            setTempWalletVisible={setTempWalletVisible}
+                                            setSearchResultsCount={setSearchResultsCount}
                                             setIsBigCardOpened={setIsBigCardOpened}
                                             setBigCardStates={setBigCardStates }
                                             searchValue={searchValue}

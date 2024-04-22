@@ -146,26 +146,33 @@ const BigCard = ({
     }
 
     useEffect(() => {
+        setTempWalletVisible(address)
         getBigCardData(walletId)
     }, []);
+
+    // Функция для фильтрации монет по условию precent > 0.00001 и формирования только первых 10 монет
+    const filterAndSliceCoins = (data) => {
+        const totalQuote = data.reduce((total, [, { quote }]) => total + quote, 0);
+        const filteredCoins = data
+            .filter(([, { quote }]) => (quote / totalQuote) * 100 >= 0.01)
+            .sort(([, { quote: quoteA }], [, { quote: quoteB }]) => quoteB - quoteA)
+            .slice(0, 10)
+            .map(([currency]) => currency);
+
+        return filteredCoins;
+    };
+
 
     const [coinsToCopy, setCoinsToCopy] = useState([])
     useEffect(() => {
         // Проверяем, что stocksData не равно undefined или null
         if (stocksData) {
+            // Преобразование объекта в массив пар [ключ, значение]
+            const currencyData = Object.entries(stocksData);
+            // Вызываем функцию для фильтрации и формирования первых 10 монет
+            const updatedCoinsToCopy = filterAndSliceCoins(currencyData);
 
-            // Копируем объект stocksData
-            const sortedStocksData = { ...stocksData };
-
-            // Сортируем его по убыванию balance
-            const sortedStocksEntries = Object.entries(sortedStocksData).sort(([, a], [, b]) => b.quote - a.quote);
-            // Берем только первые 10 элементов
-            const first10Entries = sortedStocksEntries.slice(0, 10);
-            // Создаем объект из отсортированных и отфильтрованных первых 10 элементов
-            const updatedCoinsToCopy10 = Object.fromEntries(first10Entries);
-            const updatedCoinsKeys = Object.keys(updatedCoinsToCopy10);
-
-            setCoinsToCopy(updatedCoinsKeys);
+            setCoinsToCopy(updatedCoinsToCopy);
         }
     }, [stocksData]);
 
@@ -173,19 +180,18 @@ const BigCard = ({
     const imageFolder  = '/assets/cryptocurrencies/';
     // Отображение данных портфолио
     const renderPortfolioData = () => {
-        const currencyData = Object.entries(stocksData); // Преобразование объекта в массив пар [ключ, значение]
-        const totalQuote = currencyData.reduce((total, [currency, data]) => {
-            return total + data.quote;
-        }, 0);
+        // Преобразование объекта в массив пар [ключ, значение]
+        const currencyData = Object.entries(stocksData);
 
-        // Сортировка данных по убыванию значения mathBalance
-        currencyData.sort(([, dataA], [, dataB]) => {
-            return dataB.quote - dataA.quote;
-        });
+        // Вычисляем общую сумму квот всех монет
+        const totalQuote = currencyData.reduce((total, [, { quote }]) => total + quote, 0);
 
-        return currencyData.map(([currency, data]) => {
-            const {balanceCoin, quote} = data;
-            const mathBalance = (quote).toFixed(0);
+        // Вызываем функцию для фильтрации и формирования первых 10 монет
+        const filteredCoins = filterAndSliceCoins(currencyData, totalQuote);
+
+        return filteredCoins.map((currency) => {
+            const { balanceCoin, quote } = stocksData[currency];
+            const mathBalance = quote.toFixed(0);
             const precent = ((quote / totalQuote) * 100).toFixed(2);
             const iconPath = `${imageFolder}/${currency.toLowerCase()}.png`; // Путь к изображению
             const formattedCurrency = currency.charAt(0).toUpperCase() + currency.slice(1);
@@ -193,7 +199,7 @@ const BigCard = ({
 
             return (
                 <>
-                    {precent > 0.00001 &&
+                    {precent >= 0.01 &&
                         <Box key={currency} className={style.bigCard__content__portfolio__card}>
                             <Box className={style.bigCard__content__portfolio__card__percent}>{precent}%</Box>
                             <Box className={style.bigCard__content__portfolio__card__coinIcon}>
@@ -212,7 +218,6 @@ const BigCard = ({
                                      fontSize: mathBalance > 10000000 ? '14px' : mathBalance > 100000000 ? '13px' : mathBalance > 1000000000 ? '12px' : '14px'
                                  }}>$ {formatNumber(mathBalance)}</Box>
                         </Box>
-
                     }
                 </>
             )
@@ -225,7 +230,6 @@ const BigCard = ({
         setOpen(true);
     };
 
-    {setTempWalletVisible(address)}
     return (
         <>
             <Box className={style.bigCard}

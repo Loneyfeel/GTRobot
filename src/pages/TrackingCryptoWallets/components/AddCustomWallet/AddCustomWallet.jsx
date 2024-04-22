@@ -15,6 +15,7 @@ import {tg} from "../../../../shared/telegram/telegram.js";
 
 
 const AddCustomWallet = ({
+                             setSearchResultsCount,
                              searchValue,
                              display,
 
@@ -50,6 +51,7 @@ const AddCustomWallet = ({
                         window.location.href = "/premium";
                     }
                     if (response.state === 'SUCCESS') {
+                        setSearchResultsCount(1)
                         getWhaleWalletData(response.walletId)
                             .then(response => {
                                 setDataWallet(response.data)
@@ -145,6 +147,7 @@ const AddCustomWallet = ({
             </Box>
             {Object.keys(dataWallet).length > 0 &&
                 <BigCard
+                    setTempWalletVisible={setTempWalletVisible}
                     setIsBigCardOpened={setIsBigCardOpened}
                     setWalletsData={setWalletsData}
                     leftPosition={leftPosition}

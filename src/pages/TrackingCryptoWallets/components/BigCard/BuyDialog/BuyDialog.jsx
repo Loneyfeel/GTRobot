@@ -23,7 +23,6 @@ const BuyDialog = ({
     const [first10Coins, setFirst10Coins] = useState([])
 
     useEffect(() => {
-
         // Проверяем, есть ли массив coins и он содержит хотя бы 10 элементов
         if (Array.isArray(coins) && coins.length >= 10) {
             // Получаем только первые 10 элементов из массива coins
