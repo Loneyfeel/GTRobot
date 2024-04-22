@@ -1,53 +1,24 @@
-.trackingCryptoWallets
-  display: flex
-  color: var(--text_color)
-  width: 100%
-  min-height: 100vh
-  margin-bottom: 15px
-  margin-top: 5px
-  overflow: hidden
-  font-family: 'Gilroy', sans-serif
-  &__content
+.buyConfirmation
+  position: relative
+  height: 40vh
+  width: 90vw
+  &__top
     display: flex
-    flex-direction: column
+    width: 100%
+    justify-content: center
     align-items: center
-    width: 90%
-    padding-inline: 5%
-    &__search__box
-      display: flex
-      width: 100%
-      &_search
-        display: flex
-        justify-content: center
-        width: 100%
-      &_network
-        min-width: 130px
-        max-width: 130px
-        margin-left: 10px
-    &__pages
-      display: flex
-      justify-content: center
-      margin-bottom: 10px
-      width: 100%
-    &__cards__verified
-      width: 100%
-      display: grid
-      grid-template-columns: repeat(auto-fill, minmax(140px, 1fr))
-      gap: 0 12px
-    &__cards__all
-      width: 100%
-
-.trackingCryptoWallets__sticky
-  width: 100%
-  height: 100%
-  padding-block: 10px
-  background-color: #000
-  z-index: 10
+    margin-bottom: 10px
+  &__list
+    display: flex
+    justify-content: center
+    flex-wrap: wrap
 
 .loader_box
   justify-content: center
   align-items: center
-  position: absolute
+  position: fixed
+  top: 0
+  left: 0
   width: 100vw
   height: 100vh
   background-color: #000

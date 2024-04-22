@@ -1,7 +1,8 @@
 import React from "react";
 import { Box, Button, CardMedia, Typography } from "@mui/material";
-import gif from "./assets/AnimatedSticker.gif";
 import { useTranslation } from "react-i18next";
+import Lottie from "lottie-react";
+import animation from './assets/AnimatedSticker.json'
 
 const NoSubscribe = () => {
     window.Telegram.WebApp.BackButton.isVisible = false;
@@ -20,17 +21,20 @@ const NoSubscribe = () => {
         }}
       >
         <Box>
-          <CardMedia
-            component="img"
-            image={gif}
-            loading="lazy"
-            alt="Utya Grustya"
+          <Box
             sx={{
               margin: "40px 0",
               width: "170px",
               height: "170px",
             }}
-          />
+          >
+              <Lottie
+                  animationData={animation}
+                  style={{
+                      willChange: 'transform'
+                  }}
+              />
+          </Box>
         </Box>
         <Box>
           <Typography
@@ -56,8 +60,8 @@ const NoSubscribe = () => {
         <Box>
           <Button
             onClick={() => {
-              window.Telegram.WebApp.openTelegramLink(
-                "https://t.me/GTRaibot?start=cGxhbg",
+              window.Telegram.WebApp.openLink(
+                "https://gtrobot.shop/",
               );
               window.Telegram.WebApp.close();
             }}

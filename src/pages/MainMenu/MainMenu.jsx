@@ -7,6 +7,7 @@ import MenuChart from "./Chart/index.js";
 import MenuButtons from "./MenuButtons/index.js";
 import MainCommands from "./MainCommands/index.js";
 import axios from "axios";
+import {host} from "../../shared/host/host.js";
 
 const MainMenu = () => {
     tg.setHeaderColor('#000')
@@ -17,7 +18,7 @@ const MainMenu = () => {
     const [assets, setAssets] = useState([]);
     const getAssets = async () => {
         try {
-            const response = await axios.post("https://corsproxy.io/?https:/grandtrade.space/api/get-assets", {
+            const response = await axios.post(`${host}/api/get-assets`, {
                 initData,
             });
             setAssets(response.data.data);
@@ -56,14 +57,10 @@ const MainMenu = () => {
 
         fetchData(); // Вызываем функцию fetchData сразу после монтирования компонента
 
-        const interval = setInterval(fetchData, 5000); // Вызываем функцию fetchData каждые 5 секунд
+        const interval = setInterval(fetchData, 1000); // Вызываем функцию fetchData каждые 1 секунд
 
         return () => clearInterval(interval); // Очищаем интервал при размонтировании компонента
     }, []);
-
-    useEffect(() => {
-        console.log(assets)
-    }, [assets]);
 
     return (
         <>
@@ -72,7 +69,7 @@ const MainMenu = () => {
                 <GTRobotTitle/>
                 <MenuChart/>
                 <MenuButtons setCommandsX={setCommandsX}/>
-                {assets.length > 0 && <MainCommands commandsX={commandsX} setCommandsX={setCommandsX} assets={assets}/>}
+                <MainCommands commandsX={commandsX} setCommandsX={setCommandsX} assets={assets} assetsLength={assets.length}/>
             </Box>
         </>
     );

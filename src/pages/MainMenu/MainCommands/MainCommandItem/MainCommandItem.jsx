@@ -5,7 +5,7 @@ import {sendCommand} from "../../api/api.js";
 import {useTranslation} from "react-i18next";
 import {tg} from "../../../../shared/telegram/telegram.js";
 
-const MainCommandItem = ({command, icon, description, textInput, assets}) => {
+const MainCommandItem = ({command, icon, description, textInput, assets, assetsLength}) => {
     const {t} = useTranslation()
     const [link, setLink] = useState('btc')
     function handleButtonClick(command){
@@ -82,7 +82,11 @@ const MainCommandItem = ({command, icon, description, textInput, assets}) => {
                                                      bgColor: '#fff'
                                                  }
                                         }}>
-                                            {option}
+                                            {assetsLength > 0 &&
+                                                <>
+                                                    {option}
+                                                </>
+                                            }
                                         </div>
                                     )}
                                 />

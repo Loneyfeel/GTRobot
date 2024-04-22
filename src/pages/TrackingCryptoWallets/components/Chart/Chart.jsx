@@ -47,14 +47,8 @@ const CardChart = ({money, chartData}) => {
         while (averagedData.length < 15) {
             averagedData.unshift({ x: averagedData[0].x - 24 * 60 * 60 * 1000, y: averagedData[0].y });
         }
-        console.log('averagedData',averagedData)
         setSeriesData(averagedData);
     }, [chartData]);
-
-    useEffect(() => {
-        console.log('chartData',chartData)
-        console.log('seriesData',seriesData)
-    }, []);
 
     // Данные для графика
     const series = [{

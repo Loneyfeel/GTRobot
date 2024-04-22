@@ -62,11 +62,12 @@ export const getWhaleWallets = async (setBackdropVisible, type, address, network
     }
 };
 
-export const setWhaleWalletFollow = async (walletId) => {
+export const setWhaleWalletFollow = async (walletId, walletName) => {
     try {
         const response = await axiosInstance.post('/set-whale-wallet-follow', {
             initData: initData,
             walletId: walletId,
+            walletName: walletName
         });
         return response.data;
     } catch (error) {
@@ -85,3 +86,84 @@ export const getWhaleTags = async () => {
     }
 };
 
+export const getUserPurchasedAssets = async () => {
+    try {
+        const response = await axiosInstance.post('/get-user-purchased-assets', {
+            initData: initData,
+        });
+        return response.data;
+    } catch (error) {
+        return handleError(error);
+    }
+};
+export const copyWhaleWalletFirst = async (blackList, amount, walletId) => {
+    try {
+        const response = await axiosInstance.post('/copy-whale-wallet', {
+            initData: initData,
+            assetsBlackList: blackList,
+            purchaseSum: amount,
+            walletId: walletId
+        });
+        return response.data;
+    } catch (error) {
+        return handleError(error);
+    }
+};
+
+export const copyWhaleWallet = async (taskId) => {
+    try {
+        const response = await axiosInstance.post('/copy-whale-wallet', {
+            initData: initData,
+            taskId: taskId
+        });
+        return response.data;
+    } catch (error) {
+        return handleError(error);
+    }
+};
+export const setWhaleWalletFirst = async (address) => {
+    try {
+        const response = await axiosInstance.post('/set-whale-wallet', {
+            initData: initData,
+            address: address
+        });
+        return response.data;
+    } catch (error) {
+        return handleError(error);
+    }
+};
+export const setWhaleWallet = async (taskId) => {
+    try {
+        const response = await axiosInstance.post('/set-whale-wallet', {
+            initData: initData,
+            taskId: taskId
+        });
+        return response.data;
+    } catch (error) {
+        return handleError(error);
+    }
+};
+export const setWhaleWalletName = async (walletId, walletName) => {
+    try {
+        const response = await axiosInstance.post('/set-whale-wallet-name', {
+            initData: initData,
+            walletId: walletId,
+            walletName: walletName
+        });
+        return response.data;
+    } catch (error) {
+        return handleError(error);
+    }
+};
+
+export const sendMessage = async () => {
+    try {
+        const response = await axiosInstance.post("/send-message", {
+            initData: initData,
+            message: "whale_menu"
+        });
+        return response.data;
+    } catch (error) {
+        return handleError(error);
+    }
+};

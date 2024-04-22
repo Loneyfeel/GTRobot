@@ -1,70 +1,158 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import style from './buyDialog.module.sass'
-import {Box, Button, Dialog, IconButton, Typography} from "@mui/material";
+import {Box, Dialog, IconButton} from "@mui/material";
 import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
-import ArrowBackRoundedIcon from '@mui/icons-material/ArrowBackRounded';
 import {useTranslation} from "react-i18next";
-import broken from "../../../assets/bigCard/broken.svg";
-import like from '../../../assets/bigCard/like.svg'
-const BuyDialog = ({open, setOpen, coins}) => {
+import {getUserPurchasedAssets, sendMessage} from "../../../api/api.js";
+import Final from "./Final/index.js";
+import BuyConfirmation from "./BuyConfirmation/index.js";
+import { motion, AnimatePresence } from 'framer-motion';
+import ChangeAmount from "./ChangeAmount/index.js";
+import ArrowBackRoundedIcon from "@mui/icons-material/ArrowBackRounded.js";
+import CoinsChangeList from "./CoinsChangeList/index.js";
+import {tg} from "../../../../../shared/telegram/telegram.js";
+const BuyDialog = ({
+                       open,
+                       setOpen,
+                       coins,
+                       walletId,
+                       imageFolder
+}) => {
     const {t} = useTranslation();
-    const [openSuccess, setOpenSuccess] = useState(false)
-    const [openConfirm, setOpenConfirm] = useState(false)
+
+    const [first10Coins, setFirst10Coins] = useState([])
+
+    useEffect(() => {
+
+        // Проверяем, есть ли массив coins и он содержит хотя бы 10 элементов
+        if (Array.isArray(coins) && coins.length >= 10) {
+            // Получаем только первые 10 элементов из массива coins
+            const first10 = coins.slice(0, 10);
+            // Обновляем состояние first10Coins
+            setFirst10Coins(first10);
+        } else {
+            const firstAll = coins.slice(); // Копируем весь массив coins
+            setFirst10Coins(firstAll);
+        }
+    }, [coins]);
+
+    const [currentSlide, setCurrentSlide] = useState(0);
+    const [isVisible, setIsVisible] = useState(true);
+
+    const goToNextSlide = () => {
+        setIsVisible(false);
+        setTimeout(() => {
+            setCurrentSlide((prevSlide) => (prevSlide === slides.length - 1 ? prevSlide : prevSlide + 1));
+            setIsVisible(true);
+        }, 50); // Задержка в 0.1 секунды
+    };
+
+    const goToPrevSlide = () => {
+        setAnswerPurchasedAssets(false)
+        setIsVisible(false);
+        setTimeout(() => {
+            setCurrentSlide((prevSlide) => (prevSlide === 0 ? prevSlide : prevSlide - 1));
+            setIsVisible(true);
+        }, 50); // Задержка в 0.1 секунды
+    };
+
+
     const [choiseAmount, setChoiseAmoin] = useState(0)
+
+    const [answerPurchasedAssets, setAnswerPurchasedAssets] = useState(false)
+    const [userPurchasedAssets, setUserPurchasedAssets] = useState([]) //монеты, которых нет у пользователя и они докупаются 100%
+    const [missingAssetsQuestion, setMissingAssetsQuestion] = useState([]) // тут монеты которые надо предложить докупить
+    const [missingAssets, setMissingAssets] = useState([]) // монеты, которые одобрил польз. и их надо докупить
+
+
     const handleClose = () => {
         setOpen(false);
-        setOpenSuccess(false)
-        setOpenConfirm(false)
     };
 
-    function handleButtonsItemClick(value) {
-        setChoiseAmoin(value)
-        setOpenSuccess(true)
+    function getPurchasedAssets(){
+        getUserPurchasedAssets()
+            .then(response => {
+                if (response.errorCode === 3001) {
+                    sendMessage()
+                        .catch(error => {
+                            console.error('Ошибка отправки сообщения whale_menu', error);
+                        });
+                    tg.showAlert(t("tracking.buyDialog.errorAPI"))
+                    handleClose()
+                }
+                if (response.errorCode === 1006){
+                    window.location.href = "/premium";
+                }
+                setUserPurchasedAssets(first10Coins.filter(coin => !response.data.includes(coin)))
+                setMissingAssetsQuestion(first10Coins.filter(coin => response.data.includes(coin)))
+            })
+            .catch(error => {
+                console.error('Ошибка при получении данных:', error);
+            })
+            .finally(() => {
+                setAnswerPurchasedAssets(true)
+            })
     }
 
-    const handleButtonConfirmClick = () => {
-        setOpenSuccess(false)
-        setOpenConfirm(true)
-    };
-
-    const imageFolder = '/src/pages/TrackingCryptoWallets/assets/bigCard/iconsCrypto';
-    // Отображение данных портфолио
-    const renderPortfolioData = () => {
-        const currencies = coins;
-        const imagePaths = currencies.map(currency => `${imageFolder}/${currency.toLowerCase()}.png`);
-
-        return currencies.map((currency, index) => {
-            const iconPath = imagePaths[index] || '/src/pages/TrackingCryptoWallets/bigCard/broken.svg'; // Путь к изображению
-
-            return (
-                <>
-                    <Box sx={{
-                        display: 'flex',
-                        justifyContent: 'space-around',
-                        alignItems: 'center',
-                        width: 'max-content',
-                        padding: '7px',
-                        margin: '3px',
-                        backgroundColor: '#32323BFF',
-                        overflow: 'hidden',
-                    }}>
-                        <img
-                            src={iconPath}
-                            alt={currency}
-                            style={{
-                                height: '25px',
-                                marginRight: '5px'
-                            }}
-                            onError={(e) => {
-                                e.target.src = broken; // Устанавливаем альтернативное изображение в случае ошибки загрузки основного изображения
-                            }}
-                        />
-                        {currency.charAt(0).toUpperCase() + currency.slice(1)}
-                    </Box>
-                </>
-            );
-        });
-    }
+    const slides = missingAssetsQuestion.length > 0 ? [
+        <Slide key={1}>
+            <ChangeAmount
+                setChoiseAmoin={setChoiseAmoin}
+                answerPurchasedAssets={answerPurchasedAssets}
+                goToNextSlide={goToNextSlide}
+                getPurchasedAssets={getPurchasedAssets}
+            />
+        </Slide>,
+        <Slide key={2}>
+            <CoinsChangeList
+                missingAssets={missingAssets}
+                missingAssetsQuestion={missingAssetsQuestion}
+                setMissingAssets={setMissingAssets}
+                goToNextSlide={goToNextSlide}
+            />
+        </Slide>,
+        <Slide key={3}>
+            <BuyConfirmation
+                missingAssets={missingAssets}
+                userPurchasedAssets={userPurchasedAssets}
+                choiseAmount={choiseAmount}
+                coins={first10Coins}
+                goToNextSlide={goToNextSlide}
+                walletId={walletId}
+                imageFolder={imageFolder}
+            />
+        </Slide>,
+        <Slide key={4}>
+            <Final
+                handleClose={handleClose}
+            />
+        </Slide>,
+    ] : [
+        <Slide key={1}>
+            <ChangeAmount
+                setChoiseAmoin={setChoiseAmoin}
+                answerPurchasedAssets={answerPurchasedAssets}
+                goToNextSlide={goToNextSlide}
+                getPurchasedAssets={getPurchasedAssets}
+            />
+        </Slide>,
+        <Slide key={2}>
+            <BuyConfirmation
+                missingAssets={missingAssets}
+                userPurchasedAssets={userPurchasedAssets}
+                choiseAmount={choiseAmount}
+                coins={first10Coins}
+                goToNextSlide={goToNextSlide}
+                walletId={walletId}
+                imageFolder={imageFolder}
+            />
+        </Slide>,
+        <Slide key={3}>
+            <Final
+                handleClose={handleClose}
+            />
+        </Slide>,
+    ]
 
     return (
         <>
@@ -80,6 +168,24 @@ const BuyDialog = ({open, setOpen, coins}) => {
             >
                 <Box className={style.buyDialog}>
                     <Box className={style.buyDialog__content}>
+                        <IconButton
+                            edge="start"
+                            color="inherit"
+                            onClick={goToPrevSlide}
+                            disabled={currentSlide === 0}
+                            aria-label="close"
+                            sx={{
+                                position: 'absolute',
+                                top: '30%',
+                                left: '5vw',
+                                width: '40px',
+                                height: '40px',
+                                transition: 'opacity 200ms ease',
+                                zIndex: '100'
+                            }}
+                        >
+                            <ArrowBackRoundedIcon/>
+                        </IconButton>
                         <IconButton
                             edge="start"
                             color="inherit"
@@ -99,205 +205,14 @@ const BuyDialog = ({open, setOpen, coins}) => {
                         <Box sx={{
                             display: 'flex',
                             position: 'absolute',
-                            left: openSuccess ? '-95vw' : openConfirm ? '-195vw' : '5vw',
-                            transition: 'left 200ms ease'
                         }}>
-                            <Box className={style.buyDialog__content__choice}>
-                                <Box className={style.buyDialog__content__choice__top}>
-                                    <Typography className={style.buyDialog__content__choice__top__title}
-                                                sx={{
-                                                    fontSize: '24px',
-                                                    fontWeight: '600',
-                                                    fontFamily: 'Gilroy, sans-serif',
-                                                    textAlign: 'center'
-                                                }}>
-                                        {t("tracking.buyCard.title")}
-                                    </Typography>
-                                </Box>
-                                <Box className={style.buyDialog__content__choice__buttons}>
-                                    <Box
-                                        onClick={() => {
-                                            handleButtonsItemClick(100)
-                                        }}
-                                        className={style.buyDialog__content__choice__buttons_item}
-                                    >100$
-                                    </Box>
-                                    <Box
-                                        onClick={() => {
-                                            handleButtonsItemClick(200)
-                                        }}
-                                        className={style.buyDialog__content__choice__buttons_item}
-                                    >200$
-                                    </Box>
-                                    <Box
-                                        onClick={() => {
-                                            handleButtonsItemClick(400)
-                                        }}
-                                        className={style.buyDialog__content__choice__buttons_item}
-                                    >400$
-                                    </Box>
-                                    <Box
-                                        onClick={() => {
-                                            handleButtonsItemClick(600)
-                                        }}
-                                        className={style.buyDialog__content__choice__buttons_item}
-                                    >600$
-                                    </Box>
-                                    <Box
-                                        onClick={() => {
-                                            handleButtonsItemClick(800)
-                                        }}
-                                        className={style.buyDialog__content__choice__buttons_item}
-                                    >800$
-                                    </Box>
-                                    <Box
-                                        onClick={() => {
-                                            handleButtonsItemClick(1000)
-                                        }}
-                                        className={style.buyDialog__content__choice__buttons_item}
-                                    >1000$
-                                    </Box>
-                                </Box>
-                            </Box>
-                            <Box className={style.buyDialog__content__confirmation}>
-                                <Box className={style.buyDialog__content__choice__top}>
-                                    <IconButton
-                                        edge="start"
-                                        color="inherit"
-                                        onClick={() => {
-                                            setOpenSuccess(false)
-                                        }}
-                                        aria-label="close"
-                                        sx={{
-                                            position: 'absolute',
-                                            left: '0',
-                                            width: '40px',
-                                            height: '40px',
-                                            pointerEvents: openSuccess ? 'auto' : 'none',
-                                            cursor: openSuccess ? '' : 'default',
-                                            opacity: openSuccess ? 1 : 0,
-                                            transition: 'opacity 200ms ease',
-                                            zIndex: '100'
-                                        }}
-                                    >
-                                        <ArrowBackRoundedIcon/>
-                                    </IconButton>
-                                    <Typography className={style.buyDialog__content__choice__top__title}
-                                                sx={{
-                                                    fontSize: '24px',
-                                                    fontWeight: '600',
-                                                    fontFamily: 'Gilroy, sans-serif',
-                                                    textAlign: 'center'
-                                                }}>
-                                        {t("tracking.buyCard.confirmation")}
-                                    </Typography>
-                                </Box>
-                                <Box className={style.buyDialog__content__confirmation__list}
-                                sx={{
-                                    overflow: 'hidden'
-                                }}>
-                                    Вы копируете инвестиционный портфель, включающий в себя
-                                    активы: {renderPortfolioData()}
-                                </Box>
-                                <Typography sx={{
-                                    fontSize: '16px',
-                                    fontFamily: 'Gilroy, sans-serif',
-                                }}>
-                                    на сумму: <span style={{fontWeight: '600'}}>{choiseAmount}$</span>
-                                </Typography>
-                                <Box className={style.buyDialog__content__confirmation__button}>
-                                    <Button
-                                        variant={'contained'}
-                                        onClick={handleButtonConfirmClick}
-                                        sx={{
-                                            height: '50px',
-                                            width: '100%',
-                                            backgroundColor: '#fff',
-                                            boxShadow: '0px 0px 15px 3px rgba(0, 0, 255, 0.5)',
-                                            marginTop: '10px',
-                                            borderRadius: '15px',
-                                            ':hover': {
-                                                backgroundColor: 'rgba(255,255,255, 0.7)',
-                                                boxShadow: '0px 0px 10px 3px rgba(0, 0, 255, 0.5)',
-                                            }
-                                        }}
-                                    >
-                                        <Typography
-                                            sx={{
-                                                color: '#000',
-                                                fontWeight: '700',
-                                                fontFamily: 'Gilroy, sans-serif'
-                                            }}>
-                                            {t("tracking.buyCard.confirmation_text")}
-                                        </Typography>
-                                    </Button>
-                                </Box>
-                            </Box>
-                            <Box className={style.buyDialog__content__success}>
-                                <IconButton
-                                    edge="start"
-                                    color="inherit"
-                                    onClick={() => {
-                                        setOpenSuccess(true)
-                                        setOpenConfirm(false)
-                                    }}
-                                    aria-label="close"
-                                    sx={{
-                                        width: '40px',
-                                        height: '40px',
-                                        pointerEvents: openConfirm ? 'auto' : 'none',
-                                        cursor: openConfirm ? '' : 'default',
-                                        opacity: openConfirm ? 1 : 0,
-                                        transition: 'opacity 200ms ease',
-                                        zIndex: '110'
-                                    }}
-                                >
-                                    <ArrowBackRoundedIcon/>
-                                </IconButton>
-                                <Box sx={{
-                                    display: 'flex',
-                                    flexDirection: 'column',
-                                    alignItems: 'center',
-                                    width: '100%',
-                                    marginBottom: '10px'
-                                }}>
-                                    <Box>
-                                        <img src={like} alt={"Like"} style={{
-                                            width: '100px'
-                                        }}/>
-                                    </Box>
-                                    <Box>
-                                        Портфель успешно скопирован!
-                                    </Box>
-                                </Box>
-                                <Box className={style.buyDialog__content__confirmation__button}>
-                                    <Button
-                                        variant={'contained'}
-                                        onClick={handleClose}
-                                        sx={{
-                                            height: '50px',
-                                            width: '100%',
-                                            backgroundColor: '#fff',
-                                            boxShadow: '0px 0px 15px 3px rgba(0, 0, 255, 0.5)',
-                                            marginTop: '10px',
-                                            borderRadius: '15px',
-                                            ':hover': {
-                                                backgroundColor: 'rgba(255,255,255, 0.7)',
-                                                boxShadow: '0px 0px 10px 3px rgba(0, 0, 255, 0.5)',
-                                            }
-                                        }}
-                                    >
-                                        <Typography
-                                            sx={{
-                                                color: '#000',
-                                                fontWeight: '700',
-                                                fontFamily: 'Gilroy, sans-serif'
-                                            }}>
-                                            {t("tracking.buyCard.confirmation_text_close")}
-                                        </Typography>
-                                    </Button>
-                                </Box>
-                            </Box>
+                            <Slider
+                                slides={slides}
+                                currentSlide={currentSlide}
+                                isVisible={isVisible}
+                                goToNextSlide={goToNextSlide}
+                                goToPrevSlide={goToPrevSlide}
+                            />
                         </Box>
                     </Box>
                 </Box>
@@ -307,3 +222,34 @@ const BuyDialog = ({open, setOpen, coins}) => {
 }
 
 export default BuyDialog;
+
+const Slider = ({ slides, currentSlide, isVisible, goToNextSlide, goToPrevSlide }) => {
+
+    return (
+        <div className="slider">
+            <AnimatePresence initial={false} custom={currentSlide}>
+                <motion.div
+                    key={currentSlide}
+                    custom={currentSlide}
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    transition={{ duration: 0.2, delay: 0.2 }}
+                    className="slide"
+                    style={{
+                        display: isVisible ? 'flex' : 'none',
+                        flexDirection: 'row',
+                        justifyContent: 'center',
+                        width: '100vw'
+                    }}
+                >
+                    {slides[currentSlide]}
+                </motion.div>
+            </AnimatePresence>
+        </div>
+    );
+};
+
+const Slide = ({ children }) => {
+    return <>{children}</>;
+};

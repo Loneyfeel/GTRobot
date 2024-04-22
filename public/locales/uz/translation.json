@@ -7,6 +7,7 @@
       "call": "Murojaat",
       "about": "Biz haqimizda",
       "referral": "Referal",
+      "whales": "Top Whales",
       "commands": "Bot buyruqlari",
       "start": "Botni qayta ishga tushirish",
       "language": "Tilni o’zgartirish",
@@ -300,16 +301,35 @@
     "cost": "Portfelni qiymati",
     "portfolio": "Portfel",
     "portfolio_btn": "Portfelni ko'chirib olish",
+    "inputFollowName": "Hamyon nomini kiriting:",
     "buyCard": {
       "title": "Depozitni tanlang",
       "confirmation": "Tasdiqlash",
       "confirmation_text": "Tasdiqlash",
       "confirmation_text_close": "Yopish"
     },
-    "filters": {
-      "business": "Tadbirkorlar",
-      "stars": "Mashhur insonlar",
-      "investors": "Kriptoinvestorlar"
-    }
+    "buyDialog": {
+      "message": "Siz aktivlarni o'z ichiga olgan investitsiya portfelidan ushbu kriptovlayutalarni sotib olayapsiz:",
+      "amount": "Summaga:",
+      "final": "Portfel muvoffaqiyatli ko’chirildi",
+      "changeBuyMissingCoins": {
+        "text": "Sizda ushbu aktiv mavjud:",
+        "text2": "Qayta sotib olmoqchimisiz?"
+      },
+      "error": "Xatolik!",
+      "error3002": "Birjaga ulanib bo’lmadi",
+      "error3003": "Balansda etarli miqdor mavjud emas",
+      "errorEmptyList": "Sotib olmoqchi bo’lgan aktivlarni tanlang",
+      "errorAPI": "API ma’lumotlarni ulab oling"
+    },
+
+    "addCustomWallet": {
+      "noResult": "Hech narsa topilmadi",
+      "addBtn": "Hamyondi qo’shish"
+    },
+    "yes": "Ha",
+    "no": "Yo’q",
+    "loadingCopy": "Portfel ko’chirib olinayapti…",
+    "loadingSearch": "Hamyon izlanmoqda…"
   }
 }

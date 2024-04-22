@@ -1,7 +1,7 @@
-import { defineConfig } from "vite";
-import react from "@vitejs/plugin-react";
-import { compression } from "vite-plugin-compression2";
-import svgr from "vite-plugin-svgr";
+import { defineConfig } from 'vite';
+import react from '@vitejs/plugin-react';
+import { compression } from 'vite-plugin-compression2';
+import svgr from 'vite-plugin-svgr';
 import path from 'path';
 
 export default defineConfig({
@@ -18,15 +18,22 @@ export default defineConfig({
       brotliOptions: {
         level: 11,
       },
-      include: ["**/*.css", "**/*.js"],
-      exclude: ["node_modules/**"],
+      include: ['**/*.css', '**/*.js'],
+      exclude: ['node_modules/**'],
     }),
   ],
   build: {
     rollupOptions: {
       input: {
-        main: "./index.html",
+        main: './index.html',
+      },
+    },
+    // Добавляем настройку для определения переменных среды
+    define: {
+      'process.env': {
+        NODE_ENV: JSON.stringify(process.env.NODE_ENV || 'development'),
       },
     },
   },
 });
+

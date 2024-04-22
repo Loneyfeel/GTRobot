@@ -1,26 +1,18 @@
-import React, {lazy, Suspense, useEffect, useState} from 'react';
+import React from 'react';
 import style from './miniCard.module.sass'
-import {Avatar, Box} from "@mui/material";
+import { Box} from "@mui/material";
 import mark from '../../assets/shared/checkmark.svg'
 import broken from '../../assets/card/broken.svg'
-import BigCard from '../BigCard'
-// const BigCard = lazy(() => import('../BigCard/index.js'));
 
 const MiniCard = ({
                       setIsBigCardOpened,
-                      setWalletsData,
                       name,
                       mini_description,
                       balance,
                       verified,
                       photo,
-                      address,
-                      description,
-                      chart,
-                      stocks,
-                      favorite,
-                      walletId,
-                      setIsVisible
+                      setIsVisible,
+                      address
                   }) => {
 
     const formatNumber = (number) => {
@@ -28,17 +20,14 @@ const MiniCard = ({
     };
 
     const openBigCard = () => {
-        setIsVisible(true);
+        setIsVisible();
+        setIsBigCardOpened(true)
     };
-    //
-    // useEffect(() => {
-    //         setIsBigCardOpened(isVisible);
-    // }, [isVisible]);
 
     return (
         <>
             <Box className={style.miniCard}
-                 onClick={()=>{
+                 onClick={() => {
                      openBigCard()
                      document.body.style.overflow = 'hidden'
                  }}>
@@ -65,7 +54,7 @@ const MiniCard = ({
                             </>
                         }
                     </Box>
-                    {name &&
+                    {name ? (
                         <Box className={style.miniCard__name}>
                             <Box className={style.miniCard__name_text}>
                                 {name}
@@ -76,7 +65,22 @@ const MiniCard = ({
                                 </Box>
                             )}
                         </Box>
-                    }
+                    ) : (
+                        <>
+                            {address &&
+                                <Box className={style.miniCard__name}>
+                                    <Box className={style.miniCard__name_text}>
+                                        {address}
+                                    </Box>
+                                    {verified && (
+                                        <Box className={style.miniCard__name_mark}>
+                                            <img src={mark} alt={'mark'} className={style.miniCard__name_mark_img}/>
+                                        </Box>
+                                    )}
+                                </Box>
+                            }
+                        </>
+                    )}
                 </Box>
                 {mini_description &&
                     <Box className={style.miniCard__description}>
@@ -91,29 +95,8 @@ const MiniCard = ({
                     </Box>
                 }
             </Box>
-            {/*{isVisible &&*/}
-            {/*    <Suspense>*/}
-            {/*        <BigCard*/}
-            {/*            setIsBigCardOpened={setIsBigCardOpened}*/}
-            {/*            setWalletsData={setWalletsData}*/}
-            {/*            leftPosition={leftPosition}*/}
-            {/*            setIsVisible={setIsVisible}*/}
-            {/*            favorite={favorite}*/}
-            {/*            setLeftPosition={setLeftPosition}*/}
-            {/*            photo={photo}*/}
-            {/*            name={name}*/}
-            {/*            verified={verified}*/}
-            {/*            address={address}*/}
-            {/*            description={description}*/}
-            {/*            balance={balance}*/}
-            {/*            chart={chart}*/}
-            {/*            stocks={stocks}*/}
-            {/*            walletId={walletId}*/}
-            {/*        />*/}
-            {/*    </Suspense>*/}
-            {/*}*/}
         </>
     );
-};
+}
 
 export default MiniCard;

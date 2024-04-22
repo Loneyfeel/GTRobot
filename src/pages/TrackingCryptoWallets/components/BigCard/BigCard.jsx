@@ -6,45 +6,40 @@ import {
     AccordionSummary,
     Alert,
     Box,
-    Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle,
-    IconButton,
+    Button, IconButton,
     Snackbar,
     Typography
 } from "@mui/material";
-import ArrowBackRoundedIcon from '@mui/icons-material/ArrowBackRounded';
 import ContentCopyRoundedIcon from '@mui/icons-material/ContentCopyRounded';
 import verifiedImg from '../../assets/shared/checkmark.svg'
 import {useCopyToClipboard} from "@uidotdev/usehooks";
 import {useTranslation} from "react-i18next";
-import MenuRoundedIcon from '@mui/icons-material/MenuRounded';
 import ArrowBackIosNewRoundedIcon from '@mui/icons-material/ArrowBackIosNewRounded';
 import CardChart from "../Chart/index.js";
 
 import brokenCoin from '../../assets/bigCard/broken.svg'
+import rename from '../../assets/bigCard/rename.svg'
 import brokenPhoto from '../../assets/card/broken.svg'
 import favorites_tab_active from '../../assets/main/favorites_tab_active.svg'
 import favorites_tab_disabled from '../../assets/main/favorites_tab_disabled.svg'
-// import BuyDialog from "./BuyDialog/index.js";
-import {getWhaleWalletData, getWhaleWallets, setWhaleWalletFollow} from "../../api/api.js";
+import BuyDialog from "./BuyDialog/index.js";
+import {getWhaleWalletData, getWhaleWallets, setWhaleWalletFollow, setWhaleWalletName} from "../../api/api.js";
+import ArrowBackRoundedIcon from "@mui/icons-material/ArrowBackRounded.js";
 
 const BigCard = ({
+                     setTempWalletVisible,
                      setWalletsData,
                      leftPosition,
                      setLeftPosition,
-                     setIsVisible,
                      photo,
-                     name,
                      verified,
                      address,
                      description,
                      balance,
-                     chart,
-                     stocks,
-                     // favorite,
                      walletId,
-                     activeTab
+                     activeTab,
+                     searchInputValueEmpty
 }) => {
-
     const {t, i18n} = useTranslation();
     const [isCopySnackbarOpen, setIsCopySnackbarOpen] = useState(false);
     const [copiedText, copyToClipboard] = useCopyToClipboard();
@@ -62,13 +57,32 @@ const BigCard = ({
         return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ");
     };
 
+    const [oneWalletData, setOneWalletData] = useState()
     const [stocksData, setStocksData] = useState()
     const [chartData, setChartData] = useState([])
     const [favorite, setFavorite] = useState(false)
 
-    function getBigCardData(){
+    const [inputValue, setInputValue] = useState('');
+    const handlePrompt = () => {
+        const userInput = window.prompt(t("tracking.inputFollowName"), inputValue);
+        if (userInput !== null) {
+            // пользователь ввел текст
+            followClick(activeTab, userInput)
+        } else {
+
+        }
+    };
+
+    function getBigCardData(walletId){
         getWhaleWalletData(walletId)
             .then(response => {
+                if (response.errorCode === 1006){
+                    window.location.href = "/premium";
+                }
+                setOneWalletData(response.data)
+                if (response.data.name){
+                    setInputValue(response.data.name)
+                }
                 setStocksData(response.data.stocks);
                 setFavorite(response.data.isFollow)
                 setChartData(response.data.chart)
@@ -81,12 +95,19 @@ const BigCard = ({
     }
 
     const [tempSet, settempSet] = useState(false)
-    function followClick(activeTab){
-        setWhaleWalletFollow(walletId)
+    function followClick(activeTab, name){
+        const type = searchInputValueEmpty ? 'all' : 'search'
+        setWhaleWalletFollow(walletId, name)
             .then (() =>{
-                getBigCardData()
-                getWhaleWallets(settempSet, "all", '', '', [], '')
+                getBigCardData(walletId)
+                getWhaleWallets(settempSet, type, '', '', [], '')
                     .then(response => {
+                        if (response.errorCode === 1006){
+                            window.location.href = "/premium";
+                        }
+                        if (activeTab === 'follows'){
+                            document.body.style.overflow = ''
+                        }
                         setWalletsData(response.data.data);
                     })
                     .catch(error => {
@@ -99,9 +120,55 @@ const BigCard = ({
             })
     }
 
+    function renameClick(){
+        const userInput = window.prompt(t("tracking.inputFollowName"), inputValue);
+        if (userInput !== null) {
+            setWhaleWalletName(walletId, userInput)
+                .then(response =>{
+                    getBigCardData(walletId)
+                    const type = searchInputValueEmpty ? 'all' : 'search'
+                    getWhaleWallets(settempSet, type, '', '', [], '')
+                        .then(response => {
+                            if (response.errorCode === 1006){
+                                window.location.href = "/premium";
+                            }
+                            if (activeTab === 'follows'){
+                                document.body.style.overflow = ''
+                            }
+                            setWalletsData(response.data.data);
+                        })
+                        .catch(error => {
+                            // Обрабатываем ошибку, если она возникла
+                            console.error('Ошибка при получении данных о кошельках:', error);
+                        });
+                })
+        }
+    }
+
     useEffect(() => {
-        getBigCardData()
+        getBigCardData(walletId)
     }, []);
+
+    const [coinsToCopy, setCoinsToCopy] = useState([])
+    useEffect(() => {
+        // Проверяем, что stocksData не равно undefined или null
+        if (stocksData) {
+
+            // Копируем объект stocksData
+            const sortedStocksData = { ...stocksData };
+
+            // Сортируем его по убыванию balance
+            const sortedStocksEntries = Object.entries(sortedStocksData).sort(([, a], [, b]) => b.quote - a.quote);
+            // Берем только первые 10 элементов
+            const first10Entries = sortedStocksEntries.slice(0, 10);
+            // Создаем объект из отсортированных и отфильтрованных первых 10 элементов
+            const updatedCoinsToCopy10 = Object.fromEntries(first10Entries);
+            const updatedCoinsKeys = Object.keys(updatedCoinsToCopy10);
+
+            setCoinsToCopy(updatedCoinsKeys);
+        }
+    }, [stocksData]);
+
 
     const imageFolder  = '/assets/cryptocurrencies/';
     // Отображение данных портфолио
@@ -118,15 +185,15 @@ const BigCard = ({
 
         return currencyData.map(([currency, data]) => {
             const {balanceCoin, quote} = data;
-            const mathBalance = (quote).toFixed(3);
-            const precent = ((quote / totalQuote) * 100).toFixed(4);
+            const mathBalance = (quote).toFixed(0);
+            const precent = ((quote / totalQuote) * 100).toFixed(2);
             const iconPath = `${imageFolder}/${currency.toLowerCase()}.png`; // Путь к изображению
             const formattedCurrency = currency.charAt(0).toUpperCase() + currency.slice(1);
+
 
             return (
                 <>
                     {precent > 0.00001 &&
-
                         <Box key={currency} className={style.bigCard__content__portfolio__card}>
                             <Box className={style.bigCard__content__portfolio__card__percent}>{precent}%</Box>
                             <Box className={style.bigCard__content__portfolio__card__coinIcon}>
@@ -142,7 +209,7 @@ const BigCard = ({
                             <Box className={style.bigCard__content__portfolio__card__coin}>{formattedCurrency}</Box>
                             <Box className={style.bigCard__content__portfolio__card__amount}
                                  sx={{
-                                     fontSize: mathBalance > 10000000 ? '12px' : mathBalance > 100000000 ? '11px' : mathBalance > 1000000000 ? '10px' : '14px'
+                                     fontSize: mathBalance > 10000000 ? '14px' : mathBalance > 100000000 ? '13px' : mathBalance > 1000000000 ? '12px' : '14px'
                                  }}>$ {formatNumber(mathBalance)}</Box>
                         </Box>
 
@@ -158,34 +225,22 @@ const BigCard = ({
         setOpen(true);
     };
 
-    const randomParam = Math.random().toString(36).substring(7); // Генерация случайного параметра
-    const imageUrl = `${photo}?cache=${randomParam}`;
-
+    {setTempWalletVisible(address)}
     return (
         <>
             <Box className={style.bigCard}
                  sx={{
                      left: leftPosition,
                  }}>
+                {oneWalletData && <>
                 <Box className={style.bigCard__content}>
-                    <Box className={style.bigCard__content__arrow}>
-                        <IconButton
-                            onClick={() => {
-                                setLeftPosition('200vw')
-                                document.body.style.overflow = ''
-                                setTimeout(() => {
-                                    setIsVisible()
-                                }, 200);
-                            }}
-                            sx={{
-                                color: '#fff'
-                            }}>
-                            <ArrowBackRoundedIcon/>
-                        </IconButton>
-                    </Box>
                     <Box className={style.bigCard__content__favorite}
                     onClick={()=>{
-                        followClick(activeTab)
+                        if(!favorite){
+                            handlePrompt()
+                        } else {
+                            followClick(activeTab, oneWalletData.name)
+                        }
                     }}>
                         {favorite ?
                                 <img src={favorites_tab_active} alt='' className={style.bigCard__content__favorite_img}/>
@@ -207,15 +262,33 @@ const BigCard = ({
                             />
                         </Box>
                         }
-                        {name && <Box className={style.bigCard__content__info__name}>
+                        {oneWalletData.name && <Box className={style.bigCard__content__info__name}>
                             <Box className={style.bigCard__content__info__name_text}>
-                                {name}
+                                {oneWalletData.name}
                             </Box>
                             {verified &&
                                 <Box className={style.bigCard__content__info__name_verified}>
                                     <img src={verifiedImg} alt={'verified'}
                                          className={style.bigCard__content__info__name_verified_img}/>
                                 </Box>
+                            }
+                            {favorite &&
+                                <>
+                                    <Box>
+                                        <IconButton
+                                            onClick={() => {
+                                                renameClick()
+                                            }}
+                                            sx={{
+                                                color: '#fff'
+                                            }}>
+                                            <img src={rename} alt={'Rename'}
+                                            style={{
+                                                width: '20px'
+                                            }}/>
+                                        </IconButton>
+                                    </Box>
+                                </>
                             }
                         </Box>
                         }
@@ -226,7 +299,7 @@ const BigCard = ({
                                 >
                                     <Box className={style.bigCard__content__info__address__text}
                                          sx={{
-                                             fontSize: photo && name ? '18px' : '24px'
+                                             fontSize: photo && oneWalletData.name ? '18px' : '24px'
                                          }}>
                                         {address}
                                     </Box>
@@ -340,38 +413,48 @@ const BigCard = ({
                                         {renderPortfolioData()}
                                     </Box>
                                 </AccordionDetails>
-                                {/*<Box className={style.bigCard__content__portfolio__button_box}>*/}
-                                {/*    <Button*/}
-                                {/*        className={style.bigCard__content__portfolio__button}*/}
-                                {/*        variant={'contained'}*/}
-                                {/*        onClick={handleClickOpen}*/}
-                                {/*        sx={{*/}
-                                {/*            backgroundColor: '#fff',*/}
-                                {/*            borderRadius: '15px',*/}
-                                {/*            boxShadow: '0px 0px 15px 3px rgba(0, 0, 255, 0.5)',*/}
-                                {/*            ':hover':{*/}
-                                {/*                backgroundColor: 'rgba(255,255,255, 0.7)',*/}
-                                {/*                boxShadow: '0px 0px 10px 3px rgba(0, 0, 255, 0.5)',*/}
-                                {/*            }*/}
-                                {/*        }}*/}
-                                {/*    >*/}
-                                {/*        <Typography*/}
-                                {/*        sx={{*/}
-                                {/*            color: '#000',*/}
-                                {/*            fontWeight: '700',*/}
-                                {/*            fontFamily: 'Gilroy, sans-serif'*/}
-                                {/*        }}>*/}
-                                {/*            {t("tracking.portfolio_btn")}*/}
-                                {/*        </Typography>*/}
-                                {/*    </Button>*/}
-                                {/*</Box>*/}
+                                <Box className={style.bigCard__content__portfolio__button_box}>
+                                    <Button
+                                        className={style.bigCard__content__portfolio__button}
+                                        variant={'contained'}
+                                        onClick={handleClickOpen}
+                                        sx={{
+                                            backgroundColor: '#fff',
+                                            borderRadius: '15px',
+                                            boxShadow: '0px 0px 15px 3px rgba(0, 0, 255, 0.5)',
+                                            ':hover':{
+                                                backgroundColor: 'rgba(255,255,255, 0.7)',
+                                                boxShadow: '0px 0px 10px 3px rgba(0, 0, 255, 0.5)',
+                                            }
+                                        }}
+                                    >
+                                        <Typography
+                                        sx={{
+                                            color: '#000',
+                                            fontWeight: '700',
+                                            fontFamily: 'Gilroy, sans-serif'
+                                        }}>
+                                            {t("tracking.portfolio_btn")}
+                                        </Typography>
+                                    </Button>
+                                </Box>
                             </Accordion>
                             <Box sx={{height: '5px'}}/>
                         </>
                     }
                 </Box>
+                </>}
             </Box>
-            {/*<BuyDialog open={open} setOpen={setOpen} coins={Object.keys(stocks)}/>*/}
+            {stocksData &&
+                <>
+                    <BuyDialog
+                        open={open}
+                        setOpen={setOpen}
+                        coins={coinsToCopy}
+                        walletId={walletId}
+                        imageFolder={imageFolder}/>
+                </>
+            }
         </>
     );
 }
