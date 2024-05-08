@@ -2,12 +2,13 @@ import './shared/fonts/Gilroy/fontStylesheet.css'
 import "./App.css";
 
 import { useTranslation } from "react-i18next";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import axios from "axios";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { useThemeParams } from "@vkruglikov/react-telegram-web-app";
 import { host } from "./shared/host/host.js";
-import {tg, userId} from "./shared/telegram/telegram.js";
+import {initData, tg} from "./shared/telegram/telegram.js";
+import {useQuery} from '@tanstack/react-query';
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 
 // import MainMenu from "./pages/MainMenu";
@@ -16,46 +17,36 @@ import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 // import Forex from "./pages/Forex";
 // import NoSubscribe from "./pages/NoSuscribe";
 // import Copyright from "./pages/Copyright";
-import TrackingCryptoWallets from "./pages/TrackingCryptoWallets";
-// import Mining from "./pages/Mining";
+// import TrackingCryptoWallets from "./pages/TrackingCryptoWallets";
+import Mining from "./pages/Mining";
 
 function App() {
-  const [loading, setLoading] = useState(true);
-  const [language, setLanguage] = useState("uz");
 
-  useEffect(() => {
-    const fetchUserLanguage = async () => {
-      try {
-        const response = await axios.post(`${host}/api/user-locale`, {
-          userId,
-        });
-        setLanguage(response.data);
-        setLoading(false);
-      } catch (error) {
-        console.error("Произошла ошибка при выполнении POST-запроса:", error);
-        if (error.response.data.errorCode === 1006) {
-          // Перенаправление на другую страницу
-          window.location.href = "/premium";
-        }
-      }
-    };
-
-    if (loading) {
-      fetchUserLanguage();
+  // Функция для выполнения запроса к API
+  async function fetchUserData() {
+    try {
+      const response = await axios.post(`${host}/api/get-user-data`, { initData: initData });
+      return response.data;
+    } catch (error) {
+      throw new Error('Failed to fetch user data');
     }
-  }, [loading]); // Выполняется только при изменении loading
+  }
 
-  // Локализация
+  const { data, isLoading, isError, isSuccess } = useQuery({
+    queryKey: 'userMainData', // Оберните строку 'userData' в массив
+    queryFn: fetchUserData,
+    config: {
+      keepPreviousData: true,
+      refetchOnWindowFocus: false
+    }
+  });
+
   const { i18n } = useTranslation();
   useEffect(() => {
-    const updateLanguage = async () => {
-      await i18n.changeLanguage(language);
-    };
-
-    if (!loading) {
-      updateLanguage();
+    if(isSuccess){
+      i18n.changeLanguage(data.data.userLocale);
     }
-  }, [i18n, language, loading]);
+  }, [isSuccess]);
 
   const [colorScheme, themeParams] = useThemeParams(); //тг тема
   const themeColor = {
@@ -119,12 +110,12 @@ function App() {
         {/*<Forex/>*/}
         {/*<NoSubscribe/>*/}
         {/*<Copyright/>*/}
-        <TrackingCryptoWallets/>
-        {/*<Router basename="/mining">*/}
-        {/*  <Routes>*/}
-        {/*    <Route path="/*" exact element={<Mining />} />*/}
-        {/*  </Routes>*/}
-        {/*</Router>*/}
+        {/*<TrackingCryptoWallets/>*/}
+        <Router basename="/">
+          <Routes>
+            <Route path="/*" exact element={<Mining />} />
+          </Routes>
+        </Router>
       </ThemeProvider>
     </>
   );

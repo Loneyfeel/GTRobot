@@ -13,38 +13,43 @@ import {useTranslation} from "react-i18next";
 
 const CloudMining = () => {
     const {t} = useTranslation();
-    const userDataStorage = JSON.parse(localStorage.getItem("miningUserData")); //Получаем данные
+    const [userDataStorage, setUserDataStorage] = useState()
     const prices = JSON.parse(localStorage.getItem("prices")) //Получаем цены
-    const [cryptoCurrency, setCryptoCurrency] = useState(userDataStorage.cryptoCurrency) //Получаем выбранную монету
-    const [isMiningActive, setIsMiningActive] = useState(userDataStorage.mining.isMiningActive) //Активен ли майнинг
-    const [isStartUserMiningTimestamp, setIsStartUserMiningTimestamp] = useState(userDataStorage.mining.startUserMiningTimestamp)
-    const [isEndUserMiningTimestamp, setIsEndUserMiningTimestamp] = useState(userDataStorage.mining.endUserMiningTimestamp)
+    const [cryptoCurrency, setCryptoCurrency] = useState() //Получаем выбранную монету
+    const [isMiningActive, setIsMiningActive] = useState() //Активен ли майнинг
+    const [isStartUserMiningTimestamp, setIsStartUserMiningTimestamp] = useState()
+    const [isEndUserMiningTimestamp, setIsEndUserMiningTimestamp] = useState()
 
-    const [userSubscription, setUserSubscription] = useState(userDataStorage.userSubscription) //Тариф пользователя
+    const [userSubscription, setUserSubscription] = useState() //Тариф пользователя
     const [isContentVisible, setContentVisible] = useState(true); // для анимации
     const [userCurrencyPrice, setUserCurrencyPrice] = useState(null); // Создаем состояние для цены криптовалюты пользователя
-    const [userCloudMiningBalance, setUserCloudMiningBalance] = useState(userDataStorage.balance); //Баланс
+    const [userCloudMiningBalance, setUserCloudMiningBalance] = useState(); //Баланс
 
-    const [userSubscriptionBoost, setUserSubscriptionBoost] = useState(userDataStorage.userSubscriptionBonus) //буст за подписку
-    const [userReferralBoost, setUserReferralBoost] = useState(userDataStorage.referrals.referralBonus) // буст с рефералов
+    const [userSubscriptionBoost, setUserSubscriptionBoost] = useState() //буст за подписку
+    const [userReferralBoost, setUserReferralBoost] = useState() // буст с рефералов
 
-    const [userCloudMiningRate, setUserCloudMiningRate] = useState(userDataStorage.statistics.regularMiningRate) // Количество пользователей (3й спидометр)
+    const [userCloudMiningRate, setUserCloudMiningRate] = useState() // Количество пользователей (3й спидометр)
 
     const [timerStarted, setTimerStarted] = useState(isMiningActive);
 
+    useEffect(()=>{
+        setUserDataStorage(JSON.parse(localStorage.getItem("miningUserData"))); //Получаем данные
+    }, [])
+
     useEffect(() => {
-        const userDataStorage = JSON.parse(localStorage.getItem("miningUserData")); //Получаем данные
-        setCryptoCurrency(userDataStorage.cryptoCurrency)
-        setIsMiningActive(userDataStorage.mining.isMiningActive)
-        setIsStartUserMiningTimestamp(userDataStorage.mining.startUserMiningTimestamp)
-        setIsEndUserMiningTimestamp(userDataStorage.mining.endUserMiningTimestamp)
-        setUserSubscription(userDataStorage.userSubscription)
-        setUserCloudMiningBalance(userDataStorage.balance)
-        setUserSubscriptionBoost(userDataStorage.userSubscriptionBonus)
-        setUserReferralBoost(userDataStorage.referrals.referralBonus)
-        setUserCloudMiningRate(userDataStorage.statistics.regularMiningRate)
-        setTimerStarted(isMiningActive)
-    }, []);
+        if (userDataStorage){
+            setCryptoCurrency(userDataStorage.cryptoCurrency)
+            setIsMiningActive(userDataStorage.mining.isMiningActive)
+            setIsStartUserMiningTimestamp(userDataStorage.mining.startUserMiningTimestamp)
+            setIsEndUserMiningTimestamp(userDataStorage.mining.endUserMiningTimestamp)
+            setUserSubscription(userDataStorage.userSubscription)
+            setUserCloudMiningBalance(userDataStorage.balance)
+            setUserSubscriptionBoost(userDataStorage.userSubscriptionBonus)
+            setUserReferralBoost(userDataStorage.referrals.referralBonus)
+            setUserCloudMiningRate(userDataStorage.statistics.regularMiningRate)
+            setTimerStarted(isMiningActive)
+        }
+    }, [userDataStorage]);
 
     useEffect(() => {
         // Обновляем состояние userCurrencyPrice с ценой, если объект найден, или null, если объект не найден
@@ -53,95 +58,97 @@ const CloudMining = () => {
 
     const navigate = useNavigate();
 
+    // Условный рендеринг: рендерить только если есть данные в хранилище
+    if (!userDataStorage) return null;
+
     return (
-        <>
+        <motion.div
+            className={style.cloudMining}
+            initial={{opacity: 0}}
+            animate={{opacity: 1}}
+            transition={{duration: 0.2}}
+            style={{
+                willChange: 'opacity'
+            }}
+        >
             <motion.div
-                className={style.cloudMining}
-                initial={{opacity: 0}}
-                animate={{opacity: 1}}
-                transition={{duration: 0.2}}
+                className={style.cloudMining__content}
+                initial={{opacity: 1}} // Начальное состояние - видимый
+                animate={{opacity: isContentVisible ? 1 : 0}} // Анимация по изменению видимости
+                transition={{duration: 0.2}} // Длительность анимации
                 style={{
                     willChange: 'opacity'
                 }}
             >
-                <motion.div
-                    className={style.cloudMining__content}
-                    initial={{opacity: 1}} // Начальное состояние - видимый
-                    animate={{opacity: isContentVisible ? 1 : 0}} // Анимация по изменению видимости
-                    transition={{duration: 0.2}} // Длительность анимации
-                    style={{
-                        willChange: 'opacity'
-                    }}
-                >
-                    <Box className={style.cloudMining__content}>
-                        {(timerStarted || isStartUserMiningTimestamp) && (
-                            <>
-                                <PageTitle text={`Cloud Mining${userSubscription === 'pro' ? ' Pro' : userSubscription === 'ultra' ? ' Ultra' : ''}`}/>
+                <Box className={style.cloudMining__content}>
+                        <>
+                            <PageTitle
+                                text={`Cloud Mining${userSubscription === 'pro' ? ' Pro' : userSubscription === 'ultra' ? ' Ultra' : ''}`}/>
+                            {cryptoCurrency &&
                                 <CloudCard
                                     userCloudMiningBalance={userCloudMiningBalance}
                                     userCurrencyPrice={userCurrencyPrice}
                                     cryptoCurrency={cryptoCurrency}
                                 />
-                            </>
-                        )}
-                        {isEndUserMiningTimestamp && isContentVisible ? (
-                            <Timer
-                                userCurrencyPrice={userCurrencyPrice}
-                                userCloudMiningBalance={userCloudMiningBalance}
-                                setUserCloudMiningBalance={setUserCloudMiningBalance}
-                                userSubscription={userSubscription}
-                                isStartUserMiningTimestamp={isStartUserMiningTimestamp}
-                                isEndUserMiningTimestamp={isEndUserMiningTimestamp}
-                                userSubscriptionBoost={userSubscriptionBoost}
-                                userReferralBoost={userReferralBoost}
-                                userCloudMiningRate={userCloudMiningRate}
-                            />
-                        ) : (
-                            <StartButton
-                                isMiningActive={isMiningActive}
-                                setContentVisible={setContentVisible}
-                                setIsStartUserMiningTimestamp={setIsStartUserMiningTimestamp}
-                                setIsEndUserMiningTimestamp={setIsEndUserMiningTimestamp}
-                            />
-                        )}
-                        {(timerStarted || isStartUserMiningTimestamp) && (
-                            <CustomButton
-                                content={t("mining.pages.menu.withdraw.main_btn")}
-                                onClick={() => {
-                                    navigate('/menu/wallet');
-                                }}
-                                style={{
-                                    height: '40px',
-                                    fontSize: '16px',
-                                }}
-                            />
-                        )}
-                    </Box>
-                </motion.div>
-                {!isContentVisible && (
-                    <motion.div
-                        className={`gray`}
-                        initial={{opacity: 0}} // Начальное состояние - невидимый
-                        animate={{opacity: isContentVisible ? 0 : 1}} // Анимация по изменению видимости
-                        transition={{duration: 0.2, delay: 1}} // Длительность анимации + задержка 1 сек
-                        style={{
-                            width: '100%',
-                            height: '100vh',
-                            position: 'absolute',
-                            top: '15vh',
-                            willChange: 'opacity'
-                        }}
-                    >
-                        <Lottie
-                            animationData={animationData_rocket}
+                            }
+                        </>
+                    {isEndUserMiningTimestamp && isContentVisible ? (
+                        <Timer
+                            userCurrencyPrice={userCurrencyPrice}
+                            userCloudMiningBalance={userCloudMiningBalance}
+                            setUserCloudMiningBalance={setUserCloudMiningBalance}
+                            userSubscription={userSubscription}
+                            isStartUserMiningTimestamp={isStartUserMiningTimestamp}
+                            isEndUserMiningTimestamp={isEndUserMiningTimestamp}
+                            userSubscriptionBoost={userSubscriptionBoost}
+                            userReferralBoost={userReferralBoost}
+                            userCloudMiningRate={userCloudMiningRate}
+                        />
+                    ) : (
+                        <StartButton
+                            isMiningActive={isMiningActive}
+                            setContentVisible={setContentVisible}
+                            setIsStartUserMiningTimestamp={setIsStartUserMiningTimestamp}
+                            setIsEndUserMiningTimestamp={setIsEndUserMiningTimestamp}
+                        />
+                    )}
+                    {(timerStarted || isStartUserMiningTimestamp) && (
+                        <CustomButton
+                            content={t("mining.pages.menu.withdraw.main_btn")}
+                            onClick={() => {
+                                navigate('/menu/wallet');
+                            }}
                             style={{
-                                willChange: 'transform'
+                                height: '40px',
+                                fontSize: '16px',
                             }}
                         />
-                    </motion.div>
-                )}
+                    )}
+                </Box>
             </motion.div>
-        </>
+            {!isContentVisible && (
+                <motion.div
+                    className={`gray`}
+                    initial={{opacity: 0}} // Начальное состояние - невидимый
+                    animate={{opacity: isContentVisible ? 0 : 1}} // Анимация по изменению видимости
+                    transition={{duration: 0.2, delay: 1}} // Длительность анимации + задержка 1 сек
+                    style={{
+                        width: '100%',
+                        height: '100vh',
+                        position: 'absolute',
+                        top: '15vh',
+                        willChange: 'opacity'
+                    }}
+                >
+                    <Lottie
+                        animationData={animationData_rocket}
+                        style={{
+                            willChange: 'transform'
+                        }}
+                    />
+                </motion.div>
+            )}
+        </motion.div>
     );
 }
 

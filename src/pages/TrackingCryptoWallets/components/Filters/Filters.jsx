@@ -3,8 +3,9 @@ import style from './filters.module.sass'
 import {Box} from "@mui/material";
 import {useTranslation} from "react-i18next";
 import {getWhaleTags, getWhaleWallets} from "../../api/api.js";
+import lockImg from '../../assets/shared/lockWihte.svg'
 
-const Filters = ({setWalletsData}) => {
+const Filters = ({setWalletsData, lock}) => {
     const {t, i18n} = useTranslation();
     const [backdropVisible, setBackdropVisible] = useState(false)
     const [tags, setTags] = useState([]); // Состояние для тегов
@@ -56,11 +57,6 @@ const Filters = ({setWalletsData}) => {
             });
     };
 
-    useEffect(() => {
-        // console.log('tags',tags)
-        // console.log('tagsId',tagsId)
-    }, []);
-
     return (
         <>
             {tags &&
@@ -75,6 +71,7 @@ const Filters = ({setWalletsData}) => {
                                         handleTagClick(key)
                                     }}
                                 >
+                                    {lock && <img src={lockImg} alt={lock} style={{marginRight: '5px'}}/>}
                                     <Box className={style.trackingCryptoWallets__content__filters__item_text}>{value}</Box>
                                 </Box>
                              </>

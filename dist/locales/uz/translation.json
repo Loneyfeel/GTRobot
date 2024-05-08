@@ -322,7 +322,6 @@
       "errorEmptyList": "Sotib olmoqchi bo’lgan aktivlarni tanlang",
       "errorAPI": "API ma’lumotlarni ulab oling"
     },
-
     "addCustomWallet": {
       "noResult": "Hech narsa topilmadi",
       "addBtn": "Hamyondi qo’shish"
@@ -330,6 +329,11 @@
     "yes": "Ha",
     "no": "Yo’q",
     "loadingCopy": "Portfel ko’chirib olinayapti…",
-    "loadingSearch": "Hamyon izlanmoqda…"
+    "loadingSearch": "Hamyon izlanmoqda…",
+    "noPremiumDialog": {
+      "title": "Ushbu harakat uchun faol obuna talab qilinadi",
+      "question": "Obuna bo'lish uchun veb-saytga o'tasizmi?"
+    },
+    "similarWallets": "Shunga o'xshash hamyonlar"
   }
 }

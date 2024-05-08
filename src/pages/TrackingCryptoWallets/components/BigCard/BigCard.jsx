@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {Suspense, useCallback, useEffect, useState} from 'react';
 import style from './bigCard.module.sass'
 import {
     Accordion,
@@ -6,7 +6,7 @@ import {
     AccordionSummary,
     Alert,
     Box,
-    Button, IconButton,
+    Button, Dialog, IconButton,
     Snackbar,
     Typography
 } from "@mui/material";
@@ -24,9 +24,14 @@ import favorites_tab_active from '../../assets/main/favorites_tab_active.svg'
 import favorites_tab_disabled from '../../assets/main/favorites_tab_disabled.svg'
 import BuyDialog from "./BuyDialog/index.js";
 import {getWhaleWalletData, getWhaleWallets, setWhaleWalletFollow, setWhaleWalletName} from "../../api/api.js";
-import ArrowBackRoundedIcon from "@mui/icons-material/ArrowBackRounded.js";
+import {useQueryClient} from "@tanstack/react-query";
+import NoPremiumDialog from "../NoPremiumDialog/index.js";
+import lock from '../../assets/shared/lockBlack.svg'
+import {motion} from "framer-motion";
+import MiniCard from "../MiniCard/index.js";
 
 const BigCard = ({
+                     walletsData,
                      setTempWalletVisible,
                      setWalletsData,
                      leftPosition,
@@ -38,11 +43,38 @@ const BigCard = ({
                      balance,
                      walletId,
                      activeTab,
-                     searchInputValueEmpty
-}) => {
+                     searchInputValueEmpty,
+                     setIsBigCardOpened,
+                     setIsVisible,
+                     name
+                 }) => {
+
+    const [tempWalletVisible1, setTempWalletVisible1] = useState('')
+
+    window.Telegram.WebApp.ready();
+    window.Telegram.WebApp.BackButton.isVisible = true;
+    const handleBackButtonClick = useCallback(() => {
+        window.Telegram.WebApp.HapticFeedback.notificationOccurred("error");
+        document.body.style.overflow = '';
+        setTimeout(() => {
+            setBigCardStatesOne(prevState => ({
+                ...prevState,
+                [tempWalletVisible1]: false
+            }));
+        }, 200);
+    }, [setLeftPosition]);
+
+    useEffect(() => {
+        window.Telegram.WebApp.BackButton.onClick(handleBackButtonClick);
+        return () => {
+            window.Telegram.WebApp.BackButton.offClick(handleBackButtonClick);
+        };
+    }, [handleBackButtonClick]);
+
     const {t, i18n} = useTranslation();
     const [isCopySnackbarOpen, setIsCopySnackbarOpen] = useState(false);
     const [copiedText, copyToClipboard] = useCopyToClipboard();
+    const [bigCardStatesOne, setBigCardStatesOne] = useState({});
 
     function handleCopyAddressButtonClick() {
         copyToClipboard(address)
@@ -63,25 +95,70 @@ const BigCard = ({
     const [favorite, setFavorite] = useState(false)
 
     const [inputValue, setInputValue] = useState('');
-    const handlePrompt = () => {
-        const userInput = window.prompt(t("tracking.inputFollowName"), inputValue);
-        if (userInput !== null) {
-            // пользователь ввел текст
-            followClick(activeTab, userInput)
-        } else {
 
+    const [isOpenRenameDialog, setIsOpenRenameDialog] = useState(false)
+    const [isOpenPromtDialog, setIsOpenPromtDialog] = useState(false)
+
+    const [inputValueRename, setInputValueRename] = useState('');
+    const [inputValuePromt, setInputValuePromt] = useState('');
+
+    function handleChangeRenameInputDialog(e){
+        setInputValueRename(e.target.value)
+    }
+
+    function handleChangePromtInputDialog(e){
+        setInputValuePromt(e.target.value)
+    }
+
+    function handleDialogClose(){
+        setIsOpenRenameDialog(false)
+        setIsOpenPromtDialog(false)
+    }
+
+    const handlePrompt = () => {
+        if (inputValuePromt !== null && inputValuePromt !== '' && inputValuePromt !== ' ') {
+            // пользователь ввел текст
+            followClick(activeTab, inputValuePromt)
         }
     };
 
-    function getBigCardData(walletId){
+    function renameClick() {
+        if (inputValueRename !== null && inputValueRename !== '' && inputValueRename !== ' ') {
+            setWhaleWalletName(walletId, inputValueRename)
+                .then(response => {
+                    getBigCardData(walletId)
+                    let type = searchInputValueEmpty ? 'all' : 'search'
+                    let addressFollow = address
+                    if (activeTab === 'follows') {
+                        type = 'follows'
+                        addressFollow = ''
+                    }
+                    getWhaleWallets(settempSet, type, '', '', [], '')
+                        .then(response => {
+                            if (activeTab === 'follows') {
+                                document.body.style.overflow = ''
+                            }
+                            setWalletsData(response.data.data);
+                        })
+                        .catch(error => {
+                            // Обрабатываем ошибку, если она возникла
+                            console.error('Ошибка при получении данных о кошельках:', error);
+                        });
+                })
+        }
+    }
+
+    function getBigCardData(walletId) {
         getWhaleWalletData(walletId)
             .then(response => {
-                if (response.errorCode === 1006){
+                if (response.errorCode === 3006){
                     window.location.href = "/premium";
                 }
                 setOneWalletData(response.data)
-                if (response.data.name){
+                if (response.data.name) {
                     setInputValue(response.data.name)
+                    setInputValueRename(response.data.name)
+                    setInputValuePromt(response.data.name)
                 }
                 setStocksData(response.data.stocks);
                 setFavorite(response.data.isFollow)
@@ -95,17 +172,31 @@ const BigCard = ({
     }
 
     const [tempSet, settempSet] = useState(false)
-    function followClick(activeTab, name){
-        const type = searchInputValueEmpty ? 'all' : 'search'
+
+    function followClick(activeTab, name) {
+        let type = searchInputValueEmpty ? 'all' : 'search'
+        let addressFollow = ''
+        if (favorite) {
+            addressFollow = ''
+            setLeftPosition('200vw');
+            document.body.style.overflow = '';
+            setTimeout(() => {
+                setIsVisible()
+            }, 200);
+            setIsBigCardOpened(false);
+        }
+        if (activeTab === 'follows') {
+            type = 'follows'
+        }
+        if (type === 'search') {
+            addressFollow = address
+        }
         setWhaleWalletFollow(walletId, name)
-            .then (() =>{
-                getBigCardData(walletId)
-                getWhaleWallets(settempSet, type, '', '', [], '')
+            .then(() => {
+                getWhaleWallets(settempSet, type, addressFollow, '', [], '')
                     .then(response => {
-                        if (response.errorCode === 1006){
-                            window.location.href = "/premium";
-                        }
-                        if (activeTab === 'follows'){
+                        getBigCardData(walletId)
+                        if (activeTab === 'follows') {
                             document.body.style.overflow = ''
                         }
                         setWalletsData(response.data.data);
@@ -115,47 +206,24 @@ const BigCard = ({
                         console.error('Ошибка при получении данных о кошельках:', error);
                     });
             })
-            .catch(error =>{
+            .catch(error => {
                 console.error('Ошибка при получении данных о кошельке:', error);
             })
     }
 
-    function renameClick(){
-        const userInput = window.prompt(t("tracking.inputFollowName"), inputValue);
-        if (userInput !== null) {
-            setWhaleWalletName(walletId, userInput)
-                .then(response =>{
-                    getBigCardData(walletId)
-                    const type = searchInputValueEmpty ? 'all' : 'search'
-                    getWhaleWallets(settempSet, type, '', '', [], '')
-                        .then(response => {
-                            if (response.errorCode === 1006){
-                                window.location.href = "/premium";
-                            }
-                            if (activeTab === 'follows'){
-                                document.body.style.overflow = ''
-                            }
-                            setWalletsData(response.data.data);
-                        })
-                        .catch(error => {
-                            // Обрабатываем ошибку, если она возникла
-                            console.error('Ошибка при получении данных о кошельках:', error);
-                        });
-                })
-        }
+    {
+        setTempWalletVisible(address ? address : name)
     }
-
     useEffect(() => {
-        setTempWalletVisible(address)
         getBigCardData(walletId)
     }, []);
 
     // Функция для фильтрации монет по условию precent > 0.00001 и формирования только первых 10 монет
     const filterAndSliceCoins = (data) => {
-        const totalQuote = data.reduce((total, [, { quote }]) => total + quote, 0);
+        const totalQuote = data.reduce((total, [, {quote}]) => total + quote, 0);
         const filteredCoins = data
-            .filter(([, { quote }]) => (quote / totalQuote) * 100 >= 0.01)
-            .sort(([, { quote: quoteA }], [, { quote: quoteB }]) => quoteB - quoteA)
+            .filter(([, {quote}]) => (quote / totalQuote) * 100 >= 0.01)
+            .sort(([, {quote: quoteA}], [, {quote: quoteB}]) => quoteB - quoteA)
             .slice(0, 10)
             .map(([currency]) => currency);
 
@@ -177,20 +245,20 @@ const BigCard = ({
     }, [stocksData]);
 
 
-    const imageFolder  = '/assets/cryptocurrencies/';
+    const imageFolder = '/assets/cryptocurrencies/';
     // Отображение данных портфолио
     const renderPortfolioData = () => {
         // Преобразование объекта в массив пар [ключ, значение]
         const currencyData = Object.entries(stocksData);
 
         // Вычисляем общую сумму квот всех монет
-        const totalQuote = currencyData.reduce((total, [, { quote }]) => total + quote, 0);
+        const totalQuote = currencyData.reduce((total, [, {quote}]) => total + quote, 0);
 
         // Вызываем функцию для фильтрации и формирования первых 10 монет
         const filteredCoins = filterAndSliceCoins(currencyData, totalQuote);
 
         return filteredCoins.map((currency) => {
-            const { balanceCoin, quote } = stocksData[currency];
+            const {balanceCoin, quote} = stocksData[currency];
             const mathBalance = quote.toFixed(0);
             const precent = ((quote / totalQuote) * 100).toFixed(2);
             const iconPath = `${imageFolder}/${currency.toLowerCase()}.png`; // Путь к изображению
@@ -227,226 +295,572 @@ const BigCard = ({
     const [open, setOpen] = useState(false);
 
     const handleClickOpen = () => {
-        setOpen(true);
+        if (userData.isPremiumUser) {
+            setOpen(true);
+        } else {
+            setOpenNoPremiumDialog(true)
+        }
     };
+
+    const queryClient = useQueryClient()
+    const [userData, setUserData] = useState([])
+    const [openNoPremiumDialog, setOpenNoPremiumDialog] = useState(false)
+
+    useEffect(() => {
+        if (queryClient.getQueryData('userMainData')) {
+            setUserData(queryClient.getQueryData('userMainData').data)
+        }
+    }, [queryClient.getQueryData('userMainData')])
+    
+    const [finalWallets, setFinalWallets] = useState([]);
+    const [temp, setTemp] = useState(true)
+    const [walletsSimilar, setWalletsSimilar] = useState([])
+    useEffect(() => {
+        getWhaleWallets(setTemp, 'all', '', '', [], '')
+            .then(response => {
+                setWalletsSimilar(response.data.data);
+            })
+            .catch(error => {
+                // Обрабатываем ошибку, если она возникла
+                console.error('Ошибка при получении данных о кошельках китов:', error);
+            });
+        if (oneWalletData && walletsSimilar) {
+            const filtered = walletsSimilar
+                // Фильтрация по walletNetwork
+                .filter(wallet => wallet.network === oneWalletData.network)
+                // Сортировка по максимальному количеству совпадений тегов
+                .sort((a, b) => {
+                    const aMatchCount = a.tags.filter(tag => oneWalletData.tags.includes(tag)).length;
+                    const bMatchCount = b.tags.filter(tag => oneWalletData.tags.includes(tag)).length;
+                    return bMatchCount - aMatchCount;
+                })
+                // Исключение кошелька с определенным адресом
+                .filter(wallet => wallet.address !== address)
+                // Выбор первых 6 результатов
+                .slice(0, 6);
+
+            const final = filtered.length < 6
+                ? filtered.concat(walletsSimilar.filter(wallet => !filtered.includes(wallet)).slice(0, 6 - filtered.length))
+                : filtered;
+
+            setFinalWallets(final);
+        }
+    }, [oneWalletData, temp]);
 
     return (
         <>
+
             <Box className={style.bigCard}
                  sx={{
                      left: leftPosition,
                  }}>
                 {oneWalletData && <>
-                <Box className={style.bigCard__content}>
-                    <Box className={style.bigCard__content__favorite}
-                    onClick={()=>{
-                        if(!favorite){
-                            handlePrompt()
-                        } else {
-                            followClick(activeTab, oneWalletData.name)
-                        }
-                    }}>
-                        {favorite ?
-                                <img src={favorites_tab_active} alt='' className={style.bigCard__content__favorite_img}/>
-                            :
-                                <img src={favorites_tab_disabled} alt='' className={style.bigCard__content__favorite_img}/>
-                        }
+                    <Box className={style.bigCard__content}>
+                        <Box className={style.bigCard__content__favorite}
+                             onClick={() => {
+                                 if (!favorite) {
+                                     setIsOpenPromtDialog(true)
+                                 } else {
+                                     followClick(activeTab, oneWalletData.name)
+                                 }
+                             }}>
+                            {favorite ?
+                                <img src={favorites_tab_active} alt=''
+                                     className={style.bigCard__content__favorite_img}/>
+                                :
+                                <img src={favorites_tab_disabled} alt=''
+                                     className={style.bigCard__content__favorite_img}/>
+                            }
 
-                    </Box>
-                    <Box className={style.bigCard__content__info}>
-                        {photo &&
-                            <Box className={style.bigCard__content__info__photo}>
-                            <img
-                                src={photo}
-                                alt={'Photo'}
-                                className={style.bigCard__content__info__photo_img}
-                                onError={(e) => {
-                                    e.target.src = brokenPhoto; // Устанавливаем альтернативное изображение в случае ошибки загрузки основного изображения
-                                }}
-                            />
                         </Box>
-                        }
-                        {oneWalletData.name && <Box className={style.bigCard__content__info__name}>
-                            <Box className={style.bigCard__content__info__name_text}>
-                                {oneWalletData.name}
-                            </Box>
-                            {verified &&
-                                <Box className={style.bigCard__content__info__name_verified}>
-                                    <img src={verifiedImg} alt={'verified'}
-                                         className={style.bigCard__content__info__name_verified_img}/>
+                        <Box className={style.bigCard__content__info}>
+                            {photo &&
+                                <Box className={style.bigCard__content__info__photo}>
+                                    <img
+                                        src={photo}
+                                        alt={'Photo'}
+                                        className={style.bigCard__content__info__photo_img}
+                                        onError={(e) => {
+                                            e.target.src = brokenPhoto; // Устанавливаем альтернативное изображение в случае ошибки загрузки основного изображения
+                                        }}
+                                    />
                                 </Box>
                             }
-                            {favorite &&
-                                <>
-                                    <Box>
-                                        <IconButton
-                                            onClick={() => {
+                            {oneWalletData.name && <Box className={style.bigCard__content__info__name}>
+                                <Box className={style.bigCard__content__info__name_text}>
+                                    {oneWalletData.name}
+                                </Box>
+                                {verified &&
+                                    <Box className={style.bigCard__content__info__name_verified}>
+                                        <img src={verifiedImg} alt={'verified'}
+                                             className={style.bigCard__content__info__name_verified_img}/>
+                                    </Box>
+                                }
+                                {favorite &&
+                                    <>
+                                        <Box>
+                                            <IconButton
+                                                onClick={() => {
+                                                    setIsOpenRenameDialog(true)
+                                                }}
+                                                sx={{
+                                                    color: '#fff'
+                                                }}>
+                                                <img src={rename} alt={'Rename'}
+                                                     style={{
+                                                         width: '20px'
+                                                     }}/>
+                                            </IconButton>
+                                        </Box>
+                                    </>
+                                }
+                            </Box>
+                            }
+                            <Dialog
+                                open={isOpenRenameDialog}
+                                onClose={handleDialogClose}
+                                sx={{
+                                    '& .MuiDialog-paper': {
+                                        backgroundColor: 'unset',
+                                        overflowY: 'unset'
+                                    }
+                                }}
+                            >
+                                <Box className={style.nameDialog__content}>
+                                    <Box className={style.nameDialog__content__title}>
+                                        <Box className={style.nameDialog__content__title_text}>
+                                            {t("tracking.inputFollowName")}
+                                        </Box>
+                                    </Box>
+                                    <input
+                                        value={inputValueRename}
+                                        onChange={(e) => handleChangeRenameInputDialog(e)}
+                                        placeholder={' . . . '}
+                                        className={style.nameDialog__content__input}
+                                    />
+                                    <Box sx={{
+                                        display: 'flex',
+                                        justifyContent: 'center',
+                                        width: '100%'
+                                    }}>
+                                        <Button
+                                            className={style.nameDialog__content__button}
+                                            onClick={handleDialogClose}
+                                            sx={{
+                                                backgroundColor: '#35383F',
+                                                borderRadius: '50px',
+                                                boxShadow: 'unset',
+                                                padding: '10px',
+                                                fontFamily: 'Gilroy, sans-serif',
+                                                marginRight: '20px',
+                                                ':hover': {
+                                                    backgroundColor: 'rgba(255,255,255, 0.2)',
+                                                    boxShadow: 'unset',
+                                                }
+                                            }}
+                                        >
+                                            <Typography
+                                                sx={{
+                                                    color: '#fff',
+                                                    fontWeight: '600',
+                                                    fontFamily: 'Gilroy, sans-serif'
+                                                }}>
+                                                {t("tracking.buyCard.confirmation_text_close")}
+                                            </Typography>
+                                        </Button>
+                                        <Button
+                                            className={style.nameDialog__content__button}
+                                            onClick={()=>{
                                                 renameClick()
+                                                handleDialogClose()
                                             }}
                                             sx={{
-                                                color: '#fff'
-                                            }}>
-                                            <img src={rename} alt={'Rename'}
-                                            style={{
-                                                width: '20px'
-                                            }}/>
-                                        </IconButton>
+                                                backgroundColor: '#fff',
+                                                borderRadius: '50px',
+                                                padding: '10px',
+                                                boxShadow: '0px 0px 15px 3px rgba(0, 0, 255, 0.5)',
+                                                fontFamily: 'Gilroy, sans-serif',
+                                                ':hover': {
+                                                    backgroundColor: 'rgba(255,255,255, 0.7)',
+                                                    boxShadow: '0px 0px 10px 3px rgba(0, 0, 255, 0.5)',
+                                                }
+                                            }}
+                                        >
+                                            <Typography
+                                                sx={{
+                                                    color: '#000',
+                                                    fontWeight: '600',
+                                                    fontFamily: 'Gilroy, sans-serif'
+                                                }}>
+                                                Ок
+                                            </Typography>
+                                        </Button>
+                                    </Box>
+                                </Box>
+                            </Dialog>
+                            <Dialog
+                                className={style.nameDialog}
+                                open={isOpenPromtDialog}
+                                onClose={handleDialogClose}
+                                sx={{
+                                    '& .MuiDialog-paper': {
+                                        backgroundColor: 'unset',
+                                        overflowY: 'unset'
+                                    }
+                                }}
+                            >
+                                <Box className={style.nameDialog__content}>
+                                    <Box className={style.nameDialog__content__title}>
+                                        <Box className={style.nameDialog__content__title_text}>
+                                            {t("tracking.inputFollowName")}
+                                        </Box>
+                                    </Box>
+                                    <input
+                                        value={inputValuePromt}
+                                        onChange={(e) => handleChangePromtInputDialog(e)}
+                                        placeholder={' . . . '}
+                                        className={style.nameDialog__content__input}
+                                    />
+                                    <Box sx={{
+                                        display: 'flex',
+                                        justifyContent: 'center',
+                                        width: '100%'
+                                    }}>
+                                        <Button
+                                            onClick={handleDialogClose}
+                                            className={style.nameDialog__content__button}
+                                            sx={{
+                                                backgroundColor: '#35383F',
+                                                borderRadius: '50px',
+                                                boxShadow: 'unset',
+                                                padding: '10px',
+                                                fontFamily: 'Gilroy, sans-serif',
+                                                marginRight: '20px',
+                                                ':hover': {
+                                                    backgroundColor: 'rgba(255,255,255, 0.2)',
+                                                    boxShadow: 'unset',
+                                                }
+                                            }}
+                                        >
+                                            <Typography
+                                                sx={{
+                                                    color: '#fff',
+                                                    fontWeight: '600',
+                                                    fontFamily: 'Gilroy, sans-serif'
+                                                }}>
+                                                {t("tracking.buyCard.confirmation_text_close")}
+                                            </Typography>
+                                        </Button>
+                                        <Button
+                                            className={style.nameDialog__content__button}
+                                            onClick={()=>{
+                                                handlePrompt()
+                                                handleDialogClose()
+                                            }}
+                                            sx={{
+                                                backgroundColor: '#fff',
+                                                borderRadius: '50px',
+                                                padding: '10px',
+                                                boxShadow: '0px 0px 15px 3px rgba(0, 0, 255, 0.5)',
+                                                fontFamily: 'Gilroy, sans-serif',
+                                                ':hover': {
+                                                    backgroundColor: 'rgba(255,255,255, 0.7)',
+                                                    boxShadow: '0px 0px 10px 3px rgba(0, 0, 255, 0.5)',
+                                                }
+                                            }}
+                                        >
+                                            <Typography
+                                                sx={{
+                                                    color: '#000',
+                                                    fontWeight: '600',
+                                                    fontFamily: 'Gilroy, sans-serif'
+                                                }}
+                                            >
+                                                Ок
+                                            </Typography>
+                                        </Button>
+                                    </Box>
+                                </Box>
+                        </Dialog>
+                            {address &&
+                                <>
+                                    <Box className={style.bigCard__content__info__address}
+                                         onClick={handleCopyAddressButtonClick}
+                                    >
+                                        <Box className={style.bigCard__content__info__address__text}
+                                             sx={{
+                                                 fontSize: photo && oneWalletData.name ? '18px' : '24px'
+                                             }}>
+                                            {address}
+                                        </Box>
+                                        <ContentCopyRoundedIcon/>
+                                        <Snackbar
+                                            open={isCopySnackbarOpen}>
+                                            <Alert
+                                                severity="success"
+                                                variant="filled"
+                                                sx={{
+                                                    display: 'flex',
+                                                    justifyContent: 'center',
+                                                    marginInline: 'auto',
+                                                    width: '50%',
+                                                    borderRadius: '50px',
+                                                    backgroundImage: 'linear-gradient(to bottom left, rgba(152, 152, 152, 1), rgba(62, 62, 62, 1))'
+                                                }}
+                                            >
+                                                {t("tracking.copyAddress")}
+                                            </Alert>
+                                        </Snackbar>
                                     </Box>
                                 </>
                             }
                         </Box>
-                        }
-                        {address &&
+                        {description &&
                             <>
-                                <Box className={style.bigCard__content__info__address}
-                                     onClick={handleCopyAddressButtonClick}
-                                >
-                                    <Box className={style.bigCard__content__info__address__text}
-                                         sx={{
-                                             fontSize: photo && oneWalletData.name ? '18px' : '24px'
-                                         }}>
-                                        {address}
-                                    </Box>
-                                    <ContentCopyRoundedIcon/>
-                                    <Snackbar
-                                        open={isCopySnackbarOpen}>
-                                        <Alert
-                                            severity="success"
-                                            variant="filled"
-                                            sx={{
-                                                display: 'flex',
-                                                justifyContent: 'center',
-                                                marginInline: 'auto',
-                                                width: '50%',
-                                                borderRadius: '50px',
-                                                backgroundImage: 'linear-gradient(to bottom left, rgba(152, 152, 152, 1), rgba(62, 62, 62, 1))'
-                                            }}
-                                        >
-                                            {t("tracking.copyAddress")}
-                                        </Alert>
-                                    </Snackbar>
-                                </Box>
-                            </>
-                        }
-                    </Box>
-                    {description &&
-                        <>
-                            <Accordion
-                                square={true}
-                                sx={{
-                                    backgroundColor: 'var(--component_bg_color)',
-                                    borderRadius: '20px',
-                                    marginBottom: '10px',
-                                    color: 'var(--text_color)'
-                                }}>
-                                <AccordionSummary
-                                    expandIcon={<ArrowBackIosNewRoundedIcon sx={{transform: 'rotate(-90deg)'}}/>}
-                                    aria-controls="panel1-content"
-                                    id="panel1-header"
+                                <Accordion
+                                    square={true}
                                     sx={{
+                                        backgroundColor: 'var(--component_bg_color)',
                                         borderRadius: '20px',
-                                        fontWeight: '600',
-                                        fontSize: '18px',
-                                        '& .MuiSvgIcon-root': {
-                                            color: '#fff'
-                                        },
-                                        '&.Mui-expanded': {
-                                            minHeight: '0'
-                                        }
-                                    }}
-                                >
-                                    {t("tracking.info")}
-                                </AccordionSummary>
-                                <AccordionDetails
-                                    sx={{
-                                        overflowWrap: 'break-word'
+                                        marginBottom: '10px',
+                                        color: 'var(--text_color)'
                                     }}>
-                                    <Box sx={{
-                                        marginBlock: '-7px 15px',
-                                        borderTop: '1px solid #35383F',
-                                    }}/>
-                                    {description}
-                                </AccordionDetails>
-                            </Accordion>
-                        </>
-                    }
-                    {balance > 0 && chartData.length > 0 && chartData &&
-                        <>
-                            <CardChart money={parseInt(balance)} chartData={chartData}/>
-                        </>
-                    }
-                    {stocksData &&
-                        <>
-                            <Accordion
-                                square={true}
-                                defaultExpanded={true}
-                                sx={{
-                                    backgroundColor: 'var(--component_bg_color)',
-                                    borderRadius: '20px',
-                                    marginBottom: '10px',
-                                    color: 'var(--text_color)'
-                                }}>
-                                <AccordionSummary
-                                    expandIcon={<ArrowBackIosNewRoundedIcon sx={{transform: 'rotate(-90deg)'}}/>}
-                                    aria-controls="panel1-content"
-                                    id="panel1-header"
-                                    sx={{
-                                        borderRadius: '20px',
-                                        fontWeight: '600',
-                                        fontSize: '18px',
-                                        '& .MuiSvgIcon-root': {
-                                            color: '#fff'
-                                        },
-                                        '&.Mui-expanded': {
-                                            minHeight: '0'
-                                        }
-                                    }}
-                                >
-                                    {t("tracking.portfolio")}
-                                </AccordionSummary>
-                                <AccordionDetails
-                                    sx={{
-                                        overflowWrap: 'break-word',
-                                        paddingBottom: '5px'
-                                    }}>
-                                    <Box sx={{
-                                        marginBlock: '-7px 15px',
-                                        borderTop: '1px solid #35383F',
-                                    }}/>
-                                    <Box className={style.bigCard__content__portfolio}>
-                                        {renderPortfolioData()}
-                                    </Box>
-                                </AccordionDetails>
-                                <Box className={style.bigCard__content__portfolio__button_box}>
-                                    <Button
-                                        className={style.bigCard__content__portfolio__button}
-                                        variant={'contained'}
-                                        onClick={handleClickOpen}
+                                    <AccordionSummary
+                                        expandIcon={<ArrowBackIosNewRoundedIcon sx={{transform: 'rotate(-90deg)'}}/>}
+                                        aria-controls="panel1-content"
+                                        id="panel1-header"
                                         sx={{
-                                            backgroundColor: '#fff',
-                                            borderRadius: '15px',
-                                            boxShadow: '0px 0px 15px 3px rgba(0, 0, 255, 0.5)',
-                                            ':hover':{
-                                                backgroundColor: 'rgba(255,255,255, 0.7)',
-                                                boxShadow: '0px 0px 10px 3px rgba(0, 0, 255, 0.5)',
+                                            borderRadius: '20px',
+                                            fontWeight: '600',
+                                            fontSize: '18px',
+                                            '& .MuiSvgIcon-root': {
+                                                color: '#fff'
+                                            },
+                                            '&.Mui-expanded': {
+                                                minHeight: '0'
                                             }
                                         }}
                                     >
-                                        <Typography
+                                        {t("tracking.info")}
+                                    </AccordionSummary>
+                                    <AccordionDetails
                                         sx={{
-                                            color: '#000',
-                                            fontWeight: '700',
-                                            fontFamily: 'Gilroy, sans-serif'
+                                            overflowWrap: 'break-word'
                                         }}>
-                                            {t("tracking.portfolio_btn")}
-                                        </Typography>
-                                    </Button>
-                                </Box>
-                            </Accordion>
-                            <Box sx={{height: '5px'}}/>
-                        </>
-                    }
-                </Box>
+                                        <Box sx={{
+                                            marginBlock: '-7px 15px',
+                                            borderTop: '1px solid #35383F',
+                                        }}/>
+                                        {description}
+                                    </AccordionDetails>
+                                </Accordion>
+                            </>
+                        }
+                        {balance > 0 && chartData.length > 0 && chartData &&
+                            <>
+                                <CardChart money={parseInt(balance)} chartData={chartData}/>
+                            </>
+                        }
+                        {stocksData &&
+                            <>
+                                <Accordion
+                                    square={true}
+                                    defaultExpanded={true}
+                                    sx={{
+                                        backgroundColor: 'var(--component_bg_color)',
+                                        borderRadius: '20px',
+                                        marginBottom: '10px',
+                                        color: 'var(--text_color)'
+                                    }}>
+                                    <AccordionSummary
+                                        expandIcon={<ArrowBackIosNewRoundedIcon sx={{transform: 'rotate(-90deg)'}}/>}
+                                        aria-controls="panel1-content"
+                                        id="panel1-header"
+                                        sx={{
+                                            borderRadius: '20px',
+                                            fontWeight: '600',
+                                            fontSize: '18px',
+                                            '& .MuiSvgIcon-root': {
+                                                color: '#fff'
+                                            },
+                                            '&.Mui-expanded': {
+                                                minHeight: '0'
+                                            }
+                                        }}
+                                    >
+                                        {t("tracking.portfolio")}
+                                    </AccordionSummary>
+                                    <AccordionDetails
+                                        sx={{
+                                            overflowWrap: 'break-word',
+                                            paddingBottom: '5px'
+                                        }}>
+                                        <Box sx={{
+                                            marginBlock: '-7px 15px',
+                                            borderTop: '1px solid #35383F',
+                                        }}/>
+                                        <Box className={style.bigCard__content__portfolio}>
+                                            {renderPortfolioData()}
+                                        </Box>
+                                    </AccordionDetails>
+                                    <Box className={style.bigCard__content__portfolio__button_box}>
+                                        <Button
+                                            className={style.bigCard__content__portfolio__button}
+                                            variant={'contained'}
+                                            onClick={handleClickOpen}
+                                            startIcon={
+                                                !userData.isPremiumUser &&
+                                                <img src={lock} alt={'lock'} style={{
+                                                    width: '20px'
+                                                }}/>
+                                            }
+                                            sx={{
+                                                backgroundColor: '#fff',
+                                                borderRadius: '15px',
+                                                boxShadow: '0px 0px 15px 3px rgba(0, 0, 255, 0.5)',
+                                                ':hover': {
+                                                    backgroundColor: 'rgba(255,255,255, 0.7)',
+                                                    boxShadow: '0px 0px 10px 3px rgba(0, 0, 255, 0.5)',
+                                                }
+                                            }}
+                                        >
+                                            <Typography
+                                                sx={{
+                                                    color: '#000',
+                                                    fontWeight: '700',
+                                                    fontFamily: 'Gilroy, sans-serif'
+                                                }}>
+                                                {t("tracking.portfolio_btn")}
+                                            </Typography>
+                                        </Button>
+                                    </Box>
+                                </Accordion>
+                                <Box sx={{height: '5px'}}/>
+                            </>
+                        }
+                        <Box
+                            sx={{
+                                marginBottom: '10px',
+                                fontSize: '16px'
+                            }}>
+                            {t("tracking.similarWallets")}
+                        </Box>
+                        <Box
+                            sx={{
+                                display: 'inline-block',
+                                width: '100%',
+                                overflow: 'scroll',
+                                scrollbarWidth: 'none',
+                            }}>
+                            <Box sx={{
+                               display: 'flex',
+                                width: '100%'
+                            }}>
+                                {!userData.isPremiumUser &&
+                                    <>
+                                        <Box
+                                            sx={{
+                                                position: 'absolute',
+                                                top: '0',
+                                                left: '0',
+                                                width: '100%',
+                                                backgroundColor: 'rgba(0,0,0,0.6)',
+                                                height: '97%',
+                                                zIndex: '100'
+                                            }}
+                                            onClick={()=>{
+                                                setOpenNoPremiumDialog(true)
+                                            }}
+                                        />
+                                    </>
+                                }
+                                {
+                                    finalWallets
+                                        .map((item, index) => {
+                                            return (
+                                                <>
+                                                    <motion.div
+                                                        key={index}
+                                                        initial={{opacity: 0}}
+                                                        animate={{opacity: 1}}
+                                                        exit={{
+                                                            opacity: 0,
+                                                            transition: {duration: 0.2}
+                                                        }}
+                                                        transition={{delay: 0.2}}
+                                                        style={{
+                                                            maxHeight: '100%',
+                                                            marginBlock: '3px 10px'
+                                                        }}
+                                                    >
+                                                        <Box sx={{
+                                                            marginRight: index !== finalWallets.length - 1 ? '12px' : '0',
+                                                            height: '100%'
+                                                        }}>
+                                                        <MiniCard
+                                                            activeTab={activeTab}
+                                                            setIsBigCardOpened={setIsBigCardOpened}
+                                                            setWalletsData={setWalletsData}
+                                                            name={item.name}
+                                                            address={item.address}
+                                                            verified={item.isVerified}
+                                                            mini_description={item.miniDescription[i18n.language]}
+                                                            description={item.description[i18n.language]}
+                                                            stocks={item.stocks}
+                                                            photo={`/assets/whales/${item.walletId}.png`}
+                                                            balance={item.balance.toFixed(0)}
+                                                            favorite={item.isFollow}
+                                                            walletId={item.walletId}
+                                                            chart={item.chart}
+                                                            isSimilar={true}
+                                                            setIsVisible={() => {
+                                                                setBigCardStatesOne({
+                                                                    ...bigCardStatesOne,
+                                                                    [item.address ? item.address : item.name]: true
+                                                                })
+                                                            }}
+                                                            lock={!userData.isPremiumUser}
+                                                        />
+                                                        </Box>
+                                                    </motion.div>
+                                                    {bigCardStatesOne[item.address ? item.address : item.name] &&
+                                                        <Suspense>
+                                                            <BigCard
+                                                                walletsData={walletsData}
+                                                                setTempWalletVisible={setTempWalletVisible1}
+                                                                setIsBigCardOpened={setIsBigCardOpened}
+                                                                setWalletsData={setWalletsData}
+                                                                leftPosition={leftPosition}
+                                                                bigCardStatesOne={bigCardStatesOne}
+                                                                setBigCardStatesOne={setBigCardStatesOne}
+                                                                setIsVisible={() => setBigCardStatesOne({
+                                                                    ...bigCardStatesOne,
+                                                                    [item.address ? item.address : item.name]: false
+                                                                })}
+                                                                favorite={item.isFollow}
+                                                                setLeftPosition={setLeftPosition}
+                                                                photo={`/assets/whales/${item.walletId}.png`}
+                                                                name={item.name}
+                                                                verified={item.isVerified}
+                                                                address={item.address}
+                                                                description={item.description[i18n.language]}
+                                                                balance={item.balance.toFixed(0)}
+                                                                chart={item.chart}
+                                                                stocks={item.stocks}
+                                                                walletId={item.walletId}
+                                                                activeTab={activeTab}
+                                                                searchInputValueEmpty={searchInputValueEmpty}
+                                                            />
+                                                        </Suspense>
+                                                    }
+                                                </>
+                                            )
+
+                                        })
+                                }
+                            </Box>
+                        </Box>
+                    </Box>
                 </>}
             </Box>
             {stocksData &&
@@ -459,6 +873,7 @@ const BigCard = ({
                         imageFolder={imageFolder}/>
                 </>
             }
+            <NoPremiumDialog open={openNoPremiumDialog} setOpen={setOpenNoPremiumDialog}/>
         </>
     );
 }

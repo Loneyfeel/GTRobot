@@ -1,7 +1,7 @@
 import React, {Suspense, useCallback, useEffect, useState} from 'react';
 import style from './trackingCryptoWallets.module.sass';
 import { useTranslation } from 'react-i18next';
-import {Box, InputAdornment, Input, FormControl, MenuItem, Typography, Button} from '@mui/material'; // Import TextField and Autocomplete
+import {Box, InputAdornment, Input} from '@mui/material';
 import {tg} from '../../shared/telegram/telegram.js';
 import { motion, AnimatePresence } from 'framer-motion';
 import Tab from './components/Tab'
@@ -19,12 +19,18 @@ import BigCard from "./components/BigCard/index.js";
 import SearchCustomWallet from "./components/SearchCustomWallet/index.js";
 import AddCustomWallet from "./components/AddCustomWallet/index.js";
 import CircularProgress from "@mui/material/CircularProgress";
+import {useQueryClient} from "@tanstack/react-query";
+import lock from "./assets/shared/lockGrey.svg";
+import lockBig from "./assets/shared/lockBig.svg"
+import NoPremiumDialog from "./components/NoPremiumDialog/index.js";
 
 const TrackingCryptoWallets = () => {
+
+    tg.expand()
     const {t, i18n} = useTranslation();
 
     tg.setHeaderColor('#000')
-    const [isBigCardOpenened, setIsBigCardOpened] = useState(false)
+    const [isBigCardOpened, setIsBigCardOpened] = useState(false)
 
     const [tempWalletVisible, setTempWalletVisible] = useState('')
 
@@ -39,15 +45,19 @@ const TrackingCryptoWallets = () => {
 
     const [walletsData, setWalletsData] = useState()
 
+    const [leftFol, setLeftFol] = useState('100vw')
+    const [noPremiumMessageShow, setNoPremiumMessageShow] = useState(false)
+
     const handleTabClick = (tab) => {
         setWalletsData([])
         setActiveTab(tab);
+        setTimeout(() => {
+            setLeftFol(tab === 'all' ? '100vw' : '0')
+        }, 10);
         getWhaleWallets(setBackdropVisible, tab, '', '', [], '')
             .then(response => {
-                if (response.errorCode === 1006){
-                    window.location.href = "/premium";
-                }
                 setWalletsData(response.data.data);
+                setNoPremiumMessageShow(true)
             })
             .catch(error => {
                 // Обрабатываем ошибку, если она возникла
@@ -66,10 +76,8 @@ const TrackingCryptoWallets = () => {
     useEffect(() => {
         getWhaleWallets(setBackdropVisible, 'all', '', '', [], '')
             .then(response => {
-                if (response.errorCode === 1006){
-                    window.location.href = "/premium";
-                }
                 setWalletsData(response.data.data);
+                setNoPremiumMessageShow(true)
             })
             .catch(error => {
                 // Обрабатываем ошибку, если она возникла
@@ -83,9 +91,6 @@ const TrackingCryptoWallets = () => {
                     value: response.data[key],
                     name: key
                 }));
-                if (response.errorCode === 1006){
-                    window.location.href = "/premium";
-                }
                 networkArray.unshift({name: `${t("tracking.filter_network_all")}`, value: 'all'});
                 setNetworkMenu(networkArray);
             })
@@ -108,11 +113,6 @@ const TrackingCryptoWallets = () => {
 
     }, []);
 
-    useEffect(() => {
-        // console.log(walletsData)
-        // console.log(networkMenu)
-    }, [walletsData]);
-
     const [leftPosition, setLeftPosition] = useState('200vw');
 
     const [bigCardStates, setBigCardStates] = useState({});
@@ -126,7 +126,7 @@ const TrackingCryptoWallets = () => {
     window.Telegram.WebApp.BackButton.isVisible = true;
     const handleBackButtonClick = useCallback(() => {
         window.Telegram.WebApp.HapticFeedback.notificationOccurred("error");
-        if (!isBigCardOpenened) {
+        if (!isBigCardOpened) {
             window.location.href = "/";
         } else {
             setLeftPosition('200vw');
@@ -139,7 +139,7 @@ const TrackingCryptoWallets = () => {
             }, 200);
             setIsBigCardOpened(false);
         }
-    }, [isBigCardOpenened, tempWalletVisible, setLeftPosition, setIsBigCardOpened, setBigCardStates]);
+    }, [isBigCardOpened, tempWalletVisible, setLeftPosition, setIsBigCardOpened, setBigCardStates]);
 
     useEffect(() => {
         window.Telegram.WebApp.BackButton.onClick(handleBackButtonClick);
@@ -147,6 +147,48 @@ const TrackingCryptoWallets = () => {
             window.Telegram.WebApp.BackButton.offClick(handleBackButtonClick);
         };
     }, [handleBackButtonClick]);
+
+    const [typingTimeout, setTypingTimeout] = useState(null);
+    const handleChangeInput = (e) => {
+        const value = e.target.value;
+        // Если уже есть запущенный таймер, очищаем его
+        if (typingTimeout) {
+            clearTimeout(typingTimeout);
+        }
+        // Запускаем новый таймер для вызова функции через 1.5 секунды после прекращения ввода
+        const timeoutId = setTimeout(() => {
+            handleTypingFinished(value);
+        }, 1500);
+
+        // Сохраняем ID таймера в состоянии
+        setTypingTimeout(timeoutId);
+    };
+
+    const handleTypingFinished = (value) => {
+        // Вызываем функцию, которую нужно выполнить после прекращения ввода
+        getWhaleWallets(setBackdropVisible, 'follows', '', '', [], value)
+            .then(response => {
+                setWalletsData(response.data.data);
+            })
+            .catch(error => {
+                // Обрабатываем ошибку, если она возникла
+                console.error('Ошибка при получении данных о кошельках китов:', error);
+            });
+    };
+
+    const queryClient = useQueryClient()
+    const [userData, setUserData] = useState([])
+    const [openNoPremiumDialog, setOpenNoPremiumDialog] = useState(false)
+
+    useEffect(() => {
+        if(queryClient.getQueryData('userMainData')){
+            setUserData(queryClient.getQueryData('userMainData').data)
+        }
+    }, [queryClient.getQueryData('userMainData')])
+
+    useEffect(() => {
+        console.log(bigCardStates)
+    }, [bigCardStates]);
 
     return (
         <>
@@ -158,6 +200,22 @@ const TrackingCryptoWallets = () => {
                     <Box className={style.loader}/>
                 </Box>
                 <Box className={style.trackingCryptoWallets__content}>
+                    {!userData.isPremiumUser &&
+                    <>
+                        <Box
+                            sx={{
+                                position: 'absolute',
+                                top: '0',
+                                left: '0',
+                                width: '100vw',
+                                height: '10vh',
+                                zIndex: '100'
+                            }}
+                            onClick={()=>{
+                                setOpenNoPremiumDialog(true)
+                            }}
+                        />
+                    </>}
                     {/*коробка для двух поисков*/}
                     <Box sx={{
                         display: 'flex',
@@ -179,6 +237,7 @@ const TrackingCryptoWallets = () => {
                             setWalletsData={setWalletsData}
                             handleChange={handleChange}
                             setLoading={setLoading}
+                            userData={userData}
                         />
                         {/* поиск верифицированных */}
                         <Input
@@ -186,10 +245,14 @@ const TrackingCryptoWallets = () => {
                             value={searchValueVerified}
                             disableUnderline={true}
                             defaultValue={''}
-                            onChange={(e) => setSearchValueVerified(e.target.value)}
+                            onChange={(e) => {
+                                setSearchValueVerified(e.target.value)
+                                handleChangeInput(e)
+                            }}
                             sx={{
+                                display: activeTab === 'follows' ? '' : 'none',
                                 position: 'absolute',
-                                left: activeTab === 'all' ? '100vw' : '0',
+                                left: leftFol,
                                 transition: 'left 200ms ease',
                                 color: 'var(--text_color)',
                                 borderRadius: '50px',
@@ -202,7 +265,11 @@ const TrackingCryptoWallets = () => {
                             startAdornment={
                                 <InputAdornment position="start">
                                     <Box sx={{display: 'flex', alignItems: 'center'}}>
-                                        <img src={search} alt={'search'}/>
+                                        {userData.isPremiumUser ?
+                                            <img src={search} alt={''}/>
+                                            :
+                                            <img src={lock} alt={''}/>
+                                        }
                                     </Box>
                                 </InputAdornment>
                             }
@@ -220,6 +287,7 @@ const TrackingCryptoWallets = () => {
                                 onClick={() => {
                                     handleTabClick('all')
                                     setSearchValueVerified('')
+                                    setNoPremiumMessageShow(false)
                                 }}
                                 activeTab={activeTab}
                                 text={t('tracking.page_all')}/>
@@ -231,11 +299,33 @@ const TrackingCryptoWallets = () => {
                                 onClick={() => {
                                     handleTabClick('follows')
                                     setSearchValue('')
+                                    setNoPremiumMessageShow(false)
                                 }}
                                 activeTab={activeTab}
                                 text={t('tracking.page_verified')}/>
                         </Box>
-                        <Filters setWalletsData={setWalletsData}/>
+                        {!userData.isPremiumUser &&
+                            <>
+                                <Box
+                                    sx={{
+                                        position: 'absolute',
+                                        top: '110px',
+                                        left: '0',
+                                        width: '100vw',
+                                        backgroundColor: 'rgba(0,0,0,0.6)',
+                                        height: '7vh',
+                                        zIndex: '100'
+                                    }}
+                                    onClick={()=>{
+                                        setOpenNoPremiumDialog(true)
+                                    }}
+                                />
+                            </>
+                        }
+                        <Filters
+                            lock={!userData.isPremiumUser}
+                            setWalletsData={setWalletsData}
+                        />
                     </Box>
                     <Box sx={{
                         position: 'absolute',
@@ -249,126 +339,390 @@ const TrackingCryptoWallets = () => {
                             <AnimatePresence>
                                 {walletsData &&
                                     <>
-                                        {walletsData
-                                            .slice() // Создаем копию массива, чтобы не изменять оригинал
-                                            .sort((a, b) => b.balance - a.balance) // Сортируем по убыванию баланса
-                                            .map((item, index) => {
-                                                const matchesNetwork = network === item.network || network === 'all';
-                                                if (
-                                                    matchesNetwork
-                                                ) {
-                                                    return (
-                                                        <>
-                                                            {activeTab === 'follows' ?
-                                                                <>
-                                                                    {item.isFollow &&
-                                                                        <motion.div
-                                                                            key={index}
-                                                                            initial={{opacity: 0}}
-                                                                            animate={{opacity: 1}}
-                                                                            exit={{
-                                                                                opacity: 0,
-                                                                                transition: {duration: 0.2}
-                                                                            }}
-                                                                            transition={{delay: 0.2}}
-                                                                            style={{
-                                                                                maxHeight: '100%',
-                                                                                marginBlock: '3px 10px'
-                                                                            }}
-                                                                        >
-                                                                            <MiniCard
-                                                                                activeTab={activeTab}
-                                                                                setIsBigCardOpened={setIsBigCardOpened}
-                                                                                setWalletsData={setWalletsData}
-                                                                                name={item.name}
-                                                                                address={item.address}
-                                                                                verified={item.isVerified}
-                                                                                mini_description={item.miniDescription[i18n.language]}
-                                                                                description={item.description[i18n.language]}
-                                                                                stocks={item.stocks}
-                                                                                photo={`/assets/whales/${item.walletId}.png`}
-                                                                                balance={item.balance.toFixed(0)}
-                                                                                favorite={item.isFollow}
-                                                                                walletId={item.walletId}
-                                                                                chart={item.chart}
-                                                                                setIsVisible={() => setBigCardStates({
-                                                                                    ...bigCardStates,
-                                                                                    [item.address]: true
-                                                                                })}
-                                                                            />
-                                                                        </motion.div>
-                                                                    }
-                                                                </> : <>
-                                                                    <motion.div
-                                                                        key={index}
-                                                                        initial={{opacity: 0}}
-                                                                        animate={{opacity: 1}}
-                                                                        exit={{opacity: 0, transition: {duration: 0.2}}}
-                                                                        transition={{delay: 0.2}}
-                                                                        style={{
-                                                                            maxHeight: '100%',
-                                                                            marginBlock: '3px 10px'
-                                                                        }}
-                                                                    >
-                                                                        <MiniCard
-                                                                            activeTab={activeTab}
-                                                                            setIsBigCardOpened={setIsBigCardOpened}
-                                                                            setWalletsData={setWalletsData}
-                                                                            name={item.name}
-                                                                            address={item.address}
-                                                                            verified={item.isVerified}
-                                                                            mini_description={item.miniDescription[i18n.language]}
-                                                                            description={item.description[i18n.language]}
-                                                                            stocks={item.stocks}
-                                                                            photo={`/assets/whales/${item.walletId}.png`}
-                                                                            balance={item.balance.toFixed(0)}
-                                                                            favorite={item.isFollow}
-                                                                            walletId={item.walletId}
-                                                                            chart={item.chart}
-                                                                            setIsVisible={() => setBigCardStates({
-                                                                                ...bigCardStates,
-                                                                                [item.address]: true
-                                                                            })}
-                                                                        />
-                                                                    </motion.div>
-                                                                </>
+                                        {activeTab === 'follows' ?
+                                            walletsData
+                                                .slice() // Создаем копию массива, чтобы не изменять оригинал
+                                                    .sort((a, b) => b.balance - a.balance) // Сортируем по убыванию баланса
+                                                    .map((item, index) => {
+                                                        const matchesNetwork = network === item.network || network === 'all';
+                                                        if (matchesNetwork)
+                                                            {
+                                                                return (
+                                                                    <>
+                                                                        {item.isFollow &&
+                                                                            <motion.div
+                                                                                key={index}
+                                                                                initial={{opacity: 0}}
+                                                                                animate={{opacity: 1}}
+                                                                                exit={{
+                                                                                    opacity: 0,
+                                                                                    transition: {duration: 0.2}
+                                                                                }}
+                                                                                transition={{delay: 0.2}}
+                                                                                style={{
+                                                                                    maxHeight: '100%',
+                                                                                    marginBlock: '3px 10px'
+                                                                                }}
+                                                                            >
+                                                                                <MiniCard
+                                                                                    activeTab={activeTab}
+                                                                                    setIsBigCardOpened={setIsBigCardOpened}
+                                                                                    setWalletsData={setWalletsData}
+                                                                                    name={item.name}
+                                                                                    address={item.address}
+                                                                                    verified={item.isVerified}
+                                                                                    mini_description={item.miniDescription[i18n.language]}
+                                                                                    description={item.description[i18n.language]}
+                                                                                    stocks={item.stocks}
+                                                                                    photo={`/assets/whales/${item.walletId}.png`}
+                                                                                    balance={item.balance.toFixed(0)}
+                                                                                    favorite={item.isFollow}
+                                                                                    walletId={item.walletId}
+                                                                                    chart={item.chart}
+                                                                                    setIsVisible={() => {
+                                                                                        setBigCardStates({
+                                                                                            ...bigCardStates,
+                                                                                            [item.address ? item.address : item.name]: true
+                                                                                        })
+                                                                                    }}
+                                                                                />
+                                                                            </motion.div>
+                                                                        }
+                                                                        {bigCardStates[item.address ? item.address : item.name] &&
+                                                                            <Suspense>
+                                                                                <BigCard
+                                                                                    walletsData={walletsData}
+                                                                                    setTempWalletVisible={setTempWalletVisible}
+                                                                                    setIsBigCardOpened={setIsBigCardOpened}
+                                                                                    isBigCardOpened={isBigCardOpened}
+                                                                                    setWalletsData={setWalletsData}
+                                                                                    leftPosition={leftPosition}
+                                                                                    bigCardStates={bigCardStates}
+                                                                                    setBigCardStates={setBigCardStates}
+                                                                                    setIsVisible={() => setBigCardStates({
+                                                                                        ...bigCardStates,
+                                                                                        [item.address ? item.address : item.name]: false
+                                                                                    })}
+                                                                                    favorite={item.isFollow}
+                                                                                    setLeftPosition={setLeftPosition}
+                                                                                    photo={`/assets/whales/${item.walletId}.png`}
+                                                                                    name={item.name}
+                                                                                    verified={item.isVerified}
+                                                                                    address={item.address}
+                                                                                    description={item.description[i18n.language]}
+                                                                                    balance={item.balance.toFixed(0)}
+                                                                                    chart={item.chart}
+                                                                                    stocks={item.stocks}
+                                                                                    walletId={item.walletId}
+                                                                                    activeTab={activeTab}
+                                                                                    searchInputValueEmpty={searchInputValueEmpty}
+                                                                                />
+                                                                            </Suspense>
+                                                                        }
+                                                                    </>
+                                                                )
                                                             }
-                                                            {bigCardStates[item.address] &&
-                                                                <Suspense>
-                                                                    <BigCard
-                                                                        setTempWalletVisible={setTempWalletVisible}
-                                                                        setIsBigCardOpened={setIsBigCardOpened}
-                                                                        isBigCardOpenened={isBigCardOpenened}
-                                                                        setWalletsData={setWalletsData}
-                                                                        leftPosition={leftPosition}
-                                                                        bigCardStates={bigCardStates}
-                                                                        setBigCardStates={setBigCardStates}
-                                                                        setIsVisible={() => setBigCardStates({
-                                                                            ...bigCardStates,
-                                                                            [item.address]: false
-                                                                        })}
-                                                                        favorite={item.isFollow}
-                                                                        setLeftPosition={setLeftPosition}
-                                                                        photo={`/assets/whales/${item.walletId}.png`}
-                                                                        name={item.name}
-                                                                        verified={item.isVerified}
-                                                                        address={item.address}
-                                                                        description={item.description[i18n.language]}
-                                                                        balance={item.balance.toFixed(0)}
-                                                                        chart={item.chart}
-                                                                        stocks={item.stocks}
-                                                                        walletId={item.walletId}
-                                                                        activeTab={activeTab}
-                                                                        searchInputValueEmpty={searchInputValueEmpty}
-                                                                    />
-                                                                </Suspense>
+
+                                                    })
+                                            :
+                                            !userData.isPremiumUser ? (
+                                                <>
+                                                    {
+                                                        walletsData
+                                                            .slice() // Создаем копию массива, чтобы не изменять оригинал
+                                                            .sort((a, b) => b.balance - a.balance) // Сортируем по убыванию баланса
+                                                            .map((item, index) => {
+                                                                const matchesNetwork = network === item.network || network === 'all';
+                                                                if (matchesNetwork) {
+                                                                    return (
+                                                                        <>
+                                                                            {item.isAvailableFree &&
+                                                                                <motion.div
+                                                                                    key={index}
+                                                                                    initial={{opacity: 0}}
+                                                                                    animate={{opacity: 1}}
+                                                                                    exit={{
+                                                                                        opacity: 0,
+                                                                                        transition: {duration: 0.2}
+                                                                                    }}
+                                                                                    transition={{delay: 0.2}}
+                                                                                    style={{
+                                                                                        maxHeight: '100%',
+                                                                                        marginBlock: '3px 10px'
+                                                                                    }}
+                                                                                >
+                                                                                    <MiniCard
+                                                                                        activeTab={activeTab}
+                                                                                        setIsBigCardOpened={setIsBigCardOpened}
+                                                                                        setWalletsData={setWalletsData}
+                                                                                        name={item.name}
+                                                                                        address={item.address}
+                                                                                        verified={item.isVerified}
+                                                                                        mini_description={item.miniDescription[i18n.language]}
+                                                                                        description={item.description[i18n.language]}
+                                                                                        stocks={item.stocks}
+                                                                                        photo={`/assets/whales/${item.walletId}.png`}
+                                                                                        balance={item.balance.toFixed(0)}
+                                                                                        favorite={item.isFollow}
+                                                                                        walletId={item.walletId}
+                                                                                        chart={item.chart}
+                                                                                        setIsVisible={() => {
+                                                                                            setBigCardStates({
+                                                                                                ...bigCardStates,
+                                                                                                [item.address ? item.address : item.name]: true
+                                                                                            })
+                                                                                        }}
+                                                                                    />
+                                                                                </motion.div>
+                                                                            }
+                                                                            {bigCardStates[item.address ? item.address : item.name] &&
+                                                                                <Suspense>
+                                                                                    <BigCard
+                                                                                        walletsData={walletsData}
+                                                                                        setTempWalletVisible={setTempWalletVisible}
+                                                                                        setIsBigCardOpened={setIsBigCardOpened}
+                                                                                        isBigCardOpened={isBigCardOpened}
+                                                                                        setWalletsData={setWalletsData}
+                                                                                        leftPosition={leftPosition}
+                                                                                        bigCardStates={bigCardStates}
+                                                                                        setBigCardStates={setBigCardStates}
+                                                                                        setIsVisible={() => setBigCardStates({
+                                                                                            ...bigCardStates,
+                                                                                            [item.address ? item.address : item.name]: false
+                                                                                        })}
+                                                                                        favorite={item.isFollow}
+                                                                                        setLeftPosition={setLeftPosition}
+                                                                                        photo={`/assets/whales/${item.walletId}.png`}
+                                                                                        name={item.name}
+                                                                                        verified={item.isVerified}
+                                                                                        address={item.address}
+                                                                                        description={item.description[i18n.language]}
+                                                                                        balance={item.balance.toFixed(0)}
+                                                                                        chart={item.chart}
+                                                                                        stocks={item.stocks}
+                                                                                        walletId={item.walletId}
+                                                                                        activeTab={activeTab}
+                                                                                        searchInputValueEmpty={searchInputValueEmpty}
+                                                                                    />
+                                                                                </Suspense>
+                                                                            }
+                                                                        </>
+                                                                    )
+                                                                }
+
+                                                            })
+                                                    }
+                                                    <Box className={style.trackingCryptoWallets__content__noPremium}>
+                                                        <Box
+                                                        sx={{
+                                                            position: 'absolute',
+                                                            top: '0',
+                                                            left: '0',
+                                                            width: '100vw',
+                                                            height: '100%',
+                                                            backgroundColor: 'rgba(0,0,0,0.6)',
+                                                            zIndex: '100'
+                                                        }}
+                                                        onClick={()=>{
+                                                            setOpenNoPremiumDialog(true)
+ъ                                                        }}/>
+                                                        {noPremiumMessageShow &&
+                                                            <motion.div
+                                                                initial={{opacity: 0}}
+                                                                animate={{opacity: 1}}
+                                                                exit={{
+                                                                    opacity: 0,
+                                                                    transition: {duration: 0.2}
+                                                                }}
+                                                                transition={{delay: 0.2}}
+                                                            >
+                                                                <Box className={style.trackingCryptoWallets__content__noPremium__message}>
+                                                                    <Box className={style.trackingCryptoWallets__content__noPremium__message__image}>
+                                                                        <img src={lockBig} alt={'lock'} className={style.trackingCryptoWallets__content__noPremium__message__image_img}/>
+                                                                    </Box>
+                                                                </Box>
+                                                            </motion.div>
+                                                        }
+                                                        <Box className={style.trackingCryptoWallets__content__noPremium_cards}>
+                                                            {
+                                                                walletsData
+                                                                    .slice() // Создаем копию массива, чтобы не изменять оригинал
+                                                                    .sort((a, b) => b.balance - a.balance) // Сортируем по убыванию баланса
+                                                                    .map((item, index) => {
+                                                                        const matchesNetwork = network === item.network || network === 'all';
+                                                                        if (matchesNetwork) {
+                                                                            return (
+                                                                                <>
+                                                                                    {!item.isAvailableFree &&
+                                                                                        <motion.div
+                                                                                            key={index}
+                                                                                            initial={{opacity: 0}}
+                                                                                            animate={{opacity: 1}}
+                                                                                            exit={{
+                                                                                                opacity: 0,
+                                                                                                transition: {duration: 0.2}
+                                                                                            }}
+                                                                                            transition={{delay: 0.2}}
+                                                                                            style={{
+                                                                                                maxHeight: '100%',
+                                                                                                marginBlock: '3px 10px'
+                                                                                            }}
+                                                                                        >
+                                                                                            <MiniCard
+                                                                                                lock={!item.isAvailableFree}
+                                                                                                activeTab={activeTab}
+                                                                                                setIsBigCardOpened={setIsBigCardOpened}
+                                                                                                setWalletsData={setWalletsData}
+                                                                                                name={item.name}
+                                                                                                address={item.address}
+                                                                                                verified={item.isVerified}
+                                                                                                mini_description={item.miniDescription[i18n.language]}
+                                                                                                description={item.description[i18n.language]}
+                                                                                                stocks={item.stocks}
+                                                                                                photo={`/assets/whales/${item.walletId}.png`}
+                                                                                                balance={item.balance.toFixed(0)}
+                                                                                                favorite={item.isFollow}
+                                                                                                walletId={item.walletId}
+                                                                                                chart={item.chart}
+                                                                                                setIsVisible={() => {
+                                                                                                    setBigCardStates({
+                                                                                                        ...bigCardStates,
+                                                                                                        [item.address ? item.address : item.name]: true
+                                                                                                    })
+                                                                                                }}
+                                                                                            />
+                                                                                        </motion.div>
+                                                                                    }
+                                                                                    {bigCardStates[item.address ? item.address : item.name] &&
+                                                                                        <Suspense>
+                                                                                            <BigCard
+                                                                                                walletsData={walletsData}
+                                                                                                setTempWalletVisible={setTempWalletVisible}
+                                                                                                setIsBigCardOpened={setIsBigCardOpened}
+                                                                                                isBigCardOpened={isBigCardOpened}
+                                                                                                setWalletsData={setWalletsData}
+                                                                                                leftPosition={leftPosition}
+                                                                                                bigCardStates={bigCardStates}
+                                                                                                setBigCardStates={setBigCardStates}
+                                                                                                setIsVisible={() => setBigCardStates({
+                                                                                                    ...bigCardStates,
+                                                                                                    [item.address ? item.address : item.name]: false
+                                                                                                })}
+                                                                                                favorite={item.isFollow}
+                                                                                                setLeftPosition={setLeftPosition}
+                                                                                                photo={`/assets/whales/${item.walletId}.png`}
+                                                                                                name={item.name}
+                                                                                                verified={item.isVerified}
+                                                                                                address={item.address}
+                                                                                                description={item.description[i18n.language]}
+                                                                                                balance={item.balance.toFixed(0)}
+                                                                                                chart={item.chart}
+                                                                                                stocks={item.stocks}
+                                                                                                walletId={item.walletId}
+                                                                                                activeTab={activeTab}
+                                                                                                searchInputValueEmpty={searchInputValueEmpty}
+                                                                                            />
+                                                                                        </Suspense>
+                                                                                    }
+                                                                                </>
+                                                                            )
+                                                                        }
+
+                                                                    })
                                                             }
-                                                        </>
-                                                    );
-                                                }
-                                                // return null;
-                                            })
+                                                        </Box>
+                                                    </Box>
+                                                </>
+                                                )
+                                                :
+                                                <>
+                                                    {
+                                                        walletsData
+                                                            .slice() // Создаем копию массива, чтобы не изменять оригинал
+                                                            .sort((a, b) => b.balance - a.balance) // Сортируем по убыванию баланса
+                                                            .map((item, index) => {
+                                                                const matchesNetwork = network === item.network || network === 'all';
+                                                                if (matchesNetwork) {
+                                                                    return (
+                                                                        <>
+                                                                            <motion.div
+                                                                                key={index}
+                                                                                initial={{opacity: 0}}
+                                                                                animate={{opacity: 1}}
+                                                                                exit={{
+                                                                                    opacity: 0,
+                                                                                    transition: {duration: 0.2}
+                                                                                }}
+                                                                                transition={{delay: 0.2}}
+                                                                                style={{
+                                                                                    maxHeight: '100%',
+                                                                                    marginBlock: '3px 10px'
+                                                                                }}
+                                                                            >
+                                                                                <MiniCard
+                                                                                    activeTab={activeTab}
+                                                                                    setIsBigCardOpened={setIsBigCardOpened}
+                                                                                    setWalletsData={setWalletsData}
+                                                                                    name={item.name}
+                                                                                    address={item.address}
+                                                                                    verified={item.isVerified}
+                                                                                    mini_description={item.miniDescription[i18n.language]}
+                                                                                    description={item.description[i18n.language]}
+                                                                                    stocks={item.stocks}
+                                                                                    photo={`/assets/whales/${item.walletId}.png`}
+                                                                                    balance={item.balance.toFixed(0)}
+                                                                                    favorite={item.isFollow}
+                                                                                    walletId={item.walletId}
+                                                                                    chart={item.chart}
+                                                                                    setIsVisible={() => {
+                                                                                        setBigCardStates({
+                                                                                            ...bigCardStates,
+                                                                                            [item.address ? item.address : item.name]: true
+                                                                                        })
+                                                                                    }}
+                                                                                />
+                                                                            </motion.div>
+                                                                            {bigCardStates[item.address ? item.address : item.name] &&
+                                                                                <Suspense>
+                                                                                    <BigCard
+                                                                                        walletsData={walletsData}
+                                                                                        setTempWalletVisible={setTempWalletVisible}
+                                                                                        setIsBigCardOpened={setIsBigCardOpened}
+                                                                                        isBigCardOpened={isBigCardOpened}
+                                                                                        setWalletsData={setWalletsData}
+                                                                                        leftPosition={leftPosition}
+                                                                                        bigCardStates={bigCardStates}
+                                                                                        setBigCardStates={setBigCardStates}
+                                                                                        setIsVisible={() => setBigCardStates({
+                                                                                            ...bigCardStates,
+                                                                                            [item.address ? item.address : item.name]: false
+                                                                                        })}
+                                                                                        favorite={item.isFollow}
+                                                                                        setLeftPosition={setLeftPosition}
+                                                                                        photo={`/assets/whales/${item.walletId}.png`}
+                                                                                        name={item.name}
+                                                                                        verified={item.isVerified}
+                                                                                        address={item.address}
+                                                                                        description={item.description[i18n.language]}
+                                                                                        balance={item.balance.toFixed(0)}
+                                                                                        chart={item.chart}
+                                                                                        stocks={item.stocks}
+                                                                                        walletId={item.walletId}
+                                                                                        activeTab={activeTab}
+                                                                                        searchInputValueEmpty={searchInputValueEmpty}
+                                                                                    />
+                                                                                </Suspense>
+                                                                            }
+                                                                        </>
+                                                                    )
+                                                                }
+
+                                                            })
+                                                    }
+                                                </>
+
                                         }
+
                                     </>
                                 }
                             </AnimatePresence>
@@ -412,6 +766,7 @@ const TrackingCryptoWallets = () => {
                     </Box>
                 </Box>
             </Box>
+            <NoPremiumDialog open={openNoPremiumDialog} setOpen={setOpenNoPremiumDialog}/>
         </>
     );
 }

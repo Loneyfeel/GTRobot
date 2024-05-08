@@ -169,6 +169,7 @@ const AddCustomWallet = ({
                     stocks={dataWallet.stocks}
                     walletId={dataWallet.walletId}
                     activeTab={activeTab}
+
                 />
             }
         </>

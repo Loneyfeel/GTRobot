@@ -1,11 +1,13 @@
 import React, {useState} from 'react';
 import style from './searchCustomWallet.module.sass'
 import {Box, FormControl, Input, InputAdornment, MenuItem} from "@mui/material";
-import search from "../../assets/main/search.svg";
 import Select from "@mui/material/Select";
 import ExpandMoreRoundedIcon from "@mui/icons-material/ExpandMoreRounded.js";
 import {useTranslation} from "react-i18next";
 import {getWhaleWallets} from "../../api/api.js";
+
+import search from "../../assets/main/search.svg";
+import lock from '../../assets/shared/lockGrey.svg'
 
 const SearchCustomWallet = ({
                                 setSearchResultsCount,
@@ -17,7 +19,8 @@ const SearchCustomWallet = ({
                                 network,
                                 handleChange,
                                 setLoading,
-                                setSearchInputValueEmpty
+                                setSearchInputValueEmpty,
+                                userData
 
 }) => {
     const {t} = useTranslation();
@@ -32,10 +35,10 @@ const SearchCustomWallet = ({
     const handleChangeInput = (e) => {
         const value = e.target.value;
         setValueInput(value)
-        if (value !== null || value !== undefined || value !== ''){
-            setSearchInputValueEmpty(false)
-        } else {
+        if (value === null || value === undefined || value === ''){
             setSearchInputValueEmpty(true)
+        } else {
+            setSearchInputValueEmpty(false)
         }
         setSearchValueLocally(value);
 
@@ -55,11 +58,12 @@ const SearchCustomWallet = ({
 
     function walletSearch(value){
         setLoading(true);
-        getWhaleWallets(setTempFunc, "search", value, '', [], '')
+        let type = 'search'
+        if (value === ''){
+            type = 'all'
+        }
+        getWhaleWallets(setTempFunc, type, value, '', [], '')
             .then(response => {
-                if (response.errorCode === 1006){
-                    window.location.href = "/premium";
-                }
                 if(response.data.data.length > 0) {
                     if(response.data.data[0].name || response.data.data[0].address){
                         setSearchResultsCount(1)
@@ -122,12 +126,16 @@ const SearchCustomWallet = ({
                         startAdornment={
                             <InputAdornment position="start">
                                 <Box sx={{display: 'flex', alignItems: 'center'}}>
-                                    <img src={search} alt={''}/>
-                                </Box>
-                            </InputAdornment>
+                                    {userData.isPremiumUser ?
+                                        <img src={search} alt={''}/>
+                                        :
+                                        <img src={lock} alt={''}/>
+                                    }
+                                        </Box>
+                                        </InputAdornment>
                         }
-                    />
-                </Box>
+                                />
+                            </Box>
                 <Box className={style.search__box_network}>
                     <FormControl fullWidth sx={{
                         '& .MuiInputBase-formControl': {

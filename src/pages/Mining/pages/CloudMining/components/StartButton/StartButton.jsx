@@ -1,23 +1,33 @@
 import React, { useState, useEffect } from 'react';
 import style from './startButton.module.sass';
-import { Box } from "@mui/material";
+import {Box, Typography} from "@mui/material";
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import Lottie from "lottie-react";
 import animationData_waves from "../../../../assets/CloudMining/waves.json";
 import animationData_cloud from "../../../../assets/CloudMining/cloud.json";
 import { useTranslation } from "react-i18next";
-import Countdown from 'react-countdown';
 import { fetchDataAndUpdateLocalStorageInSession } from "../../../../helps/dataHelps.js";
 import { startMining } from "../../../../api/api.js";
 import CustomButton from "@components/CustomButton/index.js";
 import moment from 'moment-timezone';
+import { motion } from "framer-motion";
 
 const StartButton = ({ isMiningActive, setContentVisible, setIsStartUserMiningTimestamp, setIsEndUserMiningTimestamp }) => {
     const { t } = useTranslation();
-    const [timerStarted, setTimerStarted] = useState(!isMiningActive);
+    const [timerStarted, setTimerStarted] = useState(true);
+    const [buttonClicked, setButtonClicked] = useState(false);
+
+    useEffect(() => {
+        setTimerStarted(!isMiningActive)
+    }, [isMiningActive]);
 
     async function handleStartButtonClick() {
-        setContentVisible(false)
+        if (!timerStarted){
+            setContentVisible(false)
+        }
+        if (timerStarted){
+            setButtonClicked(true); // Устанавливаем, что кнопка была нажата
+        }
         await startMining("regular")
         await fetchDataAndUpdateLocalStorageInSession().then(() => {
             const userDataStorage = JSON.parse(localStorage.getItem("miningUserData"));
@@ -66,67 +76,93 @@ const StartButton = ({ isMiningActive, setContentVisible, setIsStartUserMiningTi
         }, 1000);
         localTimeTashkent()
 
-
-
         return () => clearInterval(intervalId);
     }, []);
 
     return (
         <>
-            {timerStarted ? (
-                <Box className={style.startButton_timer}>
-                    <Box className={style.startButton_timer__text}>
-                        {t("mining.pages.cloudMining.startButtonTimer")}:
+            {/* Рендерим только один из блоков в зависимости от состояния */}
+            {timerStarted && buttonClicked ? (
+                <motion.div
+                    className={`gray`}
+                    initial={{opacity: 0}} // Начальное состояние - невидимый
+                    animate={{opacity: 1}} // Анимация по изменению видимости
+                    transition={{duration: 0.2}} // Длительность анимации + задержка 1 сек
+                    style={{
+                        willChange: 'opacity',
+                        margin: 'auto',
+                    }}
+                >
+                    <Box className={style.startButton_timer}>
+                        <Box className={style.startButton_timer__text}>
+                            {t("mining.pages.cloudMining.startButtonTimer")}:
+                        </Box>
+                        <span
+                            className={style.startButton_timer__count}>{timeLeft.hours.toString().padStart(2, '0')} : {timeLeft.minutes.toString().padStart(2, '0')} : {timeLeft.seconds.toString().padStart(2, '0')}</span>
+                        <Box className={style.startButton_timer__alert}>
+                            <span style={{marginRight: '0px'}}></span>
+                            {t("mining.pages.cloudMining.alert_1")} {localTimeAt08}:00
+                            - {localTimeAt00}:00. {t("mining.pages.cloudMining.alert_2")} {localTimeAt00}:00 {t("mining.pages.cloudMining.alert_3")}
+                        </Box>
+                        <CustomButton
+                            content={'Oк'}
+                            onClick={() => {
+                                setButtonClicked(false);
+                            }}
+                            style={{
+                                width: '100px',
+                                padding: '10px 20px',
+                                margin: '15px',
+                                fontFamily: 'Gilroy, sans-serif'
+                            }}
+                        />
                     </Box>
-                    <span
-                        className={style.startButton_timer__count}>{timeLeft.hours.toString().padStart(2, '0')} : {timeLeft.minutes.toString().padStart(2, '0')} : {timeLeft.seconds.toString().padStart(2, '0')}</span>
-                    <CustomButton
-                        content={t("mining.pages.cloudMining.whatIs_btn")}
-                        onClick={() => {
-                            window.Telegram.WebApp.showAlert(
-                                `${t("mining.pages.cloudMining.alert_1")} ${localTimeAt08}:00 - ${localTimeAt00}:00\n\n${t("mining.pages.cloudMining.alert_2")} ${localTimeAt00}:00 ${t("mining.pages.cloudMining.alert_3")}`,
-                            );
-                        }}
-                        startIcon={<InfoOutlinedIcon sx={{ marginRight: '10px' }} />}
-                        style={{
-                            padding: '10px 20px'
-                        }}
-                    />
-                </Box>
+                </motion.div>
             ) : (
                 <Box className={style.startButton}>
-                    <Box className={style.startButton__box}>
-                        <Box className={`gray ${style.startButton__box__animation_1}`}>
-                            <Lottie
-                                animationData={animationData_waves}
-                                style={{
-                                    willChange: 'transform'
+                    <motion.div
+                        className={`gray`}
+                        initial={{opacity: 0}} // Начальное состояние - невидимый
+                        animate={{opacity: 1}} // Анимация по изменению видимости
+                        transition={{duration: 0.35}} // Длительность анимации + задержка 1 сек
+                        style={{
+                            willChange: 'opacity',
+                        }}
+                    >
+                        <Box className={style.startButton__box}>
+                            <Box className={`gray ${style.startButton__box__animation_1}`}>
+                                <Lottie
+                                    animationData={animationData_waves}
+                                    style={{
+                                        willChange: 'transform'
+                                    }}
+                                />
+                            </Box>
+                            <Box
+                                className={`gray ${style.startButton__box__animation_2}`}
+                                onClick={() => {
+                                    handleStartButtonClick()
                                 }}
-                            />
+                            >
+                                <Lottie
+                                    animationData={animationData_cloud}
+                                    style={{
+                                        willChange: 'transform'
+                                    }}
+                                />
+                            </Box>
+                            <Box
+                                className={style.startButton__box__text}
+                                onClick={() => {
+                                    handleStartButtonClick()
+                                }}>
+                                {t("mining.pages.cloudMining.start_btn")}
+                            </Box>
                         </Box>
-                        <Box
-                            className={`gray ${style.startButton__box__animation_2}`}
-                            onClick={() => {
-                                handleStartButtonClick()
-                            }}
-                        >
-                            <Lottie
-                                animationData={animationData_cloud}
-                                style={{
-                                    willChange: 'transform'
-                                }}
-                            />
-                        </Box>
-                        <Box
-                            className={style.startButton__box__text}
-                            onClick={() => {
-                                handleStartButtonClick()
-                            }}>
-                            {t("mining.pages.cloudMining.start_btn")}
-                        </Box>
-                    </Box>
+                    </motion.div>
+
                 </Box>
-            )}
+                )}
         </>
     );
 }

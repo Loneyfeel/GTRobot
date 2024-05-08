@@ -14,7 +14,7 @@ const CardChart = ({money, chartData}) => {
         // Форматируем данные для графика
         const formattedData = chartData.map(item => ({
             x: new Date(item[0]*1000).getTime(), // Преобразуем дату в миллисекунды
-            y: parseFloat(item[1])
+            y: parseFloat(item[1].toFixed(0))
         }));
 
         // Группируем данные по дням и вычисляем среднее значение для каждого дня
@@ -43,12 +43,17 @@ const CardChart = ({money, chartData}) => {
             }
         }
 
-        // Если данных меньше 5 дней, копируем первое значение для заполнения пустых дней
+        // Если данных меньше 15 дней, копируем первое значение для заполнения пустых дней
         while (averagedData.length < 15) {
             averagedData.unshift({ x: averagedData[0].x - 24 * 60 * 60 * 1000, y: averagedData[0].y });
         }
         setSeriesData(averagedData);
     }, [chartData]);
+
+    useEffect(() => {
+        console.log('chartData',chartData)
+        console.log('seriesData',seriesData)
+    }, []);
 
     // Данные для графика
     const series = [{
@@ -58,19 +63,6 @@ const CardChart = ({money, chartData}) => {
     // Определение минимального и максимального значения из ваших данных
     const minValue = Math.min(...seriesData.map(item => item.y));
     const maxValue = Math.max(...seriesData.map(item => item.y));
-
-// Вычисление разницы между минимальным и максимальным значениями
-    const difference = maxValue - minValue;
-
-// Установка stepSize в зависимости от разницы между значениями
-    let stepSize;
-    if (difference < 1) {
-        stepSize = 1;
-    } else {
-        // Если разница больше или равна 1, то оставляем stepSize неопределенным,
-        // чтобы ApexCharts мог самостоятельно вычислить подходящий шаг
-        stepSize = undefined;
-    }
 
     // Опции графика
     const options = {
@@ -132,10 +124,7 @@ const CardChart = ({money, chartData}) => {
             logarithmic: false,
             logBase: 10,
             tickAmount: 5,
-            decimalsInFloat: 0,
-            min: Math.min(...seriesData.map(item => item.y)) - 10*(Math.max(...seriesData.map(item => item.y)) - Math.min(...seriesData.map(item => item.y))),
-            max: Math.max(...seriesData.map(item => item.y)) + 10*(Math.max(...seriesData.map(item => item.y)) - Math.min(...seriesData.map(item => item.y))),
-            // stepSize: stepSize,
+            decimalsInFloat: 1,
             labels: {
                 show: true,
                 style: {
@@ -209,16 +198,16 @@ const CardChart = ({money, chartData}) => {
                         <span className={style.chart__title__count_big}>${formatedCost}</span>
                     </Box>
                 </Box>
-                <Chart
-                    options={options}
-                    series={series}
-                    type="area"
-                    height={'80%'}
-                    width={'103%'}
-                    style={{
-                        transition: 'filter 500ms ease'
-                    }}
-                />
+                    <Chart
+                        options={options}
+                        series={series}
+                        type="area"
+                        height={'80%'}
+                        width={'103%'}
+                        style={{
+                            transition: 'filter 500ms ease'
+                        }}
+                    />
             </Box>
         </>
     );

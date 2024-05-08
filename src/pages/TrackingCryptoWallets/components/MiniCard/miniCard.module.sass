@@ -7,20 +7,31 @@
   background-color: var(--component_bg_color)
   border-radius: 14px
   cursor: pointer
+  min-width: 120px
   &__photo
     margin-bottom: 10px
     &_img
       border-radius: 10px
       width: 100%
+  &__lock
+    display: flex
+    justify-content: center
+    align-items: center
+    min-width: 15px
+    min-height: 15px
+    margin-right: 5px
+    &_img
+      width: 100%
+      height: 100%
   &__name
     display: flex
     align-items: center
-    margin-bottom: 10px
+    overflow: hidden
     &_text
       font-size: 16px
       line-height: 1.2
       margin-right: 5px
-      overflow: hidden
+      overflow-wrap: anywhere
     &_mark
       display: flex
       align-items: center
@@ -28,7 +39,7 @@
         width: 14px
   &__description
     font-size: 12px
-    margin-bottom: 5px
+    margin-block: 10px 5px
     color: #E0E0E0
   &__statistic
     display: flex

@@ -3,6 +3,7 @@ import style from './miniCard.module.sass'
 import { Box} from "@mui/material";
 import mark from '../../assets/shared/checkmark.svg'
 import broken from '../../assets/card/broken.svg'
+import lockImg from '../../assets/shared/lockWihte.svg'
 
 const MiniCard = ({
                       setIsBigCardOpened,
@@ -12,7 +13,8 @@ const MiniCard = ({
                       verified,
                       photo,
                       setIsVisible,
-                      address
+                      address,
+                      lock,
                   }) => {
 
     const formatNumber = (number) => {
@@ -54,33 +56,43 @@ const MiniCard = ({
                             </>
                         }
                     </Box>
-                    {name ? (
-                        <Box className={style.miniCard__name}>
-                            <Box className={style.miniCard__name_text}>
-                                {name}
+                    <Box sx={{
+                        display: 'flex',
+                        alignItems: 'center'
+                    }}>
+                        {lock &&
+                            <Box className={style.miniCard__lock}>
+                                <img src={lockImg} alt={'lock'} className={style.miniCard__lock_img}/>
                             </Box>
-                            {verified && (
-                                <Box className={style.miniCard__name_mark}>
-                                    <img src={mark} alt={'mark'} className={style.miniCard__name_mark_img}/>
+                        }
+                        {name ? (
+                            <Box className={style.miniCard__name}>
+                                <Box className={style.miniCard__name_text}>
+                                    {name}
                                 </Box>
-                            )}
-                        </Box>
-                    ) : (
-                        <>
-                            {address &&
-                                <Box className={style.miniCard__name}>
-                                    <Box className={style.miniCard__name_text}>
-                                        {address}
+                                {verified && !lock && (
+                                    <Box className={style.miniCard__name_mark}>
+                                        <img src={mark} alt={'mark'} className={style.miniCard__name_mark_img}/>
                                     </Box>
-                                    {verified && (
-                                        <Box className={style.miniCard__name_mark}>
-                                            <img src={mark} alt={'mark'} className={style.miniCard__name_mark_img}/>
+                                )}
+                            </Box>
+                        ) : (
+                            <>
+                                {address &&
+                                    <Box className={style.miniCard__name}>
+                                        <Box className={style.miniCard__name_text}>
+                                            {address}
                                         </Box>
-                                    )}
-                                </Box>
-                            }
-                        </>
-                    )}
+                                        {verified && !lock && (
+                                            <Box className={style.miniCard__name_mark}>
+                                                <img src={mark} alt={'mark'} className={style.miniCard__name_mark_img}/>
+                                            </Box>
+                                        )}
+                                    </Box>
+                                }
+                            </>
+                        )}
+                    </Box>
                 </Box>
                 {mini_description &&
                     <Box className={style.miniCard__description}>
@@ -89,7 +101,10 @@ const MiniCard = ({
                 }
                 {balance &&
                     <Box className={style.miniCard__statistic}>
-                        <Box className={style.miniCard__statistic__amount}>
+                        <Box className={style.miniCard__statistic__amount}
+                        sx={{
+                            filter: lock ? 'blur(3px)' : ''
+                        }}>
                             {formatNumber(balance)} $
                         </Box>
                     </Box>
