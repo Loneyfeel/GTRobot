@@ -18,7 +18,6 @@ const AddCustomWallet = ({
                              setSearchResultsCount,
                              searchValue,
                              display,
-
                              setWalletsData,
                              activeTab,
                              setIsBigCardOpened,
@@ -26,6 +25,7 @@ const AddCustomWallet = ({
                              setLeftPosition,
                              bigCardStates,
                              setBigCardStates,
+                             gtrobotTheme
 }) => {
     const {t, i18n} = useTranslation();
 
@@ -106,7 +106,8 @@ const AddCustomWallet = ({
                             }}>
                             <CircularProgress
                                 sx={{
-                                    color: '#fff'
+                                    color: 'var(--loaders-color)',
+                                    filter: !gtrobotTheme ? tg.colorScheme === 'dark' ? '' : 'invert(1)' : '',
                                 }}/>
                         </Box>
                     </>

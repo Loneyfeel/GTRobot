@@ -2,7 +2,7 @@ import './shared/fonts/Gilroy/fontStylesheet.css'
 import "./App.css";
 
 import { useTranslation } from "react-i18next";
-import { useEffect } from "react";
+import {useEffect, useState} from "react";
 import axios from "axios";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { useThemeParams } from "@vkruglikov/react-telegram-web-app";
@@ -11,16 +11,18 @@ import {initData, tg} from "./shared/telegram/telegram.js";
 import {useQuery} from '@tanstack/react-query';
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 
-// import MainMenu from "./pages/MainMenu";
+import MainMenu from "./pages/MainMenu";
 // import ToolsMenu from "./pages/ToolsMenu";
 // import Screener from "./pages/Screener";
 // import Forex from "./pages/Forex";
 // import NoSubscribe from "./pages/NoSuscribe";
 // import Copyright from "./pages/Copyright";
-// import TrackingCryptoWallets from "./pages/TrackingCryptoWallets";
+import TrackingCryptoWallets from "./pages/TrackingCryptoWallets";
 import Mining from "./pages/Mining";
 
 function App() {
+
+  tg.expand()
 
   // Функция для выполнения запроса к API
   async function fetchUserData() {
@@ -60,24 +62,6 @@ function App() {
   };
 
   const theme = createTheme({
-    palette: {
-      primary: {
-        main: themeColor.button_color,
-      },
-      secondary: {
-        main: themeColor.secondary_bg_color,
-      },
-      background: {
-        default: themeColor.bg_color,
-        paper: themeColor.secondary_bg_color,
-      },
-      text: {
-        primary: themeColor.text_color,
-      },
-      tableSortLabel: {
-        disableRipple: true,
-      },
-    },
     components: {
       MuiTableSortLabel: {
         styleOverrides: {
@@ -98,24 +82,56 @@ function App() {
     },
   });
 
-  tg.setHeaderColor('#000')
-  tg.setBackgroundColor('#000')
+  const gtrobotSettingsData = {
+    theme: 'gtrobot',
+    chartCoin: 'BTCUSDT',
+    mining: {
+      withdraw: 'ton'
+    }
+  }
+
+  function tgCloudSettings(){
+    tg.CloudStorage.getItem('gtrobotSettings', (error, value) => {
+      if (error) {
+        // Handle error
+        console.error("Error:", error);
+      } else {
+        if (!value) {
+          // Если значение отсутствует, установите его в облаке хранения
+          tg.CloudStorage.setItem('gtrobotSettings',  JSON.stringify(gtrobotSettingsData))
+          tgCloudSettings()
+        }
+        if (value !== '' && value !== null && value !== undefined) {
+          if (JSON.stringify(value) !== JSON.stringify(gtrobotSettingsData)) {
+            // Обновляем данные в облачном хранилище, если они отличаются
+            tg.CloudStorage.setItem('gtrobotSettings', JSON.stringify(gtrobotSettingsData));
+          }
+        }
+      }
+    });
+  }
+
+  useEffect(() => {
+    tgCloudSettings()
+  }, []);
+
+
 
   return (
     <>
       <ThemeProvider theme={theme}>
-        {/*<MainMenu/>*/}
+        <MainMenu/>
         {/*<ToolsMenu/>*/}
         {/*<Screener/>*/}
         {/*<Forex/>*/}
         {/*<NoSubscribe/>*/}
         {/*<Copyright/>*/}
         {/*<TrackingCryptoWallets/>*/}
-        <Router basename="/">
-          <Routes>
-            <Route path="/*" exact element={<Mining />} />
-          </Routes>
-        </Router>
+        {/*<Router basename="/">*/}
+        {/*  <Routes>*/}
+        {/*    <Route path="/*" exact element={<Mining />} />*/}
+        {/*  </Routes>*/}
+        {/*</Router>*/}
       </ThemeProvider>
     </>
   );

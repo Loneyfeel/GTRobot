@@ -46,12 +46,12 @@ const Question = ({text, animation, setArrowSrc, currentIndex, setCurrentIndex, 
                     }
                     style={{
                         marginInline: 'auto',
-                        bgcolor: 'var(--menu_button_color)',
-                        border: '2px solid var(--component_stroke_color_light)'
+                        bgcolor: 'var(--main-bg-color)',
+                        border: '2px solid var(--component-stroke-color-light)',
                     }}
                 />
             </Box>
-            <div className={'gray'}
+            <div className={'gray-animations'}
                  style={{
                      position: 'absolute',
                      bottom: '0'

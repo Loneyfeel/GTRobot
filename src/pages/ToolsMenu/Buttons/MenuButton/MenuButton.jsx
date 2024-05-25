@@ -14,7 +14,7 @@ const MenuButton = ({icon, text, url}) => {
             <Button
                 className={style.button}
                 sx={{
-                    color: 'var(--text_color)',
+                    color: 'var(--text-color)',
                     borderRadius: '50px',
                     marginBlock: '10px',
                     display: 'flex',

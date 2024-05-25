@@ -1,6 +1,14 @@
 import React, {useEffect, useState} from 'react';
 import style from './withdraw.module.sass'
-import { Box} from "@mui/material";
+import {
+    Accordion,
+    AccordionDetails,
+    AccordionSummary,
+    Backdrop,
+    Box,
+    CircularProgress,
+    IconButton
+} from "@mui/material";
 import {miningWithdraw} from "../../../api/api.js";
 import {useTranslation} from "react-i18next";
 
@@ -10,19 +18,18 @@ import btcIcon from "../../../assets/shared/cryptoCoins/bitcoin.svg";
 import tonIcon from "../../../assets/shared/cryptoCoins/toncoin.svg";
 import dogeIcon from "../../../assets/shared/cryptoCoins/dogecoin.svg";
 import shibIcon from "../../../assets/shared/cryptoCoins/shibacoin.svg";
+import notIcon from '../../../assets/shared/cryptoCoins/notcoin.svg'
 
 import btcMiniIcon from '../../../assets/Menu/Widthdraw/btcIcon.svg'
 import tonMiniIcon from '../../../assets/Menu/Widthdraw/tonIcon.png'
 import dogeMiniIcon from '../../../assets/Menu/Widthdraw/dogeIcon.svg'
 import shibMiniIcon from '../../../assets/Menu/Widthdraw/shibIcon.svg'
 
-import tether from "../../../assets/Menu/Widthdraw/tether.svg";
-
-import info from '../../../assets/Menu/Widthdraw/infoCircle.svg'
-
 import CustomSnackBar from "../../../components/CustomSnackBar/index.js";
 import CustomButton from "@components/CustomButton/index.js";
 import {fetchDataAndUpdateLocalStorageInSession} from "../../../helps/dataHelps.js";
+import {tg} from "../../../../../shared/telegram/telegram.js";
+import arrow from "../../../assets/Menu/arrow.svg";
 
 const Withdraw = () => {
     const [withdrawAmount, setWithdrawAmount] = useState("");
@@ -50,6 +57,8 @@ const Withdraw = () => {
     const withdrawNotAvailableDays = 20;
     const holdingPeriod = 90;
 
+    const [withdrawalCoin, setWithdrawalCoin] = useState('not')
+
     const [balance, setBalance] = useState(0);
     const [cryptoCurrency, setCryptoCurrency] = useState("");
     const [pricePerCoin, setPricePerCoin] = useState(0);
@@ -58,7 +67,7 @@ const Withdraw = () => {
         const storedData = JSON.parse(localStorage.getItem("miningUserData")) || {};
         setBalance(storedData.balance || 0);
         setCryptoCurrency(storedData.cryptoCurrency || "btc");
-    }, []);
+    }, [localStorage.getItem("miningUserData")]);
 
     useEffect(() => {
         const storedData = JSON.parse(localStorage.getItem("miningUserData")) || {};
@@ -108,7 +117,7 @@ const Withdraw = () => {
 
         // Обновляем состояния для холдинга
         setBalanceToHoldingTimestamp(storedData.holding.balanceToHoldingTimestamp);
-        setHoldingBalance(storedData.holding.holdingBalance || 0);
+        setHoldingBalance(storedData.holding.holdingBalance || 0)
         // setHoldingTimestamp(storedData.holding.holdingTimestamp);
     }, []);
 
@@ -136,6 +145,7 @@ const Withdraw = () => {
                             try {
                                 const withdrawalResponse = await miningWithdraw(
                                     parseFloat(withdrawAmount),
+                                    withdrawalCoin,
                                     walletAddress
                                 );
                                 fetchDataAndUpdateLocalStorageInSession()
@@ -251,7 +261,7 @@ const Withdraw = () => {
 
     const handleMaxAmount = () => {
         const prices = JSON.parse(localStorage.getItem("prices")) || [];
-        const calculatedAmount = parseFloat(balance) * pricePerCoin / prices['ton'];
+        const calculatedAmount = parseFloat(balance) * pricePerCoin / prices[withdrawalCoin];
         const formatedCalculatedAmount = parseFloat(Number(calculatedAmount.toString().slice(0, calculatedAmount.toString().indexOf('.') + 15)))
         const formatedValue = parseFloat(Number(balance.toString().slice(0, balance.toString().indexOf('.') + 15)))
 
@@ -270,6 +280,7 @@ const Withdraw = () => {
         ton: tonIcon,
         doge: dogeIcon,
         shib: shibIcon,
+        not: notIcon
     };
 
     const miniIcons = {
@@ -277,9 +288,8 @@ const Withdraw = () => {
         ton: tonMiniIcon,
         doge: dogeMiniIcon,
         shib: shibMiniIcon,
+        not: tonMiniIcon,
     };
-
-
 
 
     // const [priceObject, setPriceObject] = useState(null)
@@ -292,7 +302,7 @@ const Withdraw = () => {
         } else {
             setPricePerCoin(0); // или любое другое значение по умолчанию
         }
-    }, [cryptoCurrency]);
+    }, [cryptoCurrency, withdrawalCoin]);
 
     // Функция для форматирования баланса с заданным количеством знаков после запятой
     const formatNumber = (balance, digits) => {
@@ -300,9 +310,13 @@ const Withdraw = () => {
             return ''; // Возвращаем пустую строку или другое значение по умолчанию
         }
 
-        let formattedBalance = balance.toFixed(digits);
+        let digitsCount = digits;
+        if (balance > 10000000){
+            digitsCount = digits + 4
+        }
+        let formattedBalance = balance.toFixed(digitsCount);
         if (formattedBalance.length > digits) {
-            formattedBalance = formattedBalance.slice(0, digits);
+            formattedBalance = formattedBalance.slice(0, digitsCount);
         }
         return formattedBalance;
     };
@@ -312,12 +326,60 @@ const Withdraw = () => {
     useEffect(() => {
         const prices = JSON.parse(localStorage.getItem("prices")) || [];
         if (pricePerCoin !== undefined) {
-            setFormatedCost(formatNumber(pricePerCoin/prices['ton'], 9));
+            setFormatedCost(formatNumber(pricePerCoin/prices[`${withdrawalCoin}`], 9));
         }
-    }, [pricePerCoin]);
+    }, [pricePerCoin, withdrawalCoin]);
+
+    const [userCloudData, setUserCloudData] = useState(null)
+
+    function getSettings(){
+        tg.CloudStorage.getItem('gtrobotSettings', (error, value) => {
+            if (error) {
+                // Handle error
+                console.error("Error:", error);
+            } else if (value !== '' && value !== null && value !== undefined){
+                setUserCloudData(JSON.parse(value))
+                setWithdrawalCoin(JSON.parse(value).mining.withdraw);
+            }
+        });
+    }
+    useEffect(() => {
+        getSettings()
+    }, [])
+
+    const [changeWithdrawCoinExpanded, setChangeWithdrawCoinExpanded] = useState(false)
+    function handlechangeWithdrawCoinClick(){
+        setChangeWithdrawCoinExpanded(!changeWithdrawCoinExpanded)
+    }
+
+    const [isFunctionLocked, setIsFunctionLocked] = useState(false)
+
+    function handleChangeWithdrawCoin(coin){
+        if (isFunctionLocked) {
+            return;
+        }
+        setIsFunctionLocked(true)
+        setChangeWithdrawCoinExpanded(false)
+        userCloudData.mining.withdraw = coin
+        tg.CloudStorage.setItem('gtrobotSettings',  JSON.stringify(userCloudData))
+        setTimeout(() => {
+            getSettings()
+        }, 200)
+        setTimeout(() => {
+            setIsFunctionLocked(false)
+        }, 1000)
+    }
 
     return (
         <>
+            {isFunctionLocked &&
+                <Backdrop
+                    sx={{color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 2000}}
+                    open={true}
+                >
+                    <CircularProgress color="inherit"/>
+                </Backdrop>
+            }
             <Box className={style.withdraw}>
                 <Box className={style.withdraw__content}>
                     <Box className={style.withdraw__content__input_box}>
@@ -360,17 +422,23 @@ const Withdraw = () => {
                                 <img src={miniIcons[cryptoCurrency]} alt={'crypto'}
                                 style={{
                                     width: cryptoCurrency == 'ton' || cryptoCurrency == 'doge' ? '15px' : '20px',
-                                    height: cryptoCurrency == 'ton' || cryptoCurrency == 'doge' ? '15px' : '20px'
+                                    height: cryptoCurrency == 'ton' || cryptoCurrency == 'doge' ? '15px' : '20px',
                                 }}/>
                                 <EastRoundedIcon
                                 sx={{
                                     marginLeft: '5px'
                                 }}/>
                                 <img src={tonMiniIcon} alt={'crypto'}
-                                     className={style.withdraw__content__converter__text_img}/>
+                                     className={style.withdraw__content__converter__text_img}
+                                style={{
+                                    transform: withdrawalCoin === 'not' ? 'rotate(180deg)' : ''
+                                }}/>
                             </Box>
                             <Box className={style.withdraw__content__converter__count}>
-                            <span className={style.withdraw__content__converter__count_big}>{formatedCost.split('.')[0]}</span>
+                            <span className={style.withdraw__content__converter__count_big}
+                            style={{
+                                fontSize: parseInt(formatedCost) > 10000000 ? '30px' : '42px'
+                            }}>{formatedCost.split('.')[0]}</span>
                                 <span className={style.withdraw__content__converter__count_small}>.{formatedCost.split('.')[1]}</span>
                             </Box>
                         </Box>
@@ -392,7 +460,7 @@ const Withdraw = () => {
                             />
                             <Box className={style.withdraw__content__input_box__input_text_box__icon}>
                                 <img
-                                    src={tonIcon}
+                                    src={withdrawalCoin === 'not' ? notIcon : tonIcon}
                                     alt={"TON"}
                                     style={{
                                         height: "40px",
@@ -409,10 +477,127 @@ const Withdraw = () => {
                             </Box>
                         </Box>
                     </Box>
+                    <Accordion
+                        expanded={changeWithdrawCoinExpanded}
+                        onChange={()=>{
+                            handlechangeWithdrawCoinClick()
+                        }}
+                        sx={{
+                            '&::before':{
+                                opacity: 0
+                            },
+                            '&.MuiAccordion-root': {
+                                borderRadius: '30px',
+                                backgroundImage: 'linear-gradient(to top right, var(--gradient-five-menu-accordion), var(--gradient-six-menu-accordion))',
+                                marginBottom: '10px'
+                            },
+                            '&.MuiAccordion-root.Mui-expanded': {
+                                margin: '0',
+                                marginBottom: '10px',
+                                marginTop: '20px'
+                            },
+                            color: 'var(--text_color)',
+                            width: '100%',
+                            marginTop: '20px'
+                        }}
+                    >
+                        <AccordionSummary
+                            expandIcon={<img src={arrow} alt="Expand" />}
+                            sx={{
+                                '&.MuiAccordionSummary-root.Mui-expanded':{
+                                    minHeight: '48px'
+                                },
+                                '&.MuiAccordionSummary-content.Mui-expanded':{
+                                    margin: '0'
+                                },
+                                color: 'var(--text_color)',
+                            }}
+                        >
+                            <Box
+                                sx={{
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    fontWeight: '400',
+                                    fontSize: '16px',
+                                    lineHeight: '1.5',
+                                    color: 'var(--button-text-color)'
+                                }}>
+                                <span style={{marginTop: '3px'}}>{t("mining.pages.menu.withdraw.changeWithdrawCoin.title")}: {withdrawalCoin.toUpperCase()}</span>
+                                    <img
+                                        src={withdrawalCoin === 'not' ? notIcon : tonIcon}
+                                        alt={"TON"}
+                                        style={{
+                                            height: "25px",
+                                            width: "25px",
+                                            marginLeft: '3px'
+                                        }}
+                                    />
+                            </Box>
+                        </AccordionSummary>
+                        <AccordionDetails
+                            className={style.menu__navigation__item_text}
+                            sx={{
+                                padding: '8px',
+                                paddingTop: '0',
+                                cursor: 'pointer',
+                                borderBottomLeftRadius: '27px',
+                                borderBottomRightRadius: '27px',
+                                overflow: 'hidden',
+                                '&:hover':{
+                                    bgcolor: 'var(--coin-card-active-color)'
+                                }
+                            }}
+                            onClick={()=>{
+                                if(withdrawalCoin === 'ton'){
+                                    handleChangeWithdrawCoin('not')
+                                } else {
+                                    handleChangeWithdrawCoin('ton')
+                                }
+                            }}>
+                            {withdrawalCoin === 'ton' ?
+                                <div style={{
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    marginBottom: '7px',
+                                    marginTop: '11px',
+                                }}
+                                >
+                                    <span style={{marginTop: '3px', marginLeft: '7px',}}>{t("mining.pages.menu.withdraw.changeWithdrawCoin.select")} NOT</span>
+                                    <img
+                                        src={notIcon}
+                                        alt={"NOT"}
+                                        style={{
+                                            height: "25px",
+                                            width: "25px",
+                                            marginLeft: '3px'
+                                        }}
+                                    />
+                                </div>
+                                :
+                                <div style={{
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    marginBottom: '7px',
+                                    marginTop: '11px',
+                                }}>
+                                    <span style={{marginTop: '3px', marginLeft: '7px',}}>{t("mining.pages.menu.withdraw.changeWithdrawCoin.select")} TON</span>
+                                    <img
+                                        src={tonIcon}
+                                        alt={"TON"}
+                                        style={{
+                                            height: "25px",
+                                            width: "25px",
+                                            marginLeft: '3px'
+                                        }}
+                                    />
+                                </div>
+                            }
+                        </AccordionDetails>
+                    </Accordion>
                     <Box className={style.withdraw__content__input_box__input_text_box}>
                         <input
                             id="wallet-address"
-                            placeholder={t("mining.pages.menu.withdraw.textField_2")}
+                            placeholder={`${t("mining.pages.menu.withdraw.textField_2")}${withdrawalCoin.toUpperCase()}`}
                             value={walletAddress}
                             onChange={(e) => setWalletAddress(e.target.value)}
                             className={style.withdraw__content__input_box__input_text_box__input}
@@ -457,7 +642,8 @@ const Withdraw = () => {
                         content={t("mining.pages.menu.withdraw.menu_btn")}
                         onClick={handleWithdrawal}
                         style={{
-                            margin: '20px'
+                            margin: '20px',
+                            border: '1px solid #fff'
                         }}
                     />
                 </Box>

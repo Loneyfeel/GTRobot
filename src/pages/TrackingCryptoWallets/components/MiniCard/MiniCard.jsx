@@ -4,6 +4,7 @@ import { Box} from "@mui/material";
 import mark from '../../assets/shared/checkmark.svg'
 import broken from '../../assets/card/broken.svg'
 import lockImg from '../../assets/shared/lockWihte.svg'
+import {tg} from "../../../../shared/telegram/telegram.js";
 
 const MiniCard = ({
                       setIsBigCardOpened,
@@ -15,6 +16,7 @@ const MiniCard = ({
                       setIsVisible,
                       address,
                       lock,
+                      gtrobotTheme
                   }) => {
 
     const formatNumber = (number) => {
@@ -62,7 +64,10 @@ const MiniCard = ({
                     }}>
                         {lock &&
                             <Box className={style.miniCard__lock}>
-                                <img src={lockImg} alt={'lock'} className={style.miniCard__lock_img}/>
+                                <img src={lockImg} alt={'lock'} className={style.miniCard__lock_img}
+                                style={{
+                                    filter: gtrobotTheme === 'gtrobot' ? '' : tg.colorScheme === 'dark' ? '' : 'invert(1)',
+                                }}/>
                             </Box>
                         }
                         {name ? (

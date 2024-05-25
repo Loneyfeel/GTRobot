@@ -9,72 +9,23 @@ export const testData = {
             //     "task_link": "https://t.me/+65IRmbhnilc5NDVi",
             //     "task_text": "subscribe_to Telegram"
             // },
-            // {
-            //     "is_required": 1,
-            //     "task_group_id": -1001551531885,
-            //     "task_id": 5,
-            //     "task_link": "https://t.me/+65IRmbhnilc5NDVi",
-            //     "task_text": "like_to Instagram"
-            // },
-            // {
-            //     "is_required": 1,
-            //     "task_group_id": -1001551531885,
-            //     "task_id": 5123,
-            //     "task_link": "https://t.me/+65IRmbhnilc5NDVi",
-            //     "task_text": "subscribe_to Telegram"
-            // },
-            // {
-            //     "is_required": 1,
-            //     "task_group_id": -1001551531885,
-            //     "task_id": 5123123,
-            //     "task_link": "https://t.me/+65IRmbhnilc5NDVi",
-            //     "task_text": "subscribe_to Telegram"
-            // },
-            // {
-            //     "is_required": 1,
-            //     "task_group_id": -1001691736512,
-            //     "task_id": 6,
-            //     "task_link": "https://t.me/+ZlGATjiC764wMGYy",
-            //     "task_text": "subscribe_to YouTube"
-            // },
-            // {
-            //     "is_required": 0,
-            //     "task_group_id": null,
-            //     "task_id": 9123,
-            //     "task_link": "https://www.instagram.com/reel/C2ppJQCtk4k/?igsh=aHptcWI5bWpycnc5",
-            //     "task_text": "like_to Instagram"
-            // },
-            // {
-            //     "is_required": 0,
-            //     "task_group_id": null,
-            //     "task_id": 932,
-            //     "task_link": "https://www.instagram.com/reel/C2ppJQCtk4k/?igsh=aHptcWI5bWpycnc5",
-            //     "task_text": "subscribe_to Instagram"
-            // },
-            // {
-            //     "is_required": 0,
-            //     "task_group_id": null,
-            //     "task_id": 9,
-            //     "task_link": "https://www.instagram.com/reel/C2ppJQCtk4k/?igsh=aHptcWI5bWpycnc5",
-            //     "task_text": "like_to YouTube"
-            // }
         ],
         "balance": 0.400420,
         "cryptoCurrency": "btc",
         "dailyMiningBalance": 320,
         "holding":{
             "balanceToHoldingTimestamp":1709635354,
-            "holdingBalance": null,
+            "holdingBalance": 1,
             "holdingTimestamp": 1709635354
         },
         "mining": {
-            "endUserDailyMiningTimestamp": null,
-            "endUserMiningTimestamp": null,
+            "endUserDailyMiningTimestamp": 1716588340,
+            "endUserMiningTimestamp": 1716588340,
             "isDailyMiningActivated": true,
-            "isDailyMiningActive": false,
-            "isMiningActive": false,
-            "startUserDailyMiningTimestamp": null,
-            "startUserMiningTimestamp": null
+            "isDailyMiningActive": true,
+            "isMiningActive": true,
+            "startUserDailyMiningTimestamp": 1716577540,
+            "startUserMiningTimestamp": 1716577540
         },
         "referrals": {
             "referralBonus": 0,
@@ -135,87 +86,7 @@ export const testData = {
         "btc": 70297.3,
         "doge": 0.099067,
         "shib": 0.000011,
-        "ton": 3.07
+        "ton": 3.07,
+        "not": 0.007
     }
 }
-
-// export const testData1 = {
-//     "userExits": true,
-//     "userData": {
-//         "activeTasks": [
-//             {
-//                 "is_required": 1,
-//                 "task_group_id": -1001551531885,
-//                 "task_id": 4,
-//                 "task_link": "https://t.me/+65IRmbhnilc5NDVi",
-//                 "task_text": "subscribe_to Telegram"
-//             },
-//             {
-//                 "is_required": 1,
-//                 "task_group_id": -1001551531885,
-//                 "task_id": 5,
-//                 "task_link": "https://t.me/+65IRmbhnilc5NDVi",
-//                 "task_text": "like_to Instagram"
-//             },
-//             {
-//                 "is_required": 1,
-//                 "task_group_id": -1001551531885,
-//                 "task_id": 5123,
-//                 "task_link": "https://t.me/+65IRmbhnilc5NDVi",
-//                 "task_text": "subscribe_to Telegram"
-//             },
-//             {
-//                 "is_required": 1,
-//                 "task_group_id": -1001551531885,
-//                 "task_id": 5123123,
-//                 "task_link": "https://t.me/+65IRmbhnilc5NDVi",
-//                 "task_text": "subscribe_to Telegram"
-//             },
-//             {
-//                 "is_required": 1,
-//                 "task_group_id": -1001691736512,
-//                 "task_id": 6,
-//                 "task_link": "https://t.me/+ZlGATjiC764wMGYy",
-//                 "task_text": "subscribe_to YouTube"
-//             },
-//             {
-//                 "is_required": 0,
-//                 "task_group_id": null,
-//                 "task_id": 9123,
-//                 "task_link": "https://www.instagram.com/reel/C2ppJQCtk4k/?igsh=aHptcWI5bWpycnc5",
-//                 "task_text": "like_to Instagram"
-//             },
-//             {
-//                 "is_required": 0,
-//                 "task_group_id": null,
-//                 "task_id": 932,
-//                 "task_link": "https://www.instagram.com/reel/C2ppJQCtk4k/?igsh=aHptcWI5bWpycnc5",
-//                 "task_text": "subscribe_to Instagram"
-//             },
-//             {
-//                 "is_required": 0,
-//                 "task_group_id": null,
-//                 "task_id": 9,
-//                 "task_link": "https://www.instagram.com/reel/C2ppJQCtk4k/?igsh=aHptcWI5bWpycnc5",
-//                 "task_text": "like_to YouTube"
-//             }
-//         ],
-//         "balance": 0.000055242,
-//         "cryptoCurrency": "btc",
-//         "dailyMiningBalance": 0,
-//         "mining": {
-//             "endUserDailyMiningTimestamp": null,
-//             "endUserMiningTimestamp": null,
-//             "isDailyMiningActivated": true,
-//             "isDailyMiningActive": true,
-//             "isMiningActive": false,
-//             "startUserDailyMiningTimestamp": null,
-//             "startUserMiningTimestamp": null
-//         },
-//         "referralBonus": 0,
-//         "referralCode": "NjU0ODQxNDUx",
-//         "referrals": [],
-//         "registrationDate": 1704880004,
-//         "userSubscription": "standard"
-//     }
-// }

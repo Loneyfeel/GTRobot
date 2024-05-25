@@ -68,7 +68,7 @@ const CoinsChangeList = ({
                 <Typography
                     sx={{
                         fontSize: '20px',
-                        marginBottom: '5px'
+                        marginBottom: '5px',
                     }}>
                     {t("tracking.buyDialog.changeBuyMissingCoins.text")}
                 </Typography>
@@ -124,42 +124,43 @@ const Slide = ({children, handleClickYes, handleClickNo}) => {
                 flexDirection: 'column',
                 alignItems: 'center'
             }}>
-            <Box sx={{
-                display: 'flex',
-                justifyContent: 'space-around',
-                alignItems: 'center',
-                width: 'max-content',
-                padding: '15px',
-                margin: '5px',
-                backgroundColor: '#32323BFF',
-                borderRadius: '15px',
-                overflow: 'hidden',
-            }}>
-                <img
-                    src={iconPath}
-                    alt={currency}
-                    style={{
-                        height: '50px',
-                        width: '50px',
-                        marginRight: '5px',
-                        borderRadius: '50px',
-                        backgroundColor: '#fff',
-                        overflow: 'hidden'
-                    }}
-                    onError={(e) => {
-                         e.target.src = brokenCoin;
-                    }}
-                />
-                <Typography
-                sx={{
-                    fontSize: '20px'
+                <Box sx={{
+                    display: 'flex',
+                    justifyContent: 'space-around',
+                    alignItems: 'center',
+                    width: 'max-content',
+                    padding: '15px',
+                    margin: '5px',
+                    backgroundColor: 'var(--big-card-color)',
+                    borderRadius: '15px',
+                    overflow: 'hidden',
                 }}>
-                    {currency && currency.charAt(0).toUpperCase() + currency.slice(1)}
-                </Typography>
-            </Box>
+                    <img
+                        src={iconPath}
+                        alt={currency}
+                        style={{
+                            height: '50px',
+                            width: '50px',
+                            marginRight: '5px',
+                            borderRadius: '50px',
+                            backgroundColor: '#fff',
+                            overflow: 'hidden'
+                        }}
+                        onError={(e) => {
+                             e.target.src = brokenCoin;
+                        }}
+                    />
+                    <Typography
+                    sx={{
+                        fontSize: '20px',
+                        color: 'var(--button-text-color)'
+                    }}>
+                        {currency && currency.charAt(0).toUpperCase() + currency.slice(1)}
+                    </Typography>
+                </Box>
                 <Typography
                     sx={{
-                        fontSize: '20px'
+                        fontSize: '20px',
                     }}>
                     {t("tracking.buyDialog.changeBuyMissingCoins.text2")}
                 </Typography>

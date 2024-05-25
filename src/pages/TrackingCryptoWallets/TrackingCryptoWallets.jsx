@@ -7,7 +7,6 @@ import { motion, AnimatePresence } from 'framer-motion';
 import Tab from './components/Tab'
 import Filters from './components/Filters'
 import MiniCard from './components/MiniCard'
-import { data } from './data.js'
 
 import all_active from './assets/main/all_active.svg'
 import all_disabled from './assets/main/all_disabled.svg'
@@ -22,14 +21,13 @@ import CircularProgress from "@mui/material/CircularProgress";
 import {useQueryClient} from "@tanstack/react-query";
 import lock from "./assets/shared/lockGrey.svg";
 import lockBig from "./assets/shared/lockBig.svg"
-import NoPremiumDialog from "./components/NoPremiumDialog/index.js";
+import NoPremiumDialog from "../../shared/components/NoPremiumDialog/index.js";
 
 const TrackingCryptoWallets = () => {
 
     tg.expand()
     const {t, i18n} = useTranslation();
 
-    tg.setHeaderColor('#000')
     const [isBigCardOpened, setIsBigCardOpened] = useState(false)
 
     const [tempWalletVisible, setTempWalletVisible] = useState('')
@@ -176,19 +174,48 @@ const TrackingCryptoWallets = () => {
             });
     };
 
+    const [openNoPremiumDialog, setOpenNoPremiumDialog] = useState(false)
     const queryClient = useQueryClient()
     const [userData, setUserData] = useState([])
-    const [openNoPremiumDialog, setOpenNoPremiumDialog] = useState(false)
 
     useEffect(() => {
         if(queryClient.getQueryData('userMainData')){
-            setUserData(queryClient.getQueryData('userMainData').data)
+            setUserData(queryClient.getQueryData('userMainData').data);
+        }}, [queryClient.getQueryData('userMainData')])
+
+
+    const [gtrobotTheme, setGtrobotTheme] = useState(false)
+
+    const root = document.documentElement; // Получение элемента root
+    useEffect(() => {
+        switch (gtrobotTheme) {
+            case 'gtrobot':
+                root.classList.add('gtrobot-theme'); // Добавление класса gtrsobot-theme к :root
+                tg.setHeaderColor('#000');
+                tg.setBackgroundColor('#000');
+                break;
+            case 'telegram':
+                root.classList.add('telegram-theme'); // Добавление класса telegram-theme к :root
+                tg.setHeaderColor('bg_color');
+                tg.setBackgroundColor('bg_color');
+                break;
+            default:
+                break;
         }
-    }, [queryClient.getQueryData('userMainData')])
+    }, [gtrobotTheme]);
 
     useEffect(() => {
-        console.log(bigCardStates)
-    }, [bigCardStates]);
+        tg.CloudStorage.getItem('gtrobotSettings', (error, value) => {
+            if (error) {
+                // Handle error
+                console.error("Error:", error);
+            } else {
+                if (value !== '' && value !== null && value !== undefined) {
+                    setGtrobotTheme(JSON.parse(value).theme);
+                }
+            }
+        });
+    }, [])
 
     return (
         <>
@@ -238,6 +265,7 @@ const TrackingCryptoWallets = () => {
                             handleChange={handleChange}
                             setLoading={setLoading}
                             userData={userData}
+                            gtrobotTheme={gtrobotTheme}
                         />
                         {/* поиск верифицированных */}
                         <Input
@@ -254,9 +282,9 @@ const TrackingCryptoWallets = () => {
                                 position: 'absolute',
                                 left: leftFol,
                                 transition: 'left 200ms ease',
-                                color: 'var(--text_color)',
+                                color: 'var(--text-color)',
                                 borderRadius: '50px',
-                                bgcolor: '#1B1B1B',
+                                bgcolor: 'var(--whales-comp-bg-color)',
                                 padding: '10px 15px',
                                 width: '100%',
                                 height: '55px',
@@ -268,7 +296,8 @@ const TrackingCryptoWallets = () => {
                                         {userData.isPremiumUser ?
                                             <img src={search} alt={''}/>
                                             :
-                                            <img src={lock} alt={''}/>
+                                            <img src={lock} alt={''}
+                                            />
                                         }
                                     </Box>
                                 </InputAdornment>
@@ -281,6 +310,7 @@ const TrackingCryptoWallets = () => {
                     }}>
                         <Box className={style.trackingCryptoWallets__content__pages}>
                             <Tab
+                                gtrobotTheme={gtrobotTheme}
                                 name="all"
                                 iconActive={all_active}
                                 iconDisabled={all_disabled}
@@ -293,6 +323,7 @@ const TrackingCryptoWallets = () => {
                                 text={t('tracking.page_all')}/>
                             <Box sx={{width: '20px'}}/>
                             <Tab
+                                gtrobotTheme={gtrobotTheme}
                                 name="follows"
                                 iconActive={favorites_tab_active}
                                 iconDisabled={favorites_tab_disabled}
@@ -312,7 +343,7 @@ const TrackingCryptoWallets = () => {
                                         top: '110px',
                                         left: '0',
                                         width: '100vw',
-                                        backgroundColor: 'rgba(0,0,0,0.6)',
+                                        backgroundColor: gtrobotTheme ? 'rgba(0,0,0,0.6)' : '',
                                         height: '7vh',
                                         zIndex: '100'
                                     }}
@@ -325,6 +356,7 @@ const TrackingCryptoWallets = () => {
                         <Filters
                             lock={!userData.isPremiumUser}
                             setWalletsData={setWalletsData}
+                            gtrobotTheme={gtrobotTheme}
                         />
                     </Box>
                     <Box sx={{
@@ -378,6 +410,7 @@ const TrackingCryptoWallets = () => {
                                                                                     balance={item.balance.toFixed(0)}
                                                                                     favorite={item.isFollow}
                                                                                     walletId={item.walletId}
+                                                                                    gtrobotTheme={gtrobotTheme}
                                                                                     chart={item.chart}
                                                                                     setIsVisible={() => {
                                                                                         setBigCardStates({
@@ -416,6 +449,7 @@ const TrackingCryptoWallets = () => {
                                                                                     walletId={item.walletId}
                                                                                     activeTab={activeTab}
                                                                                     searchInputValueEmpty={searchInputValueEmpty}
+                                                                                    gtrobotTheme={gtrobotTheme}
                                                                                 />
                                                                             </Suspense>
                                                                         }
@@ -466,6 +500,7 @@ const TrackingCryptoWallets = () => {
                                                                                         favorite={item.isFollow}
                                                                                         walletId={item.walletId}
                                                                                         chart={item.chart}
+                                                                                        gtrobotTheme={gtrobotTheme}
                                                                                         setIsVisible={() => {
                                                                                             setBigCardStates({
                                                                                                 ...bigCardStates,
@@ -503,6 +538,7 @@ const TrackingCryptoWallets = () => {
                                                                                         walletId={item.walletId}
                                                                                         activeTab={activeTab}
                                                                                         searchInputValueEmpty={searchInputValueEmpty}
+                                                                                        gtrobotTheme={gtrobotTheme}
                                                                                     />
                                                                                 </Suspense>
                                                                             }
@@ -517,10 +553,10 @@ const TrackingCryptoWallets = () => {
                                                         sx={{
                                                             position: 'absolute',
                                                             top: '0',
-                                                            left: '0',
+                                                            left: '-5vw',
                                                             width: '100vw',
                                                             height: '100%',
-                                                            backgroundColor: 'rgba(0,0,0,0.6)',
+                                                            backgroundColor: gtrobotTheme === 'gtrobot' ? 'rgba(0,0,0,0.6)' : '',
                                                             zIndex: '100'
                                                         }}
                                                         onClick={()=>{
@@ -538,7 +574,10 @@ const TrackingCryptoWallets = () => {
                                                             >
                                                                 <Box className={style.trackingCryptoWallets__content__noPremium__message}>
                                                                     <Box className={style.trackingCryptoWallets__content__noPremium__message__image}>
-                                                                        <img src={lockBig} alt={'lock'} className={style.trackingCryptoWallets__content__noPremium__message__image_img}/>
+                                                                        <img src={lockBig} alt={'lock'} className={style.trackingCryptoWallets__content__noPremium__message__image_img}
+                                                                             style={{
+                                                                                 filter: gtrobotTheme === 'gtrobot' ? '' : tg.colorScheme === 'dark' ? '' : 'invert(1)',
+                                                                             }}/>
                                                                     </Box>
                                                                 </Box>
                                                             </motion.div>
@@ -584,6 +623,7 @@ const TrackingCryptoWallets = () => {
                                                                                                 favorite={item.isFollow}
                                                                                                 walletId={item.walletId}
                                                                                                 chart={item.chart}
+                                                                                                gtrobotTheme={gtrobotTheme}
                                                                                                 setIsVisible={() => {
                                                                                                     setBigCardStates({
                                                                                                         ...bigCardStates,
@@ -621,6 +661,7 @@ const TrackingCryptoWallets = () => {
                                                                                                 walletId={item.walletId}
                                                                                                 activeTab={activeTab}
                                                                                                 searchInputValueEmpty={searchInputValueEmpty}
+                                                                                                gtrobotTheme={gtrobotTheme}
                                                                                             />
                                                                                         </Suspense>
                                                                                     }
@@ -674,6 +715,7 @@ const TrackingCryptoWallets = () => {
                                                                                     favorite={item.isFollow}
                                                                                     walletId={item.walletId}
                                                                                     chart={item.chart}
+                                                                                    gtrobotTheme={gtrobotTheme}
                                                                                     setIsVisible={() => {
                                                                                         setBigCardStates({
                                                                                             ...bigCardStates,
@@ -710,6 +752,7 @@ const TrackingCryptoWallets = () => {
                                                                                         walletId={item.walletId}
                                                                                         activeTab={activeTab}
                                                                                         searchInputValueEmpty={searchInputValueEmpty}
+                                                                                        gtrobotTheme={gtrobotTheme}
                                                                                     />
                                                                                 </Suspense>
                                                                             }
@@ -738,7 +781,8 @@ const TrackingCryptoWallets = () => {
                                 }}>
                                     <CircularProgress
                                         sx={{
-                                            color: '#fff'
+                                            color: 'var(--loaders-color)',
+                                            filter: gtrobotTheme === 'gtrobot' ? '' : tg.colorScheme === 'dark' ? '' : 'invert(1)',
                                         }}/>
                                 </Box>
                             </>
@@ -758,6 +802,7 @@ const TrackingCryptoWallets = () => {
                                             leftPosition={leftPosition}
                                             setLeftPosition={setLeftPosition}
                                             bigCardStates={bigCardStates}
+                                            gtrobotTheme={gtrobotTheme}
                                         />
                                     </>
                                 )}

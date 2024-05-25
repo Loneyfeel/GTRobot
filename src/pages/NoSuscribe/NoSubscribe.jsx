@@ -3,6 +3,7 @@ import { Box, Button, CardMedia, Typography } from "@mui/material";
 import { useTranslation } from "react-i18next";
 import Lottie from "lottie-react";
 import animation from './assets/AnimatedSticker.json'
+import {tg} from "../../shared/telegram/telegram.js";
 
 const NoSubscribe = () => {
     window.Telegram.WebApp.BackButton.isVisible = false;
@@ -60,10 +61,7 @@ const NoSubscribe = () => {
         <Box>
           <Button
             onClick={() => {
-              window.Telegram.WebApp.openLink(
-                "https://gtrobot.shop/",
-              );
-              window.Telegram.WebApp.close();
+                window.Telegram.WebApp.openTelegramLink('https://t.me/GTRaibot/shop')
             }}
             variant="contained"
             sx={{

@@ -33,3 +33,14 @@ export const sendCommand = async (message) => {
         return handleError(error);
     }
 };
+
+export const getTutorialsData = async () => {
+    try {
+        const response = await axiosInstance.post("/get-tutorials-data", {
+            initData,
+        });
+        return response.data;
+    } catch (error) {
+        return handleError(error);
+    }
+};

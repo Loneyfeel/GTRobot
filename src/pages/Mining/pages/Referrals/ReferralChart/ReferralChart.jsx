@@ -1,9 +1,9 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import style from './referralChart.module.sass'
 
 import Chart from 'react-apexcharts';
 
-const AreaChart = ({ referralsData }) => {
+const AreaChart = ({ referralsData, gtrobotTheme }) => {
     // Функция для агрегации данных по временным меткам
     const aggregateData = (referralsData) => {
         if (!Array.isArray(referralsData)) return [];
@@ -63,6 +63,41 @@ const AreaChart = ({ referralsData }) => {
         data: seriesData,
     }];
 
+    const [themeColors, setThemeColors] = useState(
+        {
+            colors: 'rgba(255,255,255,1)',
+            xaxisColors: 'rgba(255,255,255,1)',
+            axisBorder: 'rgba(231,231,231,0.05)',
+            axisTicks: 'rgba(231,231,231,0.05)',
+            yaxisLabels: 'rgba(255,255,255,0.5)',
+            gridBorderColor: 'rgba(231,231,231,0.1)',
+        }
+    )
+
+    useEffect(() => {
+        if(gtrobotTheme){
+            setThemeColors(
+                {
+                    colors: 'rgba(255,255,255,1)',
+                    xaxisColors: 'rgba(255,255,255,1)',
+                    axisBorder: 'rgba(231,231,231,0.05)',
+                    axisTicks: 'rgba(231,231,231,0.05)',
+                    yaxisLabels: 'rgba(255,255,255,0.5)',
+                    gridBorderColor: 'rgba(231,231,231,0.1)',
+                }
+            )
+        } else {
+            setThemeColors({
+                colors: 'var(--menu-button-color)',
+                xaxisColors: 'var(--text-color)',
+                axisBorder: 'var(--text-color)',
+                axisTicks: 'var(--text-color)',
+                yaxisLabels: 'var(--text-color)',
+                gridBorderColor: 'var(--text-color)',
+            })
+        }
+    }, [gtrobotTheme]);
+
     // Опции графика
     const options = {
         chart: {
@@ -78,7 +113,7 @@ const AreaChart = ({ referralsData }) => {
         tooltip: {
             enabled: false,
         },
-        colors: ['#ffffff'],
+        colors: [themeColors.colors],
         dataLabels: {
             enabled: false
         },
@@ -96,7 +131,7 @@ const AreaChart = ({ referralsData }) => {
                     hour: 'HH:mm'
                 },
                 style: {
-                    colors: 'rgba(255,255,255,1)',
+                    colors: themeColors.xaxisColors,
                     fontSize: '12px',
                     fontFamily: 'Gilroy, sans-serif',
                     fontWeight: '200'
@@ -104,12 +139,12 @@ const AreaChart = ({ referralsData }) => {
             },
             axisBorder: {
                 show: true,
-                color: 'rgba(231,231,231,0.05)',
+                color: themeColors.axisBorder,
             },
             axisTicks: {
                 show: true,
                 borderType: 'solid',
-                color: 'rgba(231,231,231,0.05)',
+                color: themeColors.axisTicks,
             },
         },
         yaxis: {
@@ -125,7 +160,7 @@ const AreaChart = ({ referralsData }) => {
         },
         grid: {
             show: true,
-            borderColor: 'rgba(231,231,231,0.05)',
+            borderColor: themeColors.gridBorderColor,
         },
         fill: {
             type: 'gradient',

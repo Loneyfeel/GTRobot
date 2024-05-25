@@ -15,6 +15,28 @@
       "kurs": "Kriptovalyutani kursini bilish",
       "mining": "Cloud Mining"
     },
+    "settings": {
+      "title": "Настройки",
+      "settingsTheme": "Настройки темы",
+      "settingsChart": "Настройки графика",
+      "resetTutorials": "Сбросить инструкции",
+      "reset": "Сбросить"
+    },
+    "accountMenu": {
+      "profile": "Профиль",
+      "name": "Имя",
+      "tariff": "Тариф",
+      "daysUntil": "Осталось дней",
+      "buySubscribe": "Купить подписку",
+      "activation": "Активировать",
+      "toWebsite": "Перейти",
+      "activationError": "Ошибка активации",
+      "activationError6000": "Неправильный промокод",
+      "activationError6001": "Промокод уже был активирован",
+      "activationError1": "Неизвестная ошибка",
+      "activationSuccess": "Промокод активирован!",
+      "confirm": "Продолжить"
+    },
     "no": "Mavjud emas"
   },
   "toolsMenu": {

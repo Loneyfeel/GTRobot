@@ -19,10 +19,9 @@ const Start = () => {
                 transition={transition}
             >
                 <div
-                    className={'gray'}>
+                    className={'gray-animations'}>
                     <Lottie
                         animationData={animationData}
-
                     />
                 </div>
             </motion.div>

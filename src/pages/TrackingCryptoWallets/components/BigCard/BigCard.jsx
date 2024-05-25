@@ -1,4 +1,4 @@
-import React, {Suspense, useCallback, useEffect, useState} from 'react';
+import React, {Suspense, useCallback, useEffect, useRef, useState} from 'react';
 import style from './bigCard.module.sass'
 import {
     Accordion,
@@ -25,10 +25,11 @@ import favorites_tab_disabled from '../../assets/main/favorites_tab_disabled.svg
 import BuyDialog from "./BuyDialog/index.js";
 import {getWhaleWalletData, getWhaleWallets, setWhaleWalletFollow, setWhaleWalletName} from "../../api/api.js";
 import {useQueryClient} from "@tanstack/react-query";
-import NoPremiumDialog from "../NoPremiumDialog/index.js";
+import NoPremiumDialog from "../../../../shared/components/NoPremiumDialog/index.js";
 import lock from '../../assets/shared/lockBlack.svg'
 import {motion} from "framer-motion";
 import MiniCard from "../MiniCard/index.js";
+import {tg} from "../../../../shared/telegram/telegram.js";
 
 const BigCard = ({
                      walletsData,
@@ -46,7 +47,8 @@ const BigCard = ({
                      searchInputValueEmpty,
                      setIsBigCardOpened,
                      setIsVisible,
-                     name
+                     name,
+                     gtrobotTheme
                  }) => {
 
     const [tempWalletVisible1, setTempWalletVisible1] = useState('')
@@ -222,9 +224,9 @@ const BigCard = ({
     const filterAndSliceCoins = (data) => {
         const totalQuote = data.reduce((total, [, {quote}]) => total + quote, 0);
         const filteredCoins = data
-            .filter(([, {quote}]) => (quote / totalQuote) * 100 >= 0.01)
+            .filter(([, {quote}]) => (quote / totalQuote) * 100 >= 0)
             .sort(([, {quote: quoteA}], [, {quote: quoteB}]) => quoteB - quoteA)
-            .slice(0, 10)
+            // .slice(0, 10)
             .map(([currency]) => currency);
 
         return filteredCoins;
@@ -245,6 +247,8 @@ const BigCard = ({
     }, [stocksData]);
 
 
+    const [filteredCoinsData, setFilteredCoinsData] = useState([])
+
     const imageFolder = '/assets/cryptocurrencies/';
     // Отображение данных портфолио
     const renderPortfolioData = () => {
@@ -257,6 +261,10 @@ const BigCard = ({
         // Вызываем функцию для фильтрации и формирования первых 10 монет
         const filteredCoins = filterAndSliceCoins(currencyData, totalQuote);
 
+        setTimeout(()=>{
+            setFilteredCoinsData(filteredCoins)
+        },100)
+
         return filteredCoins.map((currency) => {
             const {balanceCoin, quote} = stocksData[currency];
             const mathBalance = quote.toFixed(0);
@@ -267,7 +275,7 @@ const BigCard = ({
 
             return (
                 <>
-                    {precent >= 0.01 &&
+                    {mathBalance >= 1 &&
                         <Box key={currency} className={style.bigCard__content__portfolio__card}>
                             <Box className={style.bigCard__content__portfolio__card__percent}>{precent}%</Box>
                             <Box className={style.bigCard__content__portfolio__card__coinIcon}>
@@ -277,6 +285,9 @@ const BigCard = ({
                                     className={style.bigCard__content__portfolio__card__coinIcon_img}
                                     onError={(e) => {
                                         e.target.src = brokenCoin; // Устанавливаем альтернативное изображение в случае ошибки загрузки основного изображения
+                                    }}
+                                    style={{
+                                        filter: gtrobotTheme === 'gtrobot' ? '' : tg.colorScheme === 'dark' ? '' : 'invert(1)',
                                     }}
                                 />
                             </Box>
@@ -347,6 +358,18 @@ const BigCard = ({
         }
     }, [oneWalletData, temp]);
 
+    const [listIsOpen, setListIsOpen] = useState(false)
+    const scrollableRef = useRef(null);
+
+    const scrollToTop = () => {
+        if (scrollableRef.current) {
+            scrollableRef.current.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        }
+    };
+
     return (
         <>
 
@@ -366,7 +389,10 @@ const BigCard = ({
                              }}>
                             {favorite ?
                                 <img src={favorites_tab_active} alt=''
-                                     className={style.bigCard__content__favorite_img}/>
+                                     className={style.bigCard__content__favorite_img}
+                                     style={{
+                                         filter: gtrobotTheme === 'gtrobot' ? '' : tg.colorScheme === 'dark' ? '' : 'invert(1)',
+                                     }}/>
                                 :
                                 <img src={favorites_tab_disabled} alt=''
                                      className={style.bigCard__content__favorite_img}/>
@@ -404,11 +430,12 @@ const BigCard = ({
                                                     setIsOpenRenameDialog(true)
                                                 }}
                                                 sx={{
-                                                    color: '#fff'
+                                                    color: 'var(--active-color)'
                                                 }}>
                                                 <img src={rename} alt={'Rename'}
                                                      style={{
-                                                         width: '20px'
+                                                         width: '20px',
+                                                         filter: gtrobotTheme === 'gtrobot' ? '' : tg.colorScheme === 'dark' ? '' : 'invert(1)',
                                                      }}/>
                                             </IconButton>
                                         </Box>
@@ -447,21 +474,21 @@ const BigCard = ({
                                             className={style.nameDialog__content__button}
                                             onClick={handleDialogClose}
                                             sx={{
-                                                backgroundColor: '#35383F',
+                                                backgroundColor: 'var(--button-color)',
                                                 borderRadius: '50px',
                                                 boxShadow: 'unset',
                                                 padding: '10px',
                                                 fontFamily: 'Gilroy, sans-serif',
                                                 marginRight: '20px',
                                                 ':hover': {
-                                                    backgroundColor: 'rgba(255,255,255, 0.2)',
+                                                    backgroundColor: 'var(--inactive-color)',
                                                     boxShadow: 'unset',
                                                 }
                                             }}
                                         >
                                             <Typography
                                                 sx={{
-                                                    color: '#fff',
+                                                    color: 'var(--button-text-color)',
                                                     fontWeight: '600',
                                                     fontFamily: 'Gilroy, sans-serif'
                                                 }}>
@@ -530,14 +557,14 @@ const BigCard = ({
                                             onClick={handleDialogClose}
                                             className={style.nameDialog__content__button}
                                             sx={{
-                                                backgroundColor: '#35383F',
+                                                backgroundColor: 'var(--button-color)',
                                                 borderRadius: '50px',
                                                 boxShadow: 'unset',
                                                 padding: '10px',
                                                 fontFamily: 'Gilroy, sans-serif',
                                                 marginRight: '20px',
                                                 ':hover': {
-                                                    backgroundColor: 'rgba(255,255,255, 0.2)',
+                                                    backgroundColor: 'var(--inactive-color)',
                                                     boxShadow: 'unset',
                                                 }
                                             }}
@@ -545,7 +572,7 @@ const BigCard = ({
                                             <Typography
                                                 sx={{
                                                     color: '#fff',
-                                                    fontWeight: '600',
+                                                    fontWeight: 'var(--button-text-color)',
                                                     fontFamily: 'Gilroy, sans-serif'
                                                 }}>
                                                 {t("tracking.buyCard.confirmation_text_close")}
@@ -605,7 +632,7 @@ const BigCard = ({
                                                     marginInline: 'auto',
                                                     width: '50%',
                                                     borderRadius: '50px',
-                                                    backgroundImage: 'linear-gradient(to bottom left, rgba(152, 152, 152, 1), rgba(62, 62, 62, 1))'
+                                                    backgroundImage: 'linear-gradient(to bottom left, var(--gradient-one), var(--gradient-two))'
                                                 }}
                                             >
                                                 {t("tracking.copyAddress")}
@@ -620,10 +647,13 @@ const BigCard = ({
                                 <Accordion
                                     square={true}
                                     sx={{
-                                        backgroundColor: 'var(--component_bg_color)',
+                                        backgroundColor: 'var(--component-bg-color)',
                                         borderRadius: '20px',
                                         marginBottom: '10px',
-                                        color: 'var(--text_color)'
+                                        color: 'var(--text-color)',
+                                        '&::before':{
+                                            opacity: 0
+                                        },
                                     }}>
                                     <AccordionSummary
                                         expandIcon={<ArrowBackIosNewRoundedIcon sx={{transform: 'rotate(-90deg)'}}/>}
@@ -634,7 +664,7 @@ const BigCard = ({
                                             fontWeight: '600',
                                             fontSize: '18px',
                                             '& .MuiSvgIcon-root': {
-                                                color: '#fff'
+                                                color: 'var(--active-color)'
                                             },
                                             '&.Mui-expanded': {
                                                 minHeight: '0'
@@ -649,7 +679,7 @@ const BigCard = ({
                                         }}>
                                         <Box sx={{
                                             marginBlock: '-7px 15px',
-                                            borderTop: '1px solid #35383F',
+                                            borderTop: '1px solid var(--big-card-color)',
                                         }}/>
                                         {description}
                                     </AccordionDetails>
@@ -658,7 +688,7 @@ const BigCard = ({
                         }
                         {balance > 0 && chartData.length > 0 && chartData &&
                             <>
-                                <CardChart money={parseInt(balance)} chartData={chartData}/>
+                                <CardChart money={parseInt(balance)} chartData={chartData} gtrobotTheme={gtrobotTheme}/>
                             </>
                         }
                         {stocksData &&
@@ -667,10 +697,13 @@ const BigCard = ({
                                     square={true}
                                     defaultExpanded={true}
                                     sx={{
-                                        backgroundColor: 'var(--component_bg_color)',
+                                        backgroundColor: 'var(--component-bg-color)',
                                         borderRadius: '20px',
                                         marginBottom: '10px',
-                                        color: 'var(--text_color)'
+                                        color: 'var(--text-color)',
+                                        '&::before':{
+                                            opacity: 0
+                                        },
                                     }}>
                                     <AccordionSummary
                                         expandIcon={<ArrowBackIosNewRoundedIcon sx={{transform: 'rotate(-90deg)'}}/>}
@@ -681,7 +714,7 @@ const BigCard = ({
                                             fontWeight: '600',
                                             fontSize: '18px',
                                             '& .MuiSvgIcon-root': {
-                                                color: '#fff'
+                                                color: 'var(--active-color)'
                                             },
                                             '&.Mui-expanded': {
                                                 minHeight: '0'
@@ -697,13 +730,47 @@ const BigCard = ({
                                         }}>
                                         <Box sx={{
                                             marginBlock: '-7px 15px',
-                                            borderTop: '1px solid #35383F',
+                                            borderTop: '1px solid var(--big-card-color)',
                                         }}/>
                                         <Box className={style.bigCard__content__portfolio}>
-                                            {renderPortfolioData()}
+                                            <div className={style.bigCard__content__portfolio__box}
+                                                 ref={scrollableRef}
+                                            style={{
+                                                height: filteredCoinsData.length > 10 ? listIsOpen ? '495px' : '350px' : '',
+                                                overflow: filteredCoinsData.length > 10 ? listIsOpen ? 'auto' : 'hidden' : '',
+                                                transition: 'height 300ms ease'
+                                            }}>
+                                                <div className={style.bigCard__content__portfolio__box__cards}>
+                                                    <div
+                                                        className={style.bigCard__content__portfolio__box__cards__content}>
+                                                        {renderPortfolioData()}
+                                                    </div>
+                                                </div>
+                                            </div>
                                         </Box>
                                     </AccordionDetails>
                                     <Box className={style.bigCard__content__portfolio__button_box}>
+                                        {filteredCoinsData.length > 10 &&
+                                            <div className={style.bigCard__content__portfolio__button_box__listButton}
+                                                 onClick={() => {
+                                                     setListIsOpen(!listIsOpen)
+                                                     scrollToTop()
+                                                 }}
+                                                 style={{
+                                                     background: listIsOpen ? '' : 'linear-gradient(to top, var(--component-bg-color), rgba(0,0,0,0))'
+                                                 }}
+                                            >
+                                                {listIsOpen ?
+                                                    <span style={{cursor: 'pointer'}}>
+                                                    {t("tracking.openListClose")}
+                                                </span>
+                                                    :
+                                                    <span style={{cursor: 'pointer'}}>
+                                                    {t("tracking.openListOpen")}
+                                                </span>
+                                                }
+                                            </div>
+                                        }
                                         <Button
                                             className={style.bigCard__content__portfolio__button}
                                             variant={'contained'}
@@ -718,6 +785,7 @@ const BigCard = ({
                                                 backgroundColor: '#fff',
                                                 borderRadius: '15px',
                                                 boxShadow: '0px 0px 15px 3px rgba(0, 0, 255, 0.5)',
+                                                marginTop: '40px',
                                                 ':hover': {
                                                     backgroundColor: 'rgba(255,255,255, 0.7)',
                                                     boxShadow: '0px 0px 10px 3px rgba(0, 0, 255, 0.5)',
@@ -754,7 +822,8 @@ const BigCard = ({
                             }}>
                             <Box sx={{
                                display: 'flex',
-                                width: '100%'
+                                width: '100%',
+                                position: 'relative'
                             }}>
                                 {!userData.isPremiumUser &&
                                     <>
@@ -850,6 +919,7 @@ const BigCard = ({
                                                                 walletId={item.walletId}
                                                                 activeTab={activeTab}
                                                                 searchInputValueEmpty={searchInputValueEmpty}
+                                                                gtrobotTheme={gtrobotTheme}
                                                             />
                                                         </Suspense>
                                                     }
@@ -870,10 +940,11 @@ const BigCard = ({
                         setOpen={setOpen}
                         coins={coinsToCopy}
                         walletId={walletId}
-                        imageFolder={imageFolder}/>
+                        imageFolder={imageFolder}
+                        gtrobotTheme={gtrobotTheme}/>
                 </>
             }
-            <NoPremiumDialog open={openNoPremiumDialog} setOpen={setOpenNoPremiumDialog}/>
+            <NoPremiumDialog open={openNoPremiumDialog} setOpen={setOpenNoPremiumDialog} gtrobotTheme={gtrobotTheme}/>
         </>
     );
 }

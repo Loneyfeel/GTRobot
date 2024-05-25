@@ -20,8 +20,8 @@ const SearchCustomWallet = ({
                                 handleChange,
                                 setLoading,
                                 setSearchInputValueEmpty,
-                                userData
-
+                                userData,
+                                gtrobotTheme
 }) => {
     const {t} = useTranslation();
     const [tempFunc, setTempFunc] = useState(false)
@@ -112,9 +112,9 @@ const SearchCustomWallet = ({
                             handleChangeInput(e)
                         }}
                         sx={{
-                            color: 'var(--text_color)',
+                            color: 'var(--text-color)',
                             borderRadius: '50px',
-                            bgcolor: '#1B1B1B',
+                            bgcolor: 'var(--whales-comp-bg-color)',
                             padding: '10px 15px',
                             width: '100%',
                             '& .MuiInput-input': {
@@ -131,20 +131,20 @@ const SearchCustomWallet = ({
                                         :
                                         <img src={lock} alt={''}/>
                                     }
-                                        </Box>
-                                        </InputAdornment>
+                                </Box>
+                            </InputAdornment>
                         }
                                 />
                             </Box>
                 <Box className={style.search__box_network}>
                     <FormControl fullWidth sx={{
                         '& .MuiInputBase-formControl': {
-                            color: 'rgb(111,111,111)',
+                            color: 'var(--inactive-color)',
                             borderRadius: '50px',
-                            backgroundColor: '#1B1B1B',
+                            backgroundColor: 'var(--whales-comp-bg-color)',
                             width: '100%',
                             '& .MuiOutlinedInput-notchedOutline': {
-                                borderColor: '#0000 !important',
+                                borderColor: 'var(--main-bg-color) !important',
                                 '& legend': {fontSize: '1.5rem'}
                             },
                         },
@@ -156,14 +156,14 @@ const SearchCustomWallet = ({
                             label="network"
                             onChange={handleChange}
                             sx={{
-                                '&.Mui-focused': {borderColor: '#fff'},
-                                '& .MuiSelect-icon': {color: '#fff', marginRight: '5px'},
+                                '&.Mui-focused': {borderColor: 'var(--active-color)'},
+                                '& .MuiSelect-icon': {color: 'var(--active-color)', marginRight: '5px'},
                             }}
                             IconComponent={ExpandMoreRoundedIcon}
                             MenuProps={{
                                 PaperProps: {
                                     style: {
-                                        backgroundColor: '#1B1B1B',
+                                        backgroundColor: 'var(--whales-comp-bg-color)',
                                         borderRadius: '20px'
                                     }
                                 }

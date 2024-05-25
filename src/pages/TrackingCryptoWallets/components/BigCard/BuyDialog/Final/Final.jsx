@@ -4,8 +4,9 @@ import {Box, Button, IconButton, Typography} from "@mui/material";
 import ArrowBackRoundedIcon from "@mui/icons-material/ArrowBackRounded.js";
 import like from "../../../../assets/bigCard/like.svg";
 import {useTranslation} from "react-i18next";
+import {tg} from "../../../../../../shared/telegram/telegram.js";
 
-const Final = ({openConfirm, setOpenSuccess, setOpenConfirm, handleClose }) => {
+const Final = ({openConfirm, setOpenSuccess, setOpenConfirm, handleClose, gtrobotTheme }) => {
     const {t} = useTranslation();
     return (
         <>
@@ -39,7 +40,8 @@ const Final = ({openConfirm, setOpenSuccess, setOpenConfirm, handleClose }) => {
                 }}>
                     <Box>
                         <img src={like} alt={"Like"} style={{
-                            width: '100px'
+                            width: '100px',
+                            filter: gtrobotTheme === 'gtrobot' ? '' : tg.colorScheme === 'dark' ? '' : 'invert(1)',
                         }}/>
                     </Box>
                     <Box>

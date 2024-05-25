@@ -3,6 +3,13 @@ import style from './timer.module.sass'
 import Countdown from 'react-countdown';
 import {Box } from "@mui/material";
 import {useTranslation} from "react-i18next";
+
+import btcTimerIcon from '../../../../assets/CloudMining/Timer/btcTimerIcon.svg'
+import dogeTimerIcon from '../../../../assets/CloudMining/Timer/dogeTimerIcon.svg'
+import tonTimerIcon from '../../../../assets/CloudMining/Timer/tonTimerIcon.svg'
+import notTimerIcon from '../../../../assets/CloudMining/Timer/notTimerIcon.svg'
+import shibTimerIcon from '../../../../assets/CloudMining/Timer/shibTimerIcon.svg'
+
 import {fetchDataAndUpdateLocalStorageInSession} from "../../../../helps/dataHelps.js";
 import HalfCircleProgressBar from "../../../GTRobotMining/components/shared/HalfCircleProgressBar/index.js";
 
@@ -79,6 +86,15 @@ const Timer = ({
 
     const currentTimestamp = Date.now()/1000;
     const [percentage,] = useState(((currentTimestamp - isStartUserMiningTimestamp) / (isEndUserMiningTimestamp - isStartUserMiningTimestamp)) * 100);
+    const miningUserData = JSON.parse(localStorage.getItem("miningUserData")) //Получаем цены
+
+    const timerIcons = {
+        btc: btcTimerIcon,
+        doge: dogeTimerIcon,
+        ton: tonTimerIcon,
+        not: notTimerIcon,
+        shib: shibTimerIcon,
+    };
 
     return (
         <>
@@ -106,17 +122,20 @@ const Timer = ({
                 <Box className={style.cloudTimer__timer__animation__box}>
                     <Box className={style.cloudTimer__timer__animation__box__progress}>
                         <Progress
-                            progress={100-percentage}
+                            progress={100 - percentage}
                             hideBall={true}
                             hideValue={true}
-                            strokeWidth={9}
+                            strokeWidth={7}
                             background={'rgba(255, 255, 255, 0.15)'}
-                            gradient={[{stop: 0.0, color: 'rgba(152, 152, 152, 1)'}, {stop: 1, color: 'rgba(82, 82, 82, 1)'}]}
+                            gradient={[{stop: 0.0, color: 'var(--timer-circle-progress-bar-one)'}, {
+                                stop: 1,
+                                color: 'var(--timer-circle-progress-bar-two)'
+                            }]}
                             reduction={0}
                             transitionDuration={1}
                             transitionTimingFunction={'ease-in-out'}
                             style={{
-                                width: '37vh'
+                                width: '25vh'
                             }}
                         />
                     </Box>
@@ -125,23 +144,26 @@ const Timer = ({
                             progress={percentage}
                             hideBall={true}
                             hideValue={true}
-                            strokeWidth={9}
+                            strokeWidth={7}
                             background={'rgba(255, 255, 255, 0.15)'}
-                            gradient={[{stop: 0.0, color: 'rgba(152, 152, 152, 1)'}, {stop: 1, color: 'rgba(82, 82, 82, 1)'}]}
+                            gradient={[{stop: 0.0, color: 'var(--timer-circle-progress-bar-one)'}, {
+                                stop: 1,
+                                color: 'var(--timer-circle-progress-bar-two)'
+                            }]}
                             reduction={0}
                             transitionDuration={1}
                             transitionTimingFunction={'ease-in-out'}
                             style={{
-                                width: '32vh',
+                                width: '22vh',
                                 transform: 'scaleX(-1)'
                             }}
                         />
                     </Box>
                     <Box className={style.cloudTimer__timer__animation__box__waves_box}>
                         <Box className={style.cloudTimer__timer__animation__box__waves_box__animation}
-                        sx={{
-                            top: `${90-percentage*1.1}%`
-                        }}>
+                             sx={{
+                                 top: `${90 - percentage * 1.1}%`
+                             }}>
                             <svg className={style.cloudTimer__timer__animation__box__waves_box__animation__waves}
                                  xmlns="http://www.w3.org/2000/svg"
                                  xmlns:xlink="http://www.w3.org/1999/xlink"
@@ -151,13 +173,23 @@ const Timer = ({
                                           d="M-160 44c30 0 58-18 88-18s 58 18 88 18 58-18 88-18 58 18 88 18 v44h-352z"/>
                                 </defs>
                                 <g className={style.parallax}>
-                                    <use xlinkHref="#gentle-wave" x="48" y="0" fill="rgba(82, 82, 82, 1)"/>
-                                    <use xlinkHref="#gentle-wave" x="48" y="3" fill="rgba(152, 152, 152, 1)"/>
+                                    <use xlinkHref="#gentle-wave" x="48" y="0"
+                                         fill="var(--timer-circle-progress-bar-two)"/>
+                                    <use xlinkHref="#gentle-wave" x="48" y="3"
+                                         fill="var(--timer-circle-progress-bar-one)"/>
                                 </g>
                             </svg>
                             <Box className={style.cloudTimer__timer__animation__box__waves_box__animation__bgc}/>
                         </Box>
                     </Box>
+                    <img
+                        src={timerIcons[miningUserData.cryptoCurrency] || btcTimerIcon}
+                        alt={miningUserData.cryptoCurrency}
+                        className={style.cloudTimer__timer__box__timerIcon}
+                        style={{
+                            width: miningUserData.cryptoCurrency === 'shib' ? '110px' : '80px'
+                        }}
+                    />
                 </Box>
                 <Box className={style.cloudTimer__timer__box}>
                     <Box className={style.cloudTimer__timer__title}>

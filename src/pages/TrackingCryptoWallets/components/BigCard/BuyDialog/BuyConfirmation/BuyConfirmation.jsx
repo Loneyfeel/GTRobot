@@ -38,7 +38,7 @@ const BuyConfirmation = ({
                         width: 'max-content',
                         padding: '7px',
                         margin: '3px',
-                        backgroundColor: '#32323BFF',
+                        backgroundColor: 'var(--big-card-color)',
                         borderRadius: '7px',
                         overflow: 'hidden',
                     }}>
@@ -56,7 +56,9 @@ const BuyConfirmation = ({
                                 e.target.src = broken; // Устанавливаем альтернативное изображение в случае ошибки загрузки основного изображения
                             }}
                         />
-                        {currency.charAt(0).toUpperCase() + currency.slice(1)}
+                        <span style={{
+                            color: 'var(--button-text-color)'
+                        }}>{currency.charAt(0).toUpperCase() + currency.slice(1)}</span>
                     </Box>
                 </>
             );

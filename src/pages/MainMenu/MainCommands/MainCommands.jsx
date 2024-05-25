@@ -1,8 +1,8 @@
-import React, {useEffect, useState} from 'react';
+import React from 'react';
 import style from './mainCommands.module.sass'
 import {Box} from "@mui/material";
 
-import close from '../assets/close.svg'
+import close from '../assets/shared/close.svg'
 import CustomButton from "@components/CustomButton/index.js";
 import MainCommandItem from "./MainCommandItem/index.js";
 
@@ -11,10 +11,9 @@ import language from '../assets/Commands/language.svg'
 import id from '../assets/Commands/id.svg'
 import kurs from '../assets/Commands/kurs.svg'
 import {useTranslation} from "react-i18next";
-import axios from "axios";
-import {initData} from "../../../shared/telegram/telegram.js";
+import {tg} from "../../../shared/telegram/telegram.js";
 
-const MainCommands = ({commandsX, setCommandsX, assets, assetsLength}) => {
+const MainCommands = ({commandsX, setCommandsX, assets, assetsLength, gtrobotTheme}) => {
     const {t} = useTranslation()
 
     return (
@@ -24,10 +23,33 @@ const MainCommands = ({commandsX, setCommandsX, assets, assetsLength}) => {
                      top: commandsX,
                  }}>
                 <Box className={style.menuCommands__list}>
-                    <MainCommandItem command={'start'} description={t("mainMenu.buttons.start")} icon={start}/>
-                    <MainCommandItem command={'language'} description={t("mainMenu.buttons.language")} icon={language}/>
-                    <MainCommandItem command={'getid'} description={t("mainMenu.buttons.getid")} icon={id}/>
-                    <MainCommandItem command={'kurs'} description={t("mainMenu.buttons.kurs")} textInput={true} icon={kurs} assets={assets} assetsLength={assetsLength}/>
+                    <MainCommandItem
+                        command={'start'}
+                        description={t("mainMenu.buttons.start")}
+                        icon={start}
+                        gtrobotTheme={gtrobotTheme}
+                    />
+                    <MainCommandItem
+                        command={'language'}
+                        description={t("mainMenu.buttons.language")}
+                        icon={language}
+                        gtrobotTheme={gtrobotTheme}
+                    />
+                    <MainCommandItem
+                        command={'getid'}
+                        description={t("mainMenu.buttons.getid")}
+                        icon={id}
+                        gtrobotTheme={gtrobotTheme}
+                    />
+                    <MainCommandItem
+                        command={'kurs'}
+                        description={t("mainMenu.buttons.kurs")}
+                        textInput={true}
+                        icon={kurs}
+                        assets={assets}
+                        assetsLength={assetsLength}
+                        gtrobotTheme={gtrobotTheme}
+                    />
                 </Box>
                 <Box className={style.menuCommands__close}
                      onClick={() => {
@@ -35,9 +57,12 @@ const MainCommands = ({commandsX, setCommandsX, assets, assetsLength}) => {
                      }}
                 >
                     <CustomButton
-                        content={<img src={close} alt={'close'} className={style.menuCommands__close_img}/>}
+                        content={<img src={close} alt={'close'} className={style.menuCommands__close_img}
+                                      style={{
+                                          filter: gtrobotTheme === 'gtrobot' ? '' : tg.colorScheme === 'dark' ? '' : 'invert(1)',
+                                      }}/>}
                         style={{
-                            color: 'var(--text_color)',
+                            color: 'var(--text-color)',
                             margin: '10px'
                         }}
                     />

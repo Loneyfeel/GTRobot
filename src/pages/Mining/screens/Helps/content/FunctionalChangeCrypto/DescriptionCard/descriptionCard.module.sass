@@ -11,7 +11,7 @@
       width: 103px
       height: 103px
       border-radius: 100px
-      background-image: linear-gradient(to bottom left, rgba(82, 82, 82, 1), rgba(192, 192, 192, 1))
+      background-image: linear-gradient(to bottom left, var(--gradient-tree-descr-card), var(--gradient-four-descr-card))
       &_1
         display: flex
         justify-content: center
@@ -19,25 +19,25 @@
         width: 97px
         height: 97px
         border-radius: 100px
-        background-image: linear-gradient(to right, rgba(82, 82, 82, 1), rgba(192, 192, 192, 1))
+        background-image: linear-gradient(to right, var(--gradient-tree-descr-card), var(--gradient-four-descr-card))
         &__img
           width: 90px
   &__text_box
     width: 80%
     padding: 7px
-    border: 2px solid #C0C0C0
+    border: 2px solid var(--gradient-four)
     border-radius: 27px
-    background-color: rgba(108, 108, 108, 0.25)
+    background-color: var(--descr-text-bg-color)
     margin-left: auto
     transition: height 0.3s ease
     &__card
-      background-color: rgba(0, 0, 0, 0.7)
+      background-color: var(--descr-text-bg-card-color)
       border-radius: 21px
       padding: 10px
       overflow: hidden
       transition: height 0.3s ease
       &__text
-        color: var(--button_text_color)
+        color: var(--button-text-color)
         margin-left: auto
         width: 85%
         line-height: 1.2

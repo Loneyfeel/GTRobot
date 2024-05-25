@@ -1,5 +1,5 @@
 .button
-  background-image: linear-gradient(to bottom left, rgba(152, 152, 152, 0.7), rgba(62, 62, 62, 0.7))
+  background-image: linear-gradient(to bottom left, var(--gradient-one), var(--gradient-two))
   background-color: unset
   text-transform: none
   line-height: 1
@@ -20,6 +20,7 @@
       margin-right: 7px
       &_img
     &__text
+      color: var(--button-text-color)
   &__arrow
     display: flex
     align-items: center

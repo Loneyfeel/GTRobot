@@ -2,7 +2,7 @@ import React from 'react';
 import style from './noPremiumDialog.module.sass'
 import {Box, Button, Dialog, Typography} from "@mui/material";
 import {useTranslation} from "react-i18next";
-import {tg} from "../../../../shared/telegram/telegram.js";
+import {tg} from "../../telegram/telegram.js";
 
 const NoPremiumDialog = ({open, setOpen}) => {
     const {t, i18n} = useTranslation();
@@ -11,7 +11,7 @@ const NoPremiumDialog = ({open, setOpen}) => {
     }
 
     function handleClickOpenSite(){
-        tg.openLink('https://gtrobot.shop/')
+        tg.openTelegramLink('https://t.me/GTRaibot/shop')
     }
 
     return (
@@ -70,18 +70,19 @@ const NoPremiumDialog = ({open, setOpen}) => {
                         variant={'contained'}
                         onClick={handleClose}
                         sx={{
-                            backgroundColor: '#35383F',
+                            backgroundColor: 'var(--no-premium-dialog)',
                             borderRadius: '50px',
                             boxShadow: 'unset',
                             fontFamily: 'Gilroy, sans-serif',
                             ':hover': {
-                                backgroundColor: 'rgba(255,255,255, 0.2)',
-                                boxShadow: 'unset',                            }
+                                backgroundColor: 'var(--inactive-color)',
+                                boxShadow: 'unset',
+                            }
                         }}
                     >
                         <Typography
                             sx={{
-                                color: '#fff',
+                                color: 'var(--button-text-color)',
                                 fontWeight: '600',
                                 fontFamily: 'Gilroy, sans-serif'
                             }}>

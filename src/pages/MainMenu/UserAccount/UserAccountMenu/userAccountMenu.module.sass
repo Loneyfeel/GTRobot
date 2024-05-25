@@ -1,0 +1,125 @@
+.userAccountMenu
+  position: absolute
+  top: 0
+  transition: right 300ms ease
+  height: 100vh
+  width: 100vw
+  background-color: var(--main-bg-color)
+  z-index: 1000
+  color: var(--text-color)
+  display: flex
+  flex-direction: column
+  align-items: center
+  &__content
+    margin-top: 20px
+    width: 85%
+    &__userData
+      cursor: default
+      &__title
+        text-align: center
+        margin-bottom: 28px
+        &_text
+          font-size: 26px
+          font-weight: 800
+      &__avatar
+        margin-inline: auto
+        width: max-content
+        border-radius: 50px
+        padding: 12px
+        background-color: var(--component-bg-color)
+        margin-bottom: 25px
+        &_img
+          border-radius: 50px
+          width: 76px
+          height: 76px
+      &__data
+        display: flex
+        align-items: center
+        width: 100%
+        border-bottom: 1px solid var(--component-stroke-color)
+        &__section
+          width: 50%
+          padding-block: 20px
+          &__item
+            display: flex
+            margin-bottom: 8px
+            &__icon
+              display: flex
+              align-items: center
+              margin-right: 5px
+              &_img
+                width: 18px
+            &__title
+              display: flex
+              align-items: flex-end
+              &_text
+                font-size: 16px
+        &__name
+          &_text
+            font-size: 16px
+            font-weight: 600
+    &__tarifData
+      cursor: default
+      display: flex
+      justify-content: space-between
+      width: 100%
+      margin-bottom: 30px
+    &__promocodeActivation
+      &__promocode
+        &__title
+          margin-bottom: 12px
+        &__input
+          width: 90%
+          background-color: var(--main-bg-color)
+          border: 1px solid var(--text-color)
+          border-radius: 14px
+          color: var(--text-color)
+          padding: 15px
+          margin-bottom: 10px
+    &__services
+      &__title
+        margin-bottom: 10px
+      &__items
+        &_item
+          background-color: var(--component-bg-color)
+          margin-block: 10px
+          border: 1px solid var(--component-stroke-color)
+          border-radius: 20px
+          padding: 8px
+          &_img
+            width: 32px
+            margin-right: 8px
+          &__text
+            font-weight: 600
+            font-size: 18px
+          &__dialog
+            &__btn
+              width: 100%
+              display: flex
+              justify-content: center
+            &__text
+              color: var(--text-color)
+              background-color: var(--component-bg-color)
+
+  &__success
+    display: flex
+    flex-direction: column
+    align-items: center
+    justify-content: space-around
+    position: fixed
+    top: 0
+    width: 100vw
+    height: 100vh
+    transition: left 300ms ease
+    z-index: 1500
+    background-color: var(--main-bg-color)
+    color: var(--text-color)
+    &__title
+      margin-top: 20px
+      width: 70%
+      font-size: 32px
+      font-weight: 700
+      text-align: center
+    &__icon
+      &_img
+        width: 280px

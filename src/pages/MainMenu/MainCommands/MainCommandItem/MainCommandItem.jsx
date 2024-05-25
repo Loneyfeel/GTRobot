@@ -1,11 +1,11 @@
-import React, {useEffect, useState} from 'react';
+import React, {useState} from 'react';
 import style from './mainCommandItem.module.sass'
 import {Autocomplete, Box} from "@mui/material";
 import {sendCommand} from "../../api/api.js";
 import {useTranslation} from "react-i18next";
 import {tg} from "../../../../shared/telegram/telegram.js";
 
-const MainCommandItem = ({command, icon, description, textInput, assets, assetsLength}) => {
+const MainCommandItem = ({command, icon, description, textInput, assets, assetsLength, gtrobotTheme}) => {
     const {t} = useTranslation()
     const [link, setLink] = useState('btc')
     function handleButtonClick(command){
@@ -21,7 +21,10 @@ const MainCommandItem = ({command, icon, description, textInput, assets, assetsL
         <>
             <Box className={style.mainCommandItem}>
                 <Box className={style.mainCommandItem__command}>
-                    <img src={icon} alt={'icon'} className={style.mainCommandItem__command_img}/>
+                    <img src={icon} alt={'icon'} className={style.mainCommandItem__command_img}
+                         style={{
+                             filter: gtrobotTheme === 'gtrobot' ? '' : tg.colorScheme === 'dark' ? '' : 'invert(1)',
+                         }}/>
                     {command}
                     {textInput && (
                         <>
@@ -38,9 +41,9 @@ const MainCommandItem = ({command, icon, description, textInput, assets, assetsL
                                         '& input': {
                                             width: 50,
                                             height: 25,
-                                            backgroundColor: '#000',
-                                            color: '#fff',
-                                            border: '1px solid var(--component_stroke_color)',
+                                            backgroundColor: 'var(--main-secondary-bg-color )',
+                                            color: 'var(--text-color)',
+                                            border: '1px solid var(--component-stroke-color)',
                                             borderRadius: '7px',
                                             marginLeft: '10px',
                                             position: 'relative',
@@ -57,10 +60,10 @@ const MainCommandItem = ({command, icon, description, textInput, assets, assetsL
                                             position: 'absolute',
                                             top: 0,
                                             left: 5,
-                                            backgroundColor: 'var(--component_bg_color)',
+                                            color: 'var(--text-color)',
+                                            backgroundColor: 'var(--component-bg-color)',
                                             maxHeight: '300px',
                                             overflow: 'scroll',
-                                            border: '1px solid rgba(0,0,0,.25)',
                                             borderRadius: 7,
                                             scrollbarWidth: 'none',
                                         }

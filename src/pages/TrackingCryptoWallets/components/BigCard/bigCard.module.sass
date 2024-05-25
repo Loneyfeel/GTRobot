@@ -6,12 +6,12 @@
   width: 100vw
   overflow-y: auto
   overflow-x: hidden
-  background-color: #000
+  background-color: var(--main-bg-color)
   z-index: 100
   transition: left 200ms ease
   height: 100vh
   scrollbar-width: none
-  color: var(--text_color)
+  color: var(--text-color)
   &__content
     width: 95%
     &__favorite
@@ -29,7 +29,7 @@
       flex-direction: column
       align-items: center
       width: 100%
-      border-bottom: 1px solid #35383F
+      border-bottom: 1px solid var(--big-card-color)
       padding-bottom: 15px
       margin-block: 15px
       &__photo
@@ -62,7 +62,10 @@
           text-align: center
           font-weight: 600
     &__portfolio
-      color: var(--text_color)
+      color: var(--text-color)
+      &__box
+        &__cards
+          &__content
       &__card
         display: flex
         justify-content: flex-start
@@ -70,7 +73,7 @@
         width: 100%
         padding-bottom: 10px
         margin-bottom: 10px
-        border-bottom: 1px solid #35383F
+        border-bottom: 1px solid var(--big-card-color)
         &__percent
           width: 25%
         &__coinIcon
@@ -82,7 +85,7 @@
           width: 25px
           height: 25px
           margin-right: 8px
-          background-color: #fff
+          background-color: var(--active-color)
           &_img
             height: 25px
         &__coin
@@ -96,34 +99,44 @@
         &_box
           padding-inline: 16px
           margin-bottom: 15px
+          &__listButton
+            position: absolute
+            bottom: 80px
+            width: 91%
+            height: 150px
+            display: flex
+            justify-content: center
+            align-items: flex-end
 
 .nameDialog
   &__content
     padding: 18px
     width: 80vw
-    background-color: #1B1B1B
+    background-color: var(--whales-comp-bg-color)
     border-radius: 20px
     display: flex
     flex-direction: column
     align-items: center
     justify-content: space-around
+    color: var(--text-color)
     &__title
       cursor: default
       display: flex
       justify-content: center
       align-items: center
       padding: 18px
-      border-bottom: 1px solid #35383F
+      border-bottom: 1px solid var(--big-card-color)
       width: 100%
       &_text
         text-align: center
         font-size: 20px
         font-weight: 600
+        color: var(--text-color)
     &__input
       width: 70vw
       height: 50px
-      background-color: #35383F
-      color: #fff
+      background-color: var(--main-bg-color)
+      color: var(--text-color)
       border-radius: 50px
       padding-inline: 10px
       border: none

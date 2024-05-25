@@ -16,12 +16,14 @@ import btcCoin from '../../assets/Menu/btcCoin.svg';
 import usdCoin from '../../assets/Menu/usdCoin.svg';
 import wallet from '../../assets/Menu/wallet.svg';
 import arrow from '../../assets/Menu/arrow.svg';
+import changeCrypto from '../../assets/Menu/changeCrypto.svg';
 import btc from '../../assets/shared/cryptoCoins/bitcoin.svg'
 import doge from '../../assets/shared/cryptoCoins/dogecoin.svg'
 import ton from '../../assets/shared/cryptoCoins/toncoin.svg'
 import shib from '../../assets/shared/cryptoCoins/shibacoin.svg'
 import arrowRight from '../../assets/Menu/History/arrowRight.svg'
 import history from '../../assets/Menu/History/history.svg'
+import ChangeCrypto from "./ChangeCrypto/index.js";
 
 // Функция для кэширования изображений
 const imageCache = {};
@@ -33,7 +35,7 @@ const importImage = async (imagePath) => {
     return imageCache[imagePath];
 };
 
-const Menu = ({ onTabChange }) => {
+const Menu = ({ onTabChange, gtrobotTheme }) => {
     const { t } = useTranslation();
     const location = useLocation();
     const [expanded, setExpanded] = useState(null);
@@ -62,8 +64,20 @@ const Menu = ({ onTabChange }) => {
 
             if (!userHistoryResponse) {
                 //тут надо сделать тестовые данные потом
+                const wasd = {
+                 data: {
+                     holding: [{amount: 0.432000118, date: 1706218172, cryptoCurrency: 'usdt', status: 1 }],
+                     withdraws: [{amount: 0.432000000000118, date: 1706218172, cryptoCurrency: 'usdt', status: 0 }],
+                }}
+                localStorage.setItem("userHistory", JSON.stringify(wasd))
             } else {
-                localStorage.setItem("userHistory", JSON.stringify(userHistoryResponse))
+                // localStorage.setItem("userHistory", JSON.stringify(userHistoryResponse))
+                const wasd = {
+                    data: {
+                        holding: [{amount: 0.432000118, date: 1706218172, cryptoCurrency: 'usdt', status: 1 }],
+                        withdraws: [{amount: 0.432000000000118, date: 1706218172, cryptoCurrency: 'usdt', status: 0 }],
+                    }}
+                localStorage.setItem("userHistory", JSON.stringify(wasd))
             }
         }  catch (error) {
             console.error('Error user history:', error);
@@ -164,10 +178,17 @@ const Menu = ({ onTabChange }) => {
             </span>
         },
         {
+            id: 'changeCrypto',
+            icon: changeCrypto,
+            title: `${t("mining.pages.menu.changeCrypto.title")}`,
+            isChangeCrypto: true,
+        },
+        {
             id: 'wallet',
             icon: wallet,
             title: `${t("mining.pages.menu.withdraw.title")}`,
-            isCustom: true }
+            isWithdraw: true,
+        },
     ], [t]);
 
     //История транзакций
@@ -176,6 +197,8 @@ const Menu = ({ onTabChange }) => {
         setExpanded(null)
         setHistoryPageX('0')
     }
+
+    const [temp, setTemp] = useState(false)
 
     return (
         <>
@@ -196,9 +219,12 @@ const Menu = ({ onTabChange }) => {
                                 expanded={expanded === item.id}
                                 onChange={handleChange(item.id)}
                                 sx={{
+                                    '&::before':{
+                                        opacity: 0
+                                    },
                                     '&.MuiAccordion-root': {
                                         borderRadius: '30px',
-                                        backgroundImage: 'linear-gradient(to top right, rgba(32, 32, 32, 1), rgba(122, 122, 122, 1))',
+                                        backgroundImage: 'linear-gradient(to top right, var(--gradient-five-menu-accordion), var(--gradient-six-menu-accordion))',
                                         marginBottom: '10px'
                                     },
                                     '&.MuiAccordion-root.Mui-expanded': {
@@ -236,7 +262,7 @@ const Menu = ({ onTabChange }) => {
                                             fontWeight: '400',
                                             fontSize: '16px',
                                             lineHeight: '1.5',
-                                            color: 'var(--text_color)'
+                                            color: 'var(--button-text-color)'
                                         }}>
                                         {item.title}
                                     </Box>
@@ -247,16 +273,21 @@ const Menu = ({ onTabChange }) => {
                                         padding: '8px',
                                         paddingTop: '0'
                                     }}>
-                                    {item.isCustom ? <Withdraw /> : <Box
-                                        sx={{
-                                            bgcolor: 'var(--component_bg_color)',
-                                            borderRadius: '20px',
-                                            padding: '20px',
-                                            fontWeight: '400',
-                                            fontSize: '16px',
-                                            lineHeight: '1.5',
-                                            color: 'var(--text_color)'
-                                        }}>{item.text}</Box>}
+                                    {item.isChangeCrypto && <ChangeCrypto setIsSectionOpen={setTemp} />}
+                                    {item.isWithdraw && <Withdraw />}
+                                    {item.isChangeCrypto || item.isWithdraw ?
+                                       <></> :
+                                        <Box
+                                            sx={{
+                                                bgcolor: 'var(--component_bg_color)',
+                                                borderRadius: '20px',
+                                                padding: '20px',
+                                                fontWeight: '400',
+                                                fontSize: '16px',
+                                                lineHeight: '1.5',
+                                                color: 'var(--button-text-color)'
+                                            }}>{item.text}</Box>
+                                    }
                                 </AccordionDetails>
                             </Accordion>
                         ))}
@@ -275,12 +306,12 @@ const Menu = ({ onTabChange }) => {
                             padding: '0 15px',
                             fontSize: '16px',
                             fontWeight: '400',
-                            fontFamily: 'Gilroy, sans-serif'
+                            fontFamily: 'Gilroy, sans-serif',
                         }}
                     />
                 </Box>
             </motion.div>
-            <History historyPageX={historyPageX} setHistoryPageX={setHistoryPageX}/>
+            <History historyPageX={historyPageX} setHistoryPageX={setHistoryPageX} gtrobotTheme={gtrobotTheme}/>
         </>
     );
 };

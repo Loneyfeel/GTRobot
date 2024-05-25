@@ -85,7 +85,7 @@ const HistoryItem = ({
                                 )
                             ) : (
                                 <>
-                                <span style={{color: '#E0E0E0'}}>
+                                <span style={{color: 'var(--text-color)'}}>
                                     {t("mining.pages.menu.history.status.holding")}
                                     </span>
                                 </>

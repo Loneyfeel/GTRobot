@@ -7,8 +7,9 @@ import wallet from '../../../assets/Menu/History/wallet.png'
 
 import {useTranslation} from "react-i18next";
 import HistoryItem from "./HistoryItem/index.js";
+import {tg} from "../../../../../shared/telegram/telegram.js";
 
-const History = ({historyPageX, setHistoryPageX}) => {
+const History = ({historyPageX, setHistoryPageX, gtrobotTheme}) => {
 
     const [userHistory, setUserHistory] = useState([])
     const [withdrawSum, setWithdrawSum] = useState(0);
@@ -61,7 +62,8 @@ const History = ({historyPageX, setHistoryPageX}) => {
                         margin: '20px',
                         position: 'absolute',
                         top: '0',
-                        left: '0'
+                        left: '0',
+                        filter: !gtrobotTheme ? tg.colorScheme === 'dark' ? '' : 'invert(1)' : '',
                     }}
                 />
                 <Box className={style.history__title}>

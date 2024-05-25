@@ -12,7 +12,7 @@ import btc from '../../../../assets/shared/cryptoCoins/bitcoin.svg';
 import doge from '../../../../assets/shared/cryptoCoins/dogecoin.svg';
 import shib from '../../../../assets/shared/cryptoCoins/shibacoin.svg';
 import ton from '../../../../assets/shared/cryptoCoins/toncoin.svg';
-import {fetchDataAndUpdateLocalStorageInSession} from "../../../../helps/dataHelps.js";
+import not from '../../../../assets/shared/cryptoCoins/notcoin.svg';
 
 const FunctionalChangeCrypto = ({setIsUserExists}) => {
     const { t } = useTranslation();
@@ -43,14 +43,15 @@ const FunctionalChangeCrypto = ({setIsUserExists}) => {
         btc: { name: "Bitcoin", description: <p><b>{t("mining.pages.menu.coins.text_btc_1")}</b> {t("mining.pages.menu.coins.text_btc_2")}</p> },
         doge: { name: "Dogecoin", description: <p><b>{t("mining.pages.menu.coins.text_doge_1")}</b> {t("mining.pages.menu.coins.text_doge_2")}</p> },
         ton: { name: "Toncoin", description: <p><b>{t("mining.pages.menu.coins.text_ton_1")}</b> {t("mining.pages.menu.coins.text_ton_2")}</p> },
-        shib: { name: "Shiba Inu", description: <p><b>{t("mining.pages.menu.coins.text_shib_1")}</b> {t("mining.pages.menu.coins.text_shib_2")}</p> }
+        shib: { name: "Shiba Inu", description: <p><b>{t("mining.pages.menu.coins.text_shib_1")}</b> {t("mining.pages.menu.coins.text_shib_2")}</p> },
+        not: { name: "Notcoin", description: <p><b>{t("mining.pages.menu.coins.text_shib_1")}</b> {t("mining.pages.menu.coins.text_shib_2")}</p> }
     };
 
     return (
         <Box className={style.changeBox}>
             <Box className={style.changeBox__coins}>
                 <Box className={style.changeBox__coins__cards}>
-                    {Object.entries({ btc, doge, ton, shib }).map(([coinName, coinImg]) => (
+                    {Object.entries({ btc, doge, ton, shib, not }).map(([coinName, coinImg]) => (
                         <CoinCard
                             key={coinName}
                             coin={coinImg}

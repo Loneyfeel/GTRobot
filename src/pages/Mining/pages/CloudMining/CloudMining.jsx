@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import style from './cloudMining.module.sass';
-import { Box } from "@mui/material";
+import {Box, Button, Typography} from "@mui/material";
 import Lottie from "lottie-react";
 import animationData_rocket from "../../assets/CloudMining/rocket.json";
 
@@ -10,8 +10,10 @@ import CustomButton from "@components/CustomButton/index.js";
 import { motion } from "framer-motion";
 import {useNavigate} from "react-router-dom";
 import {useTranslation} from "react-i18next";
+import {tg} from "../../../../shared/telegram/telegram.js";
+import {useQueryClient} from "@tanstack/react-query";
 
-const CloudMining = () => {
+const CloudMining = ({gtrobotTheme}) => {
     const {t} = useTranslation();
     const [userDataStorage, setUserDataStorage] = useState()
     const prices = JSON.parse(localStorage.getItem("prices")) //Получаем цены
@@ -56,10 +58,13 @@ const CloudMining = () => {
         setUserCurrencyPrice(prices[cryptoCurrency]);
     }, [cryptoCurrency, prices]);
 
-    const navigate = useNavigate();
+    const queryClient = useQueryClient()
+    const [userData, setUserData] = useState([])
 
-    // Условный рендеринг: рендерить только если есть данные в хранилище
-    if (!userDataStorage) return null;
+    useEffect(() => {
+        if(queryClient.getQueryData('userMainData')){
+            setUserData(queryClient.getQueryData('userMainData').data);
+        }}, [queryClient.getQueryData('userMainData')])
 
     return (
         <motion.div
@@ -89,6 +94,7 @@ const CloudMining = () => {
                                     userCloudMiningBalance={userCloudMiningBalance}
                                     userCurrencyPrice={userCurrencyPrice}
                                     cryptoCurrency={cryptoCurrency}
+                                    gtrobotTheme={gtrobotTheme}
                                 />
                             }
                         </>
@@ -113,16 +119,69 @@ const CloudMining = () => {
                         />
                     )}
                     {(timerStarted || isStartUserMiningTimestamp) && (
-                        <CustomButton
-                            content={t("mining.pages.menu.withdraw.main_btn")}
-                            onClick={() => {
-                                navigate('/menu/wallet');
-                            }}
-                            style={{
-                                height: '40px',
-                                fontSize: '16px',
-                            }}
-                        />
+                        <div style={{
+                            display: 'flex',
+                            width: '80%',
+                            justifyContent: 'center'
+                        }}>
+                            <Button
+                                variant={'contained'}
+                                onClick={()=>{
+                                    navigate('/menu/wallet');
+                                }}
+                                sx={{
+                                    height: '50px',
+                                    backgroundColor: '#fff',
+                                    borderRadius: '50px',
+                                    padding: '18px 32px',
+                                    marginBottom: '5px',
+                                    ':hover': {
+                                        backgroundColor: 'rgba(255,255,255, 0.6)',
+                                    }
+                                }}
+                            >
+                                <Typography
+                                    sx={{
+                                        color: '#000',
+                                        fontSize: '16px',
+                                        fontWeight: '600',
+                                        fontFamily: 'Gilroy, sans-serif',
+                                        textTransform: 'none',
+                                    }}>
+                                    {t("mining.pages.menu.withdraw.main_btn")}
+                                </Typography>
+                            </Button>
+                            {userData.length > 0 && !userData.isPremiumUser &&
+                                <Button
+                                    variant={'contained'}
+                                    onClick={()=>{
+                                        tg.openTelegramLink('https://t.me/GTRaibot/shop')
+                                    }}
+                                    sx={{
+                                        height: '50px',
+                                        backgroundColor: 'var(--component-bg-color)',
+                                        borderRadius: '50px',
+                                        padding: '18px 18px',
+                                        marginBottom: '5px',
+                                        marginLeft: 'auto',
+                                        ':hover': {
+                                            backgroundColor: 'rgba(255,255,255, 0.6)',
+                                        }
+                                    }}
+                                >
+                                    <Typography
+                                        sx={{
+                                            color: 'var(--text-color)',
+                                            fontSize: '16px',
+                                            fontWeight: '600',
+                                            fontFamily: 'Gilroy, sans-serif',
+                                            textTransform: 'none',
+                                        }}>
+                                        {t("mining.pages.cloudMining.subscribeBtn")}
+                                    </Typography>
+                                </Button>
+                            }
+                        </div>
                     )}
                 </Box>
             </motion.div>

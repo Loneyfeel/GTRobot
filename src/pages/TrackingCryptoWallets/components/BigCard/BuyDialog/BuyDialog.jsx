@@ -16,7 +16,8 @@ const BuyDialog = ({
                        setOpen,
                        coins,
                        walletId,
-                       imageFolder
+                       imageFolder,
+                       gtrobotTheme
 }) => {
     const {t} = useTranslation();
 
@@ -124,6 +125,7 @@ const BuyDialog = ({
         <Slide key={4}>
             <Final
                 handleClose={handleClose}
+                gtrobotTheme={gtrobotTheme}
             />
         </Slide>,
     ] : [
@@ -149,6 +151,7 @@ const BuyDialog = ({
         <Slide key={3}>
             <Final
                 handleClose={handleClose}
+                gtrobotTheme={gtrobotTheme}
             />
         </Slide>,
     ]
@@ -161,7 +164,7 @@ const BuyDialog = ({
                 fullScreen
                 sx={{
                     '& .MuiDialog-paper': {
-                        backgroundColor: '#000'
+                        backgroundColor: 'var(--main-bg-color)'
                     }
                 }}
             >

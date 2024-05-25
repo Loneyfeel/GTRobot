@@ -9,7 +9,7 @@ import {saveMiningUserTask} from "../../api/api.js";
 import {useLocalStorage} from "@uidotdev/usehooks";
 import CustomSnackBar from "../../components/CustomSnackBar/index.js";
 
-const Tasks = ({ userTasks, setUserTasks }) => {
+const Tasks = ({ userTasks, setUserTasks, gtrobotTheme }) => {
     const { t } = useTranslation();
 
     const [openSnackBar, setIsOpenSnackBar] = useState(false)
@@ -94,7 +94,7 @@ const Tasks = ({ userTasks, setUserTasks }) => {
                 <Box className={style.tasks__list}>
                     {trail.map((props, index) => (
                         <animated.div key={index} style={props}>
-                            <TaskItem taskId={currentTasks[index].task_id} taskText={currentTasks[index].task_text} taskLink={currentTasks[index].task_link} />
+                            <TaskItem gtrobotTheme={gtrobotTheme} taskId={currentTasks[index].task_id} taskText={currentTasks[index].task_text} taskLink={currentTasks[index].task_link} />
                         </animated.div>
                     ))}
                 </Box>

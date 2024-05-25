@@ -15,6 +15,28 @@
       "kurs": "Узнать курс монеты",
       "mining": "Cloud Mining"
     },
+    "settings": {
+      "title": "Настройки",
+      "settingsTheme": "Настройки темы",
+      "settingsChart": "Настройки графика",
+      "resetTutorials": "Сбросить инструкции",
+      "reset": "Сбросить"
+    },
+    "accountMenu": {
+      "profile": "Профиль",
+      "name": "Имя",
+      "tariff": "Тариф",
+      "daysUntil": "Осталось дней",
+      "buySubscribe": "Купить подписку",
+      "activation": "Активировать",
+      "toWebsite": "Перейти",
+      "activationError": "Ошибка активации",
+      "activationError6000": "Неправильный промокод",
+      "activationError6001": "Промокод уже был активирован",
+      "activationError1": "Неизвестная ошибка",
+      "activationSuccess": "Промокод активирован!",
+      "confirm": "Продолжить"
+    },
     "no": "Нет"
   },
   "toolsMenu": {
@@ -89,6 +111,7 @@
         "startButtonTimer": "Время до майнинга",
         "whatIs_btn": "Что это?",
         "timer_text": "Осталось:",
+        "subscribeBtn": "Купить подписку",
         "timer": {
           "speedometer_1": "Эффективность",
           "speedometer_2": "Boost",
@@ -179,12 +202,16 @@
           "text_doge_1": "Dogecoin (DOGE)",
           "text_doge_2": "- создался из популярного интернет-мема «doge», а на его логотипе изображен пёс породы сиба-ину. Генеральный директор Tesla Илон Маск опубликовал несколько твитов о том, что Dogecoin - его любимая криптовалюта, тем самым создав хорошую поддержку для криптовалюты."
         },
+        "changeCrypto": {
+          "title": "Сменить монету майнинга",
+          "alert_1": "Вы уверены, что хотите поменять монету?"
+        },
         "withdraw": {
           "menu_btn": "Вывод",
           "title": "Вывод баланса",
           "cost": "Стоимость",
           "textField_1": "Сумма вывода",
-          "textField_2": "Адрес кошелька TON",
+          "textField_2": "Адрес кошелька ",
           "send": "Вы отправите",
           "receive": "Вы получите",
           "main_btn": "Вывести",
@@ -217,6 +244,10 @@
             "alert_3": "До обнуления счета USDT осталось",
             "alert_4": "дней. Выведите свои средства.",
             "question": "Вы хотите вывести средства с счета USDT?"
+          },
+          "changeWithdrawCoin": {
+            "title": "Монета вывода",
+            "select": "Выбрать"
           }
         },
         "history": {
@@ -301,6 +332,8 @@
     "portfolio": "Портфель",
     "portfolio_btn": "Скопировать портфель",
     "inputFollowName": "Введите имя кошелька:",
+    "openListOpen": "Показать все",
+    "openListClose": "Скрыть",
     "buyCard": {
       "title": "Выберите депозит",
       "confirmation": "Подтверждение",

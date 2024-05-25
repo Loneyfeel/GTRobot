@@ -111,14 +111,15 @@ export async function getDailyPromoCode() {
     }
 }
 
-export const miningWithdraw = async (withdrawAmount, withdrawAddress, isWithdrawHold) => {
+export const miningWithdraw = async (withdrawAmount, withdrawAddress, withdrawalCoin, isWithdrawHold) => {
     try {
         // Отправляем запрос на /api/mining-withdraw с указанными данными
         const response = await axiosInstance.post("/mining-withdraw", {
-            initData,
-            withdrawAmount,
-            withdrawAddress,
-            isWithdrawHold
+            initData: initData,
+            withdrawAmount: withdrawAmount,
+            withdrawAddress: withdrawAddress,
+            cryptoCurrencyWithdraw: withdrawalCoin
+            // isWithdrawHold
         });
 
         // Возвращаем результат выполнения запроса

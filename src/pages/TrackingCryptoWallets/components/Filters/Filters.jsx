@@ -4,8 +4,9 @@ import {Box} from "@mui/material";
 import {useTranslation} from "react-i18next";
 import {getWhaleTags, getWhaleWallets} from "../../api/api.js";
 import lockImg from '../../assets/shared/lockWihte.svg'
+import {tg} from "../../../../shared/telegram/telegram.js";
 
-const Filters = ({setWalletsData, lock}) => {
+const Filters = ({setWalletsData, lock, gtrobotTheme}) => {
     const {t, i18n} = useTranslation();
     const [backdropVisible, setBackdropVisible] = useState(false)
     const [tags, setTags] = useState([]); // Состояние для тегов
@@ -71,7 +72,11 @@ const Filters = ({setWalletsData, lock}) => {
                                         handleTagClick(key)
                                     }}
                                 >
-                                    {lock && <img src={lockImg} alt={lock} style={{marginRight: '5px'}}/>}
+                                    {lock && <img src={lockImg} alt={lock}
+                                                  style={{
+                                                      marginRight: '5px',
+                                                      filter: gtrobotTheme === 'gtrobot' ? '' : tg.colorScheme === 'dark' ? '' : 'invert(1)',
+                                                  }}/>}
                                     <Box className={style.trackingCryptoWallets__content__filters__item_text}>{value}</Box>
                                 </Box>
                              </>

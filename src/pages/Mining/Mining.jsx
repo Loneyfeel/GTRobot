@@ -25,6 +25,37 @@ const Mining = () => {
         window.location.href = "/";
     });
 
+    const [gtrobotTheme, setGtrobotTheme] = useState(false)
+
+    const root = document.documentElement; // Получение элемента root
+    useEffect(() => {
+        switch (gtrobotTheme) {
+            case 'gtrobot':
+                root.classList.add('gtrobot-theme'); // Добавление класса gtrsobot-theme к :root
+                tg.setHeaderColor('#000');
+                tg.setBackgroundColor('#000');
+                break;
+            case 'telegram':
+                root.classList.add('telegram-theme'); // Добавление класса telegram-theme к :root
+                tg.setHeaderColor('bg_color');
+                tg.setBackgroundColor('bg_color');
+                break;
+            default:
+                break;
+        }
+    }, [gtrobotTheme]);
+
+    useEffect(() => {
+        tg.CloudStorage.getItem('gtrobotSettings', (error, value) => {
+            if (error) {
+                // Handle error
+                console.error("Error:", error);
+            } else if (value !== '' && value !== null && value !== undefined){
+                setGtrobotTheme(JSON.parse(value).theme);
+            }
+        });
+    }, [])
+
     const { t } = useTranslation();
 
     const [selectedTab, setSelectedTab] = useState(0);
@@ -58,7 +89,7 @@ const Mining = () => {
             const userExistsResponse = await miningUserExists();
 
             if (!userExistsResponse.status) {
-                // setIsUserExists(testData.userExits);
+                setIsUserExists(testData.userExits);
             } else {
                 setIsUserExists(userExistsResponse.status)
             }
@@ -120,17 +151,17 @@ const Mining = () => {
                                 {userTasks.length > 0 ? (
                                     <>
                                         <Suspense fallback={null}>
-                                            <Tasks userTasks={userTasks} setUserTasks={setUserTasks} />
+                                            <Tasks userTasks={userTasks} setUserTasks={setUserTasks} gtrobotTheme={gtrobotTheme}/>
                                         </Suspense>
                                     </>
                                 ) : (
                                     <>
                                         <Suspense>
                                             <Routes>
-                                                <Route path="/cloud-mining" element={<CloudMining />} />
-                                                <Route path="/gtrobot-mining" element={<GTRobotMining />} />
-                                                <Route path="/referrals" element={<Referrals />} />
-                                                <Route path="/menu/:item?" element={<Menu onTabChange={handleTabChange}/>} />
+                                                <Route path="/cloud-mining" element={<CloudMining  gtrobotTheme={gtrobotTheme}/>} />
+                                                <Route path="/gtrobot-mining" element={<GTRobotMining  gtrobotTheme={gtrobotTheme}/>} />
+                                                <Route path="/referrals" element={<Referrals  gtrobotTheme={gtrobotTheme}/>} />
+                                                <Route path="/menu/:item?" element={<Menu onTabChange={handleTabChange} gtrobotTheme={gtrobotTheme}/>} />
                                             </Routes>
                                         </Suspense>
                                         <Suspense>

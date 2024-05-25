@@ -26,7 +26,7 @@ export async function fetchDataAndUpdateLocalStorage(setBackdropVisible) {
                 setBackdropVisible(false)
             } else {
                 // Устанавливаем начальные тестовые данные в локальное хранилище при возникновении ошибки
-                // localStorage.setItem('miningUserData', JSON.stringify(testData.userData));
+                localStorage.setItem('miningUserData', JSON.stringify(testData.userData));
             }
         } else if (storedQueryId === currentQueryId){
             setBackdropVisible(false)
@@ -43,7 +43,7 @@ export async function fetchDataAndUpdateLocalStorageInSession() {
             localStorage.setItem('miningUserData', JSON.stringify(response.data));
         } else {
             // Устанавливаем начальные тестовые данные в локальное хранилище при возникновении ошибки
-            // localStorage.setItem('miningUserData', JSON.stringify(testData.userData));
+            localStorage.setItem('miningUserData', JSON.stringify(testData.userData));
         }
     } catch (error) {
         console.error("Error fetching user data:", error);
@@ -58,9 +58,9 @@ export async function fetchTickersPricesAndUpdateLocalStorage () {
 
         if (tickersPrices) {
             localStorage.setItem('prices', JSON.stringify(tickersPrices));
-            // localStorage.setItem('prices', JSON.stringify(testData.prices));
+            localStorage.setItem('prices', JSON.stringify(testData.prices));
         } else {
-            // localStorage.setItem('prices', JSON.stringify(testData.prices));
+            localStorage.setItem('prices', JSON.stringify(testData.prices));
         }
     } catch (error) {
         console.error('Error fetching tickers prices:', error);

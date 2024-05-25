@@ -6,7 +6,7 @@ const Change = () => {
     return (
         <>
             <div
-                className={'gray'}>
+                className={'gray-animations'}>
                 <Lottie
                 animationData={animationData}
             />

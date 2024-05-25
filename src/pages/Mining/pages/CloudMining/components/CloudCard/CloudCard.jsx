@@ -4,7 +4,7 @@ import { Box } from "@mui/material";
 import { useTranslation } from "react-i18next";
 import BalanceBox from "../../../GTRobotMining/components/shared/BalanceBox/index.js";
 
-const CloudCard = ({ userCloudMiningBalance, userCurrencyPrice, cryptoCurrency }) => {
+const CloudCard = ({ userCloudMiningBalance, userCurrencyPrice, cryptoCurrency, gtrobotTheme }) => {
     const {t, i18n} = useTranslation();
 
     // Функция для форматирования баланса с заданным количеством знаков после запятой
@@ -22,7 +22,7 @@ const CloudCard = ({ userCloudMiningBalance, userCurrencyPrice, cryptoCurrency }
     return (
         <>
             <Box>
-                <BalanceBox balance={userCloudMiningBalance} currensy={cryptoCurrency} count={13} text={t("mining.pages.cloudMining.balance")}/>
+                <BalanceBox balance={userCloudMiningBalance} currensy={cryptoCurrency} count={12} text={t("mining.pages.cloudMining.balance")}/>
                 <Box className={style.cloudCard}>
                     <Box className={style.cloudCard__future}>
                         <Box className={style.cloudCard__future_text}>
@@ -30,7 +30,8 @@ const CloudCard = ({ userCloudMiningBalance, userCurrencyPrice, cryptoCurrency }
                         </Box>
                         <Box className={style.cloudCard__future_count}
                              sx={{
-                                 fontSize: futureBalance > 1000000 ? '12px' : '16px'
+                                 fontSize: futureBalance > 1000000 ? '12px' : '16px',
+                                 cursor: 'default'
                              }}>
                             {futureBalance > 0 ? (
                                 <>
@@ -51,7 +52,11 @@ const CloudCard = ({ userCloudMiningBalance, userCurrencyPrice, cryptoCurrency }
                             )}
                         </Box>
                         {i18n.language === 'uz' && (
-                            <Box className={style.cloudCard__future_text}>
+                            <Box className={style.cloudCard__future_text}
+                            sx={{
+                                color: 'var(--text-color-light)',
+                                filter: !gtrobotTheme ? tg.colorScheme === 'dark' ? '' : 'invert(1)' : '',
+                            }}>
                                 {t("mining.pages.cloudMining.future_balance_2")}
                             </Box>
                         )}

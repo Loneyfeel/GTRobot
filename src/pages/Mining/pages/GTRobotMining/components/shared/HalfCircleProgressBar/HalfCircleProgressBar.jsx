@@ -43,7 +43,7 @@ const HalfCircleProgressBar = ({ value, max, width, height, gradient, text, widt
                         transform: `translate(-50%, -100%) rotate(${pointerRotation}deg)`,
                         width: `${widthStick}`,
                         height: height,
-                        backgroundImage: 'linear-gradient(to bottom, #FFFFFF, #454545)',
+                        backgroundImage: 'linear-gradient(to bottom, var(--circle-progressbar-one), var(--circle-progressbar-two))',
                         borderRadius: '10px',
                         transition: 'transform 1000ms ease-in-out',
                     }}

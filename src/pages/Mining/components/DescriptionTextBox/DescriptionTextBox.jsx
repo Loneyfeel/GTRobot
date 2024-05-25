@@ -33,7 +33,9 @@ const DescriptionTextBox = ({ text, bgcolor, width, borderRadius, component, sty
                      borderRadius: `${borderRadius}`,
                  }}>
                 <Box className={style.description__text_box__card__text} ref={textRef}>
-                    <p>{text}</p>
+                    <p style={{
+                        color: 'var(--text-color)'
+                    }}>{text}</p>
                 </Box>
             </Box>
         </Box>

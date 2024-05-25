@@ -67,8 +67,6 @@ const BottomNavigationMenu = ({ selectedTab, onTabChange }) => {
         <Box className={style.bottomNavigationMenu}
         sx={{
             position: wasd,
-            // paddingBottom: wasd === 'fixed' ? '15px' : '15px',
-            // bottom: wasd === 'fixed' ? '0' : '15px'
         }}>
             <Box className={style.bottomNavigationMenu_box} ref={containerRef}>
                 <animated.div className={style.bottomNavigationMenu_box__circle} style={{ ...circleSpring}}>

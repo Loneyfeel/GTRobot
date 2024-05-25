@@ -4,7 +4,7 @@ import Chart from 'react-apexcharts';
 import {Box} from "@mui/material";
 import {useTranslation} from "react-i18next";
 
-const CardChart = ({money, chartData}) => {
+const CardChart = ({money, chartData, gtrobotTheme}) => {
     const { t } = useTranslation();
 
     const [seriesData, setSeriesData] = useState([]);
@@ -60,9 +60,40 @@ const CardChart = ({money, chartData}) => {
         data: seriesData,
     }];
 
-    // Определение минимального и максимального значения из ваших данных
-    const minValue = Math.min(...seriesData.map(item => item.y));
-    const maxValue = Math.max(...seriesData.map(item => item.y));
+    const [themeColors, setThemeColors] = useState(
+        {
+            colors: 'rgba(255,255,255,1)',
+            xaxisColors: 'rgba(255,255,255,1)',
+            axisBorder: 'rgba(231,231,231,0.05)',
+            axisTicks: 'rgba(231,231,231,0.05)',
+            yaxisLabels: 'rgba(255,255,255,0.5)',
+            gridBorderColor: 'rgba(231,231,231,0.1)',
+        }
+    )
+
+    useEffect(() => {
+        if(gtrobotTheme === 'gtrobot'){
+            setThemeColors(
+                {
+                    colors: 'rgba(255,255,255,1)',
+                    xaxisColors: 'rgba(255,255,255,1)',
+                    axisBorder: 'rgba(231,231,231,0.05)',
+                    axisTicks: 'rgba(231,231,231,0.05)',
+                    yaxisLabels: 'rgba(255,255,255,0.5)',
+                    gridBorderColor: 'rgba(231,231,231,0.1)',
+                }
+            )
+        } else if(gtrobotTheme === 'telegram') {
+            setThemeColors({
+                colors: 'var(--menu-button-color)',
+                xaxisColors: 'var(--text-color)',
+                axisBorder: 'var(--text-color)',
+                axisTicks: 'var(--text-color)',
+                yaxisLabels: 'var(--text-color)',
+                gridBorderColor: 'var(--text-color)',
+            })
+        }
+    }, [gtrobotTheme]);
 
     // Опции графика
     const options = {
@@ -79,7 +110,7 @@ const CardChart = ({money, chartData}) => {
         tooltip: {
             enabled: false,
         },
-        colors: ['#ffffff'],
+        colors: [themeColors.colors],
         dataLabels: {
             enabled: false
         },
@@ -98,7 +129,7 @@ const CardChart = ({money, chartData}) => {
                     hour: 'HH:mm'
                 },
                 style: {
-                    colors: 'rgba(255,255,255,1)',
+                    colors: themeColors.xaxisColors,
                     fontSize: '12px',
                     fontFamily: 'Gilroy, sans-serif',
                     fontWeight: '200'
@@ -106,12 +137,12 @@ const CardChart = ({money, chartData}) => {
             },
             axisBorder: {
                 show: true,
-                color: 'rgba(231,231,231,0.05)',
+                color: themeColors.axisBorder,
             },
             axisTicks: {
                 show: true,
                 borderType: 'solid',
-                color: 'rgba(231,231,231,0.05)',
+                color: themeColors.axisTicks,
             },
         },
         yaxis: {
@@ -128,7 +159,7 @@ const CardChart = ({money, chartData}) => {
             labels: {
                 show: true,
                 style: {
-                    colors: 'rgba(255,255,255,0.5)',
+                    colors: themeColors.yaxisLabels,
                 },
                 formatter : (value) => {
                     let formattedValue = '';
@@ -155,7 +186,7 @@ const CardChart = ({money, chartData}) => {
         },
         grid: {
             show: true,
-            borderColor: 'rgba(231,231,231,0.1)',
+            borderColor: themeColors.gridBorderColor,
             strokeDashArray: 10,
         },
         fill: {

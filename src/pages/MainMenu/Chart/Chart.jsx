@@ -1,15 +1,16 @@
 import React, {useEffect, useState} from 'react';
 import style from './chart.module.sass'
 import Chart from 'react-apexcharts';
-import {Backdrop, Box, CircularProgress} from "@mui/material";
+import {Box} from "@mui/material";
 import {host} from '../../../shared/host/host.js'
-import {currentQueryId, initData} from '../../../shared/telegram/telegram.js'
+import {currentQueryId, initData, tg} from '../../../shared/telegram/telegram.js'
 
-import btcIcon from '../assets/btcIcon.svg'
+import gtrobotLogo from '../../../assets/gtrobot_logo.svg'
+
 import {useTranslation} from "react-i18next";
 import axios from "axios";
 
-const MenuChart = () => {
+const MenuChart = ({gtrobotTheme, gtrobotSettings}) => {
     const { t } = useTranslation();
 
     const [seriesData, setSeriesData] = useState([]);
@@ -21,10 +22,10 @@ const MenuChart = () => {
         const fetchData = async () => {
             try {
                 const storedQueryId = localStorage.getItem('mainMenuQueryId');
-                const market = 'BTCUSDT';
+                const market = gtrobotSettings.chartCoin.toUpperCase();
                 const tickInterval = '1d';
                 const url = `${host}/api/get-klines`;
-                if (storedQueryId !== currentQueryId) {
+                // if (storedQueryId !== currentQueryId) {
                     const response = await axios.post(url, {
                         symbol: market,
                         interval: tickInterval,
@@ -35,8 +36,10 @@ const MenuChart = () => {
                     if (data) {
                         setBackdropVisible(false);
                         localStorage.setItem('chartData', JSON.stringify(data));
+                    } else {
+                        localStorage.setItem('chartData', JSON.stringify([]));
                     }
-                }
+                // }
                 const chartData = JSON.parse(localStorage.getItem('chartData'))
                 const chartDataSet = parseFloat(chartData[chartData.length - 1][4])
 
@@ -51,6 +54,9 @@ const MenuChart = () => {
 
             } catch (error) {
                 console.error('Error fetching data:', error);
+                localStorage.setItem('chartData', JSON.stringify([]));
+                setCurrentPrice(0);
+                setSeriesData([]);
             } finally {
                 setTimeout(() => {
                     setBackdropVisible(false);
@@ -59,12 +65,47 @@ const MenuChart = () => {
         };
 
         fetchData();
-    }, []);
+    }, [gtrobotSettings]);
 
     // Данные для графика
     const series = [{
         data: seriesData,
     }];
+
+    const [themeColors, setThemeColors] = useState(
+        {
+            colors: 'rgba(255,255,255,1)',
+            xaxisColors: 'rgba(255,255,255,1)',
+            axisBorder: 'rgba(231,231,231,0.05)',
+            axisTicks: 'rgba(231,231,231,0.05)',
+            yaxisLabels: 'rgba(255,255,255,0.5)',
+            gridBorderColor: 'rgba(231,231,231,0.1)',
+        }
+    )
+
+    useEffect(() => {
+        if(gtrobotTheme === 'gtrobot'){
+            setThemeColors(
+                {
+                    colors: 'rgba(255,255,255,1)',
+                    xaxisColors: 'rgba(255,255,255,1)',
+                    axisBorder: 'rgba(231,231,231,0.05)',
+                    axisTicks: 'rgba(231,231,231,0.05)',
+                    yaxisLabels: 'rgba(255,255,255,0.5)',
+                    gridBorderColor: 'rgba(231,231,231,0.1)',
+                }
+            )
+        } else  if(gtrobotTheme === 'telegram'){
+            setThemeColors({
+                colors: 'var(--menu-button-color)',
+                xaxisColors: 'var(--text-color)',
+                axisBorder: 'var(--text-color)',
+                axisTicks: 'var(--text-color)',
+                yaxisLabels: 'var(--text-color)',
+                gridBorderColor: 'var(--text-color)',
+            })
+        }
+    }, [gtrobotTheme]);
 
     // Опции графика
     const options = {
@@ -81,7 +122,7 @@ const MenuChart = () => {
         tooltip: {
             enabled: false,
         },
-        colors: ['#ffffff'],
+        colors: [themeColors.colors],
         dataLabels: {
             enabled: false
         },
@@ -100,7 +141,7 @@ const MenuChart = () => {
                     hour: 'HH:mm'
                 },
                 style: {
-                    colors: 'rgba(255,255,255,1)',
+                    colors: themeColors.xaxisColors,
                     fontSize: '12px',
                     fontFamily: 'Gilroy, sans-serif',
                     fontWeight: '200'
@@ -108,12 +149,12 @@ const MenuChart = () => {
             },
             axisBorder: {
                 show: true,
-                color: 'rgba(231,231,231,0.05)',
+                color: themeColors.axisBorder,
             },
             axisTicks: {
                 show: true,
                 borderType: 'solid',
-                color: 'rgba(231,231,231,0.05)',
+                color: themeColors.axisTicks,
             },
         },
         yaxis: {
@@ -130,7 +171,7 @@ const MenuChart = () => {
             labels: {
                 show: true,
                 style: {
-                    colors: 'rgba(255,255,255,0.5)',
+                    colors: themeColors.yaxisLabels,
                 },
                 formatter: (value) => {
                     if (Math.abs(value) >= 1000) {
@@ -142,7 +183,7 @@ const MenuChart = () => {
         },
         grid: {
             show: true,
-            borderColor: 'rgba(231,231,231,0.1)',
+            borderColor: themeColors.gridBorderColor,
             strokeDashArray: 10,
         },
         fill: {
@@ -155,7 +196,7 @@ const MenuChart = () => {
                 stops: [0, 90, 100]
             }
         }
-    };
+    }
 
     // Функция для форматирования баланса с заданным количеством знаков после запятой
     const formatNumber = (balance, digits) => {
@@ -180,23 +221,27 @@ const MenuChart = () => {
 
     return (
         <>
-            <Backdrop open={false} sx={{ zIndex: 9999, bgcolor: '#000' }}>
-                <CircularProgress sx={{ color: '#fff' }} />
-            </Backdrop>
             <Box className={style.chart}>
                 <Box className={style.chart__title}>
-                    <Box className={style.chart__title__text}>
-                        {t("mining.pages.menu.withdraw.cost")}
-                        <img src={btcIcon} alt={'btc'} className={style.chart__title__text_img}/>
-                    </Box>
-                    <Box className={style.chart__title__count}
-                    sx={{
-                        filter: backdropVisible ? 'blur(7px)' : 'blur(0)',
-                        transition: 'filter 500ms ease'
-                    }}>
-                        <span className={style.chart__title__count_big}>${formatedCost.split('.')[0]}</span>
-                        <span className={style.chart__title__count_small}>.{formatedCost.split('.')[1]}</span>
-                    </Box>
+                    <div>
+                        <Box className={style.chart__title__text}>
+                            <span style={{marginRight: '5px'}}>{t("mining.pages.menu.withdraw.cost")}</span>
+                            {
+                                gtrobotSettings &&
+                                <>
+                                    {gtrobotSettings.chartCoin.replace(/([A-Z]+)(USDT)/, '$1/$2')}
+                                </>
+                            }
+                        </Box>
+                        <Box className={style.chart__title__count}
+                        sx={{
+                            filter: backdropVisible ? 'blur(7px)' : 'blur(0)',
+                            transition: 'filter 500ms ease'
+                        }}>
+                            <span className={style.chart__title__count_big}>${formatedCost.split('.')[0]}</span>
+                            <span className={style.chart__title__count_small}>.{formatedCost.split('.')[1]}</span>
+                        </Box>
+                    </div>
                 </Box>
                 <Chart
                     options={options}

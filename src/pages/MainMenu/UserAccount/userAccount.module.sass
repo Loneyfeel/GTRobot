@@ -1,0 +1,45 @@
+.userAccount
+  display: flex
+  align-items: center
+  justify-content: space-between
+  width: 95%
+  color: #fff
+  margin-bottom: 5px
+  min-height: 13vh
+  &__userData
+    display: flex
+    align-items: center
+    cursor: pointer
+    width: 50%
+    &__avatar
+      margin-right: 8px
+      &__icon
+        display: flex
+        align-items: center
+        padding: 3px
+        background-color: var(--component-bg-color)
+        border-radius: 50%
+        overflow: hidden
+        &_img
+          border-radius: 50px
+          width: 17vw
+          height: 17vw
+    &__data
+      &__name
+        color: var(--text-color)
+        margin-bottom: 5px
+        font-size: 18px
+      &__level
+        display: flex
+        &__box
+          display: flex
+          align-items: center
+          background-color: #fff
+          padding: 1px 5px
+          border-radius: 50px
+          color: #000
+          &_text
+            font-size: 14px
+            font-weight: 600
+            margin-top: 1px
+  &__settings

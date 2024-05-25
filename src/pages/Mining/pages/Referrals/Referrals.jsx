@@ -11,6 +11,7 @@ import { motion } from "framer-motion";
 
 import user from '../../assets/Referrals/user.svg'
 import userAdd from '../../assets/Referrals/userAdd.svg'
+import {tg} from "../../../../shared/telegram/telegram.js";
 
 // Функция для кэширования изображений
 const imageCache = {};
@@ -23,7 +24,7 @@ const cachedImage = (src) => {
     return imageCache[src];
 };
 
-const Referrals = () => {
+const Referrals = ({gtrobotTheme}) => {
     const { t } = useTranslation();
     const userDataStorage = JSON.parse(localStorage.getItem("miningUserData"));
     const boost = userDataStorage.referrals.referralBonus
@@ -84,7 +85,7 @@ const Referrals = () => {
                     <Box className={style.referrals__graph__text}>
                         {t("mining.pages.ref.graphic")}
                     </Box>
-                    <AreaChart referralsData={referralsData}/>
+                    <AreaChart referralsData={referralsData} gtrobotTheme={gtrobotTheme}/>
                 </Box>
                 <Box className={style.referrals__list}>
                     <Box className={style.referrals__list__text}>
@@ -98,6 +99,7 @@ const Referrals = () => {
                                         key={index}
                                         userName={referral.userName}
                                         userProfilePhoto={referral.userProfilePhoto}
+                                        gtrobotTheme={gtrobotTheme}
                                     />
                                 ))}
                             </>
@@ -109,8 +111,8 @@ const Referrals = () => {
                             <Box className={style.referrals__list__cards_card__img}>
                                 <Avatar
                                     sx={{
-                                        bgcolor: 'var(--component_stroke_color)',
-                                        border: '1px solid var(--component_stroke_color_light)',
+                                        bgcolor: 'var(--component-stroke-color)',
+                                        border: '1px solid var(--component-stroke-color-light)',
                                         width: '15vw',
                                         height: '15vw',
                                         maxHeight: '95px',
@@ -119,7 +121,9 @@ const Referrals = () => {
                                     alt="userAdd"
                                     src={"userAdd"} // Кешируем изображение
                                 >
-                                    <img src={cachedImage(userAdd).src} alt={'userAdd'}/>
+                                    <img src={cachedImage(userAdd).src} alt={'userAdd'} style={{
+                                        filter: !gtrobotTheme ? tg.colorScheme === 'dark' ? '' : 'invert(1)' : '',
+                                    }}/>
                                 </Avatar>
                             </Box>
                             <Box className={style.referrals__list__cards_card__text}>
@@ -141,14 +145,14 @@ const Referrals = () => {
 
 export default Referrals;
 
-const ReferralCard = ({ userName, userProfilePhoto }) => {
+const ReferralCard = ({ userName, userProfilePhoto, gtrobotTheme }) => {
     return (
         <Box className={style.referrals__list__cards_card}>
             <Box className={style.referrals__list__cards_card__img}>
                 <Avatar
                     sx={{
-                        bgcolor: 'var(--component_bg_color)',
-                        border: '1px solid var(--component_stroke_color)',
+                        bgcolor: 'var(--component-bg-color)',
+                        border: '1px solid var(--component-stroke-color)',
                         width: '15vw',
                         height: '15vw',
                         maxHeight: '95px',
@@ -157,7 +161,10 @@ const ReferralCard = ({ userName, userProfilePhoto }) => {
                     alt={userName}
                     src={useMemo(() => `data:image/jpeg;base64,${userProfilePhoto}`, [userProfilePhoto])} // Используем useMemo для мемоизации
                 >
-                    <img src={useMemo(() => user, [user])} alt={'user'}/>
+                    <img src={useMemo(() => user, [user])} alt={'user'}style={{
+                        filter: !gtrobotTheme ? tg.colorScheme === 'dark' ? '' : 'invert(1)' : '',
+                    }}
+                    />
                 </Avatar>
             </Box>
             <Box className={style.referrals__list__cards_card__text}>

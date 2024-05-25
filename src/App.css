@@ -5,12 +5,12 @@
 }
 html {
   scroll-behavior: smooth;
-  background-color: #000;
+  background-color: var(--main-bg-color);
 }
 
 body {
   font-family: 'Gilroy', sans-serif;
-  background-color: #000;
+  background-color: var(--main-bg-color);
 }
 
 body::-webkit-scrollbar {
@@ -26,39 +26,194 @@ img {
   -webkit-transform: translate3d(0, 0, 0);
 }
 
+/* Значение по умолчанию */
 :root {
-  --bg_color: var(--tg-theme-bg-color);
-  --secondary_bg_color: var(--tg-theme-secondary-bg-color);
+  /* Общие цвета, которые встречаются везде*/
+  --main-bg-color: #000;
+  --text-color: #fff;
+  --text-color-light: rgb( 170, 170, 170);
+  --button-color: rgba(255, 255, 255, 0.2);
+  --button-text-color: #fff;
+  --component-bg-color: rgba(25, 25, 25, 0.9);
+  --component-stroke-color: rgba(255, 255, 255, 0.2);
+  --component-stroke-color-light: rgba(255, 255, 255, 0.5);
+  --loaders-color: #fff;
+  --gradient-one: rgba(152, 152, 152, 0.7);
+  --gradient-two: rgba(62, 62, 62, 0.7);
 
-  --header_bg_color: var(--tg-theme-header-bg-color);
-  --section_bg_color: var(--tg-theme-section-bg-color);
+  /*Telegram Web App*/
+  --tg-web-app-header-color: #000;
+  --tg-web-app-bg-color: #000;
 
-  /*--text_color: var(--tg-theme-text-color);*/
-  --hint_color: var(--tg-theme-hint-color);
-  --link_color: var(--tg-theme-link-color);
+  /*Далее цвета, которые встречаются только в проекте*/
 
-  --button_color: var(--tg-theme-button-color);
-  --button_text_color: var(--tg-theme-button-text-color);
+  /*Main Menu*/
+  --menu-button-color: rgba(108, 108, 108, 0.35);
+  --settings-inactive-color: #000;
 
-  --accent_text_color: var(--tg-theme-accent-text-color);
-  --section_header_text_color: var(--tg-theme-section-header-text-color);
-  --subtitle_text_color: var(--tg-theme-subtitle-text-color);
-  --destructive_text_color: var(--tg-theme-destructive-text-color);
+  /*Tools Menu*/
 
-  /*--bg_color: #000;*/
-  /*--button_text_color: #fff*/
-  --text_color: #fff;
-  --text-light: rgb( 170, 170, 170);
-  --component_bg_color: rgba(25, 25, 25, 0.9);
-  --component_stroke_color: rgba(255, 255, 255, 0.2);
-  --component_stroke_color_light: rgba(255, 255, 255, 0.5);
-  --menu_button_color: rgba(108, 108, 108, 0.35);
+  /*Mining*/
+  --gradient-tree-descr-card: rgba(82, 82, 82, 1);
+  --gradient-four-descr-card: rgba(192, 192, 192, 1);
+  --gradient-five-menu-accordion: rgba(32, 32, 32, 1);
+  --gradient-six-menu-accordion: rgba(122, 122, 122, 1);
+  --gradient-seven-widthdraw: rgba(62, 62, 62, 0.95);
+  --gradient-eight-widthdraw: rgba(112, 112, 112, 0.95);
+  --descr-text-bg-color: rgba(108, 108, 108, 0.25);
+  --descr-text-bg-card-color: rgba(0, 0, 0, 0.7);
+  --coin-card-active-color: #878787;
+  --coin-card-inactive-color: rgba(156, 156, 156, 0.2);
+  --referrals-text-color: rgba(255,255,255,0.4);
+  --circle-progressbar-one: #FFFFFF;
+  --circle-progressbar-two: #454545;
+  --timer-circle-progress-bar-one: rgba(152, 152, 152, 1);
+  --timer-circle-progress-bar-two: rgba(82, 82, 82, 1);
+  --snackbars-one: rgba(152, 152, 152, 1);
+  --snackbars-two: rgba(62, 62, 62, 1);
+  --bottom-nav-menu: var(--component-bg-color);
 
-  --tracking-gray: rgb(224, 224, 244);
+  /*Top Whales*/
+  --white-daker: rgb(224, 224, 244);
+  --whales-comp-bg-color: #1B1B1B;
+  --no-premium-dialog: #35383F;
+  --big-card-color: #35383F;
+  --active-color: #FFFFFF;
+  --inactive-color: #616161;
+  --no-premium-place: rgba(0,0,0,0.6);
+
+  /*Другое*/
+  --white-black-filter: grayscale(100%);
+  --white-black-filter-animations: grayscale(100%);
+}
+
+.gtrobot-theme {
+/* Общие цвета, которые встречаются везде*/
+  --main-bg-color: #000;
+  --text-color: #fff;
+  --text-color-light: rgb( 170, 170, 170);
+  --button-color: rgba(255, 255, 255, 0.2);
+  --button-text-color: #fff;
+  --component-bg-color: rgba(20, 20, 20, 1);
+  --component-stroke-color: rgba(255, 255, 255, 0.2);
+  --component-stroke-color-light: rgba(255, 255, 255, 0.5);
+  --loaders-color: #fff;
+  --gradient-one: rgba(152, 152, 152, 0.7);
+  --gradient-two: rgba(62, 62, 62, 0.7);
+
+  /*Telegram Web App*/
+  --tg-web-app-header-color: #000;
+  --tg-web-app-bg-color: #000;
+
+  /*Далее цвета, которые встречаются только в проекте*/
+
+  /*Main Menu*/
+  --menu-button-color: rgba(108, 108, 108, 0.35);
+  --settings-inactive-color: #000;
+
+  /*Tools Menu*/
+
+  /*Mining*/
+  --gradient-tree-descr-card: rgba(82, 82, 82, 1);
+  --gradient-four-descr-card: rgba(192, 192, 192, 1);
+  --gradient-five-menu-accordion: rgba(32, 32, 32, 1);
+  --gradient-six-menu-accordion: rgba(122, 122, 122, 1);
+  --gradient-seven-widthdraw: rgba(62, 62, 62, 0.95);
+  --gradient-eight-widthdraw: rgba(112, 112, 112, 0.95);
+  --descr-text-bg-color: rgba(108, 108, 108, 0.25);
+  --descr-text-bg-card-color: rgba(0, 0, 0, 0.7);
+  --coin-card-active-color: #878787;
+  --coin-card-inactive-color: rgba(156, 156, 156, 0.2);
+  --referrals-text-color: rgba(255,255,255,0.4);
+  --circle-progressbar-one: #FFFFFF;
+  --circle-progressbar-two: #454545;
+  --timer-circle-progress-bar-one: rgba(152, 152, 152, 1);
+  --timer-circle-progress-bar-two: rgba(82, 82, 82, 1);
+  --snackbars-one: rgba(152, 152, 152, 1);
+  --snackbars-two: rgba(62, 62, 62, 1);
+  --bottom-nav-menu: var(--component-bg-color);
+
+  /*Top Whales*/
+  --white-daker: rgb(224, 224, 244);
+  --whales-comp-bg-color: #1B1B1B;
+  --no-premium-dialog: #35383F;
+  --big-card-color: #35383F;
+  --active-color: #FFFFFF;
+  --inactive-color: #616161;
+  --no-premium-place: rgba(0,0,0,0.6);
+
+  /*Другое*/
+  --white-black-filter: grayscale(100%);
+  --white-black-filter-animations: grayscale(100%);
+}
+
+.telegram-theme {
+/* Общие цвета, которые встречаются везде*/
+  --main-bg-color: var(--tg-theme-bg-color);
+  --main-secondary-bg-color: var(--tg-theme-secondary-bg-color);
+  --text-color: var(--tg-theme-text-color);
+  --text-color-light: rgb(240, 240, 240);
+  --button-color: var(--tg-theme-button-color);
+  --button-text-color: var(--tg-theme-button-text-color);
+  --component-bg-color: var(--tg-theme-secondary-bg-color);
+  --component-stroke-color: rgba(255, 255, 255, 0.2);
+  --component-stroke-color-light: rgba(255, 255, 255, 0.5);
+  --loaders-color: var(--tg-theme-hint-color);
+  --gradient-one: var(--tg-theme-secondary-bg-color);
+  --gradient-two: var(--button-color);
+
+  /*Telegram Web App*/
+  --tg-web-app-header-color: var(--tg-theme-bg-color);
+  --tg-web-app-bg-color: var(--tg-theme-bg-color);
+
+  /*Далее цвета, которые встречаются только в проекте*/
+
+  /*Main Menu*/
+  --menu-button-color: var(--button-color);
+  --settings-inactive-color: var(--tg-theme-hint-color);
+
+  /*Tools Menu*/
+
+  /*Mining*/
+  --gradient-tree-descr-card: var(--tg-theme-button-color);
+  --gradient-four-descr-card: var(--tg-theme-button-color);
+  --gradient-five-menu-accordion: var(--tg-theme-button-color);
+  --gradient-six-menu-accordion: var(--tg-theme-secondary-bg-color);
+  --gradient-seven-widthdraw: rgba(255, 255, 255, 0.6);
+  --gradient-eight-widthdraw: var(--button-color);
+  --descr-text-bg-color: rgba(250, 250, 250, 0.7);
+  --descr-text-bg-card-color: rgba(250, 250, 250, 0.7);
+  --coin-card-active-color: #878787;
+  --coin-card-inactive-color: rgba(156, 156, 156, 0.5);
+  --referrals-text-color: var(--tg-theme-text-color);
+  --circle-progressbar-one: #FFFFFF;
+  --circle-progressbar-two: #454545;
+  --timer-circle-progress-bar-one: var(--tg-theme-button-color);
+  --timer-circle-progress-bar-two: var(--tg-theme-button-color);
+  --snackbars-one: var(--tg-theme-button-color);
+  --snackbars-two: var(--tg-theme-button-color);
+  --bottom-nav-menu: var(--tg-theme-hint-color);
+
+  /*Top Whales*/
+  --white-daker: rgb(150, 150, 150);
+  --whales-comp-bg-color: var(--tg-theme-secondary-bg-color);
+  --no-premium-dialog: var(--button-color);
+  --big-card-color: var(--tg-theme-hint-color);
+  --active-color: var(--tg-theme-text-color);
+  --inactive-color: var(--tg-theme-hint-color);
+  --no-premium-place: rgba(0,0,0,0.2);
+
+  /*Другое*/
+  --white-black-filter: grayscale(0);
+  --white-black-filter-animations: grayscale(0%);
 }
 
 .gray {
-  filter: grayscale(100%);
+  filter: var(--white-black-filter);
+}
+
+.gray-animations {
+  filter: var(--white-black-filter-animations);
 }
 
 video::-webkit-media-controls-start-playback-button {
@@ -66,15 +221,15 @@ video::-webkit-media-controls-start-playback-button {
 }
 
 .MuiPopper-root .MuiPaper-root .MuiAutocomplete-noOptions {
-  background-color: var(--component_bg_color);
+  background-color: var(--component-bg-color);
   color: #fff;
 }
 .MuiAutocomplete-popper .MuiAutocomplete-paper{
   width: 75px;
 }
 .MuiPopper-root{
-  background-color: var(--component_bg_color);
+  background-color: var(--component-bg-color);
 }
 .MuiPopper-root .MuiPaper-root{
-  background-color: var(--component_bg_color);
+  background-color: var(--component-bg-color);
 }

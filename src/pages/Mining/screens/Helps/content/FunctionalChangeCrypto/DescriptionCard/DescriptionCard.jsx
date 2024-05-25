@@ -13,7 +13,7 @@ const DescriptionCard = ({ coin, text }) => {
                     </Box>
                 </Box>
             </Box>
-            <DescriptionTextBox text={text} width={'80%'} bgcolor={'rgba(108, 108, 108, 0.25)'}/>
+            <DescriptionTextBox text={text} width={'80%'} bgcolor={'var(--descr-text-bg-color)'}/>
         </Box>
     );
 };
